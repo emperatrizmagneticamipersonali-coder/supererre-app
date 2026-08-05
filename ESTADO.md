@@ -4,7 +4,7 @@
 ⏸️ CHECKPOINT — Última acción completada: Sesión 3 (página de ventas) CERRADA — landing con las 10 secciones canónicas verificada: build limpio, eslint sin errores, linter de diseño del SO sin violaciones, renderizado confirmado en el navegador (dev server en localhost:3000) / Siguiente acción exacta: presentar cierre al usuario y proponer arrancar Sesión 4 (onboarding + paywall + login)
 
 ## Qué es esta app (3 líneas máximo)
-App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante imitación de niños reales en video (peer modeling), ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
+App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante la mascota animada "el León" que muestra dónde poner la lengua, ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
 
 ## Promesa central
 "Ayudo a mamás de niños de 4 a 7 años con dificultad para decir la R a lograr que sus hijos suelten la lengua y pronuncien palabras como 'carro' y 'perro' con claridad en 15 días, sin tener que pelear todas las tardes con ejercicios aburridos frente al espejo ni pagar fortunas en terapias."
@@ -74,7 +74,7 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Framework: Next.js (App Router) — decidido el 2026-08-04. Razón: la app necesita landing con SEO/conversión, API routes para webhook de Hotmart, y posible BFF si se usa IA — Next.js es el default del stack pineado (51) para este perfil.
 - Stack: scaffold canónico de 51-STACK-PINEADO.md (Next 16, Tailwind v4, shadcn/ui, Supabase con @supabase/ssr)
 - Features del MVP (orden de prioridad):
-  1. Gimnasia de Lengua (Praxias) — 5 rutinas en video corto con niños reales
+  1. Gimnasia de Lengua (Praxias) — 5 rutinas animadas guiadas por la mascota León (sin video de niños reales — decisión de Sesión 3, ver nota abajo)
   2. Modo Onomatopeyas y Sonidos — imitación con activación de micrófono + filtros AR/stickers
   3. Escalera Fonética (RA/RE/RI/RO/RU) — práctica progresiva de sílabas y palabras clave
   4. Minijuego de Recompensa — se desbloquea tras completar 2 ejercicios
@@ -90,6 +90,7 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Sesión 3 — Página de ventas: proyecto Next.js creado en `superrre-app/` (scaffold de 51), tokens de FICHA-ARTE volcados a `globals.css`, landing con las 10 secciones canónicas construida (Hero con mini-demo interactivo del mecanismo, Problema, Agitación, Solución con "el Espejo del León" bautizado, App por Dentro con placeholders del carrusel, Oferta pago único $19.99 + plan gratis, Garantía "del Primer Rugido", FAQ, CTA final + PS, Footer legal). Páginas legales (/privacidad /terminos /reembolso) creadas como borrador. Build y typecheck verificados limpios.
 - Mecanismo bautizado: "el Espejo del León" — aparece en hero, sección solución y oferta (consistente en los 3 lugares, regla dura de 19).
 - Desviación informada: el modelo es pago único (no mensual/anual como default del 19) — la sección Oferta muestra plan Gratis vs. Pago Único $19.99, coherente con la decisión de monetización de Sesión 1.
+- Cambio de mecanismo (post-cierre, a pedido del usuario): la investigación original priorizaba "peer modeling" (video de niños reales imitando el sonido) por su alto engagement documentado — pero el usuario no tiene niños disponibles para filmar ese contenido. Se reemplazó por la mascota animada "el León" (ilustración/animación, consistente con la dirección de arte ya aprobada) mostrando dónde poner la lengua. Se actualizó: Hero, Solución (los 3 pasos), metadata de la página, y el feature #1 del MVP (Praxias). Mantiene el mismo insight de la investigación (mostrar visualmente el movimiento oculto de la lengua) sin depender de video de niños reales.
 
 ## Próximas sesiones 📋
 - Sesión 4: Onboarding, paywall y login (hoy /onboarding y /login son stubs "en construcción")

@@ -13,9 +13,9 @@ export function Hero() {
             De &ldquo;cawo&rdquo; a &ldquo;carro&rdquo; en 15 días
           </h1>
           <p className="mt-5 text-lg text-txt-secondary max-w-md leading-relaxed">
-            El Espejo del León le muestra a tu hijo cómo mover la lengua,
-            imitando a otro niño real — 5 minutos al día, sin pelear frente
-            al espejo.
+            El Espejo del León le muestra a tu hijo, con animación paso a
+            paso, cómo mover la lengua — 5 minutos al día, sin pelear
+            frente al espejo.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:items-center">
             <Link

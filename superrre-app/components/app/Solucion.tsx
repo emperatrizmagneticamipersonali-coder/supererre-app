@@ -1,9 +1,9 @@
 const pasos = [
   {
     n: "1",
-    titulo: "Ve a otro niño rugir",
+    titulo: "Ve al León mostrar el truco",
     texto:
-      'Tu hijo toca la pantalla y ve un video de 10 segundos de otro niño real diciendo "¡GRRR!" como un león.',
+      'Tu hijo toca la pantalla y ve al León animado hacer el sonido "¡GRRR!", mostrando paso a paso dónde poner la lengua.',
   },
   {
     n: "2",
@@ -31,8 +31,9 @@ export function Solucion() {
             <strong className="text-txt-primary font-semibold">
               El Espejo del León
             </strong>{" "}
-            resuelve esto haciendo que tu hijo imite a otro niño real, en
-            vez de intentar entender explicaciones de adultos.
+            resuelve esto mostrándole a tu hijo, con animación clara, dónde
+            va la lengua — en vez de esperar que entienda explicaciones de
+            adultos.
           </p>
         </div>
 
@@ -70,8 +71,8 @@ export function Solucion() {
               Con el Espejo del León
             </p>
             <p className="text-sm text-txt-on-secondary-soft leading-relaxed">
-              Tu hijo pide jugar solo, imita a otro niño, y en minutos
-              logra su primer intento real de R.
+              Tu hijo sigue al León paso a paso, y en minutos logra su
+              primer intento real de R.
             </p>
           </div>
         </div>
