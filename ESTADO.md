@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: FICHA-ARTE.md cerrada y aprobada por el usuario (dirección "La Isla del Espejo") / Siguiente acción exacta: Cerrar Sesión 2 volcando los tokens a globals.css cuando arranque el scaffold, y proponer arrancar Sesión 3 (página de ventas)
+⏸️ CHECKPOINT — Última acción completada: Sesión 3 (página de ventas) CERRADA — landing con las 10 secciones canónicas verificada: build limpio, eslint sin errores, linter de diseño del SO sin violaciones, renderizado confirmado en el navegador (dev server en localhost:3000) / Siguiente acción exacta: presentar cierre al usuario y proponer arrancar Sesión 4 (onboarding + paywall + login)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante imitación de niños reales en video (peer modeling), ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
@@ -87,13 +87,17 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Sesión 0 — Instalación del SO + git init — verificado 2026-08-04
 
 ## Sesión en progreso 🔧
-- Sesión 2 — Identidad visual CERRADA: FICHA-ARTE.md aprobada. Dirección final: "La Isla del Espejo" — espejo circular (grabar/imitar) + mapa de islas (progreso), paleta arena/dorado/turquesa/coral, tipografía Baloo 2 + Quicksand. Falta: volcar tokens a globals.css cuando arranque el scaffold de código (se hace en Sesión 3 al crear el proyecto).
+- Sesión 3 — Página de ventas: proyecto Next.js creado en `superrre-app/` (scaffold de 51), tokens de FICHA-ARTE volcados a `globals.css`, landing con las 10 secciones canónicas construida (Hero con mini-demo interactivo del mecanismo, Problema, Agitación, Solución con "el Espejo del León" bautizado, App por Dentro con placeholders del carrusel, Oferta pago único $19.99 + plan gratis, Garantía "del Primer Rugido", FAQ, CTA final + PS, Footer legal). Páginas legales (/privacidad /terminos /reembolso) creadas como borrador. Build y typecheck verificados limpios.
+- Mecanismo bautizado: "el Espejo del León" — aparece en hero, sección solución y oferta (consistente en los 3 lugares, regla dura de 19).
+- Desviación informada: el modelo es pago único (no mensual/anual como default del 19) — la sección Oferta muestra plan Gratis vs. Pago Único $19.99, coherente con la decisión de monetización de Sesión 1.
 
 ## Próximas sesiones 📋
-- Sesión 3: Página de ventas (10 secciones canónicas) — primera vez que se crea el proyecto Next.js real (scaffold de 51-STACK-PINEADO.md) y se aplican los tokens de FICHA-ARTE.md
+- Sesión 4: Onboarding, paywall y login (hoy /onboarding y /login son stubs "en construcción")
 
 ## Problemas conocidos ⚠️
-- Ninguno por ahora
+- Carrusel de "La app por dentro" usa placeholders rotulados "Próximamente" (la app interna aún no existe) — pendiente reemplazar por screenshots reales al cerrar Sesión 5, según regla del 19.
+- Footer legal usa email de contacto placeholder (hola@supererre.app) — el usuario debe confirmar/crear una cuenta de correo real antes de publicar.
+- Páginas /privacidad, /terminos, /reembolso son borradores base — recomendable revisión legal local antes de publicar.
 
 ## Pendientes del usuario (acciones que el usuario debe hacer)
 - [ ] Ninguno todavía — se avisará cuando lleguemos a cuentas/dominio/claves (Sesión 6+)

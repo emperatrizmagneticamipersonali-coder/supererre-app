@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+:root {
+  /* Superficies — arena cálida, nunca blanco puro (FICHA-ARTE.md) */
+  --surface-base: #FFF6E4;
+  --surface-primary: #FFFFFB;
+  --surface-secondary: #FFF0D6;
+  --surface-tertiary: #F5ECD6;
+  --surface-elevated: #FFFFFE;
+  --surface-overlay: rgba(34, 51, 46, 0.5);
+
+  /* Texto */
+  --text-primary: #22332E;
+  --text-secondary: #6B6558;
+  --text-tertiary: #9A8F6F;
+  --text-on-brand: #FFFFFB;
+
+  /* Marca — dorado tesoro (acción) + turquesa agua (progreso) + coral (urgencia/meta) */
+  --brand-primary: #F0A93A;
+  --brand-primary-hover: #DB9527;
+  --brand-primary-soft: #FDECC9;
+  --brand-primary-light: #FFE9B8;
+  --brand-secondary: #2FB6A8;
+  --brand-secondary-soft: #D9F0EC;
+  --brand-accent: #E8604A;
+  --brand-accent-soft: #FBDFD8;
+
+  /* Texto legible sobre superficies -soft (más oscuro que el acento sólido) */
+  --text-on-primary-soft: #8A5E1E;
+  --text-on-secondary-soft: #0F6E56;
+
+  /* Semánticos */
+  --success: #2FB6A8;
+  --error: #D14A42;
+  --warning: #D98F1E;
+
+  --border-default: rgba(34, 51, 46, 0.12);
+  --border-strong: rgba(34, 51, 46, 0.22);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(34, 51, 46, 0.06);
+  --shadow-md: 0 8px 24px rgba(34, 51, 46, 0.10);
+  --shadow-lg: 0 16px 40px rgba(34, 51, 46, 0.14);
+}
+
+/* SuperErre es una app infantil claro-cálida por decisión de diseño (FICHA-ARTE.md) —
+   modo único, no se deriva un tema oscuro. */
+
+@theme inline {
+  --color-surface-base: var(--surface-base);
+  --color-surface-primary: var(--surface-primary);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-surface-tertiary: var(--surface-tertiary);
+  --color-surface-elevated: var(--surface-elevated);
+
+  --color-txt-primary: var(--text-primary);
+  --color-txt-secondary: var(--text-secondary);
+  --color-txt-tertiary: var(--text-tertiary);
+  --color-txt-on-brand: var(--text-on-brand);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-primary-soft: var(--brand-primary-soft);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-soft: var(--brand-secondary-soft);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-accent-soft: var(--brand-accent-soft);
+  --color-brand-primary-light: var(--brand-primary-light);
+
+  --color-txt-on-primary-soft: var(--text-on-primary-soft);
+  --color-txt-on-secondary-soft: var(--text-on-secondary-soft);
+
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-full: var(--radius-full);
+
+  --font-display: var(--font-baloo);
+  --font-body: var(--font-quicksand);
+}
+
+* {
+  border-color: var(--border-default);
+}
+
+body {
+  background: var(--surface-base);
+  color: var(--text-primary);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), ui-rounded, sans-serif;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 500ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+.animate-breathe {
+  animation: breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in {
+  animation: pop-in 380ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
