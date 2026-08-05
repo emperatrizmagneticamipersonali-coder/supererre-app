@@ -16,6 +16,13 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Brecha LATAM confirmada: sí — mercado hispanohablante saturado de apps de trazado/estimulación general, pero sin herramienta enfocada 100% en destrabar la R con gamificación moderna y pago justo
 - Precio de referencia del mercado: $14.99/mes o $59.99/año (competencia) vs. nuestro pago único $19.99
 
+### Segunda validación independiente (verificada por el agente vía búsqueda web, 2026-08-05)
+- Prevalencia real del problema: 30% de niños de 4-5 años aún no pronuncian bien la R (fuentes clínicas de logopedia)
+- Prueba de pago en el nicho: app de speech therapy similar (en inglés) alcanzó 5,000+ clientes y $300K ARR bootstrapeada — mercado global de speech therapy apps for kids ~$1.35B en 2024, creciendo 12.9%/año
+- Único competidor directo en español (Pronuncia con Sarahí, UNAM): técnicamente correcto pero académico/aburrido, 3.0★ con solo 2 reseñas — confirma la brecha de gamificación en español
+- Apps de referencia para diseño/progreso: Speech Blubs (peer modeling — tomar; cobros tras cancelación — evitar), Articulation Station (sistema de progreso por niveles palabra→frase→historia, credibilidad clínica — tomar)
+- Veredicto: Excelente oportunidad confirmada de forma independiente
+
 ## Avatar y venta (Sesión 1 — NO cambiar sin validar)
 - FICHA-AVATAR.md: pendiente de crear formalmente en Sesión 1 (datos ya recolectados abajo)
 - Resumen: Carolina, 34 años, mamá LATAM clase media/media-alta, hijo Mateo (5) con rotacismo · dolor #1: culpa/impotencia al ver a su hijo burlado en el colegio por decir "cawo" en vez de "carro" · deseo #1: escuchar a su hijo decir "carro"/"perro" con claridad y orgullo · nivel de consciencia: Problem & Solution Aware (4/5) · sofisticación de mercado: alta (ya probó espejo, YouTube, apps con cobro sorpresa)
