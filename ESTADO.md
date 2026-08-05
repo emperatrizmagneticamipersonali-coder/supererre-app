@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: Constitución del Producto cerrada (onboarding padre-primero, gate de adulto pre-pago, límites éticos) / Siguiente acción exacta: Presentar Plan Maestro final al usuario y esperar OK para arrancar Sesión 2 (diseño visual)
+⏸️ CHECKPOINT — Última acción completada: FICHA-ARTE.md cerrada y aprobada por el usuario (dirección "La Isla del Espejo") / Siguiente acción exacta: Cerrar Sesión 2 volcando los tokens a globals.css cuando arranque el scaffold, y proponer arrancar Sesión 3 (página de ventas)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante imitación de niños reales en video (peer modeling), ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
@@ -87,11 +87,10 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Sesión 0 — Instalación del SO + git init — verificado 2026-08-04
 
 ## Sesión en progreso 🔧
-- Sesión 1 — cerrada en lo esencial (Avatar, monetización, Constitución del Producto, arquitectura/BD/auth). Falta solo presentar el Plan Maestro final y esperar el OK del usuario para pasar a Sesión 2.
+- Sesión 2 — Identidad visual CERRADA: FICHA-ARTE.md aprobada. Dirección final: "La Isla del Espejo" — espejo circular (grabar/imitar) + mapa de islas (progreso), paleta arena/dorado/turquesa/coral, tipografía Baloo 2 + Quicksand. Falta: volcar tokens a globals.css cuando arranque el scaffold de código (se hace en Sesión 3 al crear el proyecto).
 
 ## Próximas sesiones 📋
-- Sesión 2: Identidad visual y sistema de diseño (paleta, tipografía, 3 opciones A/B/C, FICHA-ARTE.md)
-- Sesión 3: Página de ventas (10 secciones canónicas)
+- Sesión 3: Página de ventas (10 secciones canónicas) — primera vez que se crea el proyecto Next.js real (scaffold de 51-STACK-PINEADO.md) y se aplican los tokens de FICHA-ARTE.md
 
 ## Problemas conocidos ⚠️
 - Ninguno por ahora

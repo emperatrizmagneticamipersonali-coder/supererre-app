@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperErre — 3 direcciones de arte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mulish:wght@400;600;800&family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;800&family=Comic+Neue:wght@400;700&family=Work+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EDEAE2;
+    font-family: 'Work Sans', monospace;
+    padding: 40px 24px 80px;
+    color: #2C2A26;
+  }
+  .intro {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    text-align: center;
+  }
+  .intro h1 {
+    font-family: 'Mulish', monospace;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .intro p {
+    font-size: 15px;
+    color: #6B655A;
+  }
+  .board {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .option {
+    width: 375px;
+    max-width: 92vw;
+  }
+  .option-label {
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .option-label .letter {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 50%;
+    background: #2C2A26;
+    color: #fff;
+    font-family: 'Mulish', monospace;
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .option-label h2 {
+    font-family: 'Mulish', monospace;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .option-label p {
+    font-size: 13px;
+    color: #6B655A;
+    margin-top: 4px;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+  .phone {
+    width: 375px;
+    max-width: 92vw;
+    height: 720px;
+    border-radius: 40px;
+    border: 10px solid #1A1815;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.18);
+  }
+  .screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ============ OPCIÓN A — "Racha de León" (Duolingo-forward) ============ */
+  .screen-a {
+    background: #FFF8EE;
+    font-family: 'Mulish', monospace;
+  }
+  .a-top {
+    background: #FFF8EE;
+    padding: 18px 18px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .a-greeting { font-size: 13px; color: #B0A08A; font-weight: 600; }
+  .a-name { font-family: 'Baloo 2', monospace; font-size: 20px; font-weight: 700; color: #3A2C1E; }
+  .a-streak {
+    display: flex; align-items: center; gap: 6px;
+    background: #FFEBD1; border-radius: 999px; padding: 6px 12px;
+  }
+  .a-streak b { font-family: 'Baloo 2', monospace; font-size: 15px; color: #C9660E; }
+  .a-body { flex: 1; padding: 8px 18px 12px; overflow: hidden; }
+  .a-hero {
+    background: linear-gradient(180deg, #FFDDB0 0%, #FFC988 100%);
+    border-radius: 28px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .a-hero-lion { font-size: 64px; line-height: 1; margin-bottom: 6px; }
+  .a-hero h3 { font-family: 'Baloo 2', monospace; font-size: 19px; font-weight: 800; color: #5A3410; margin-bottom: 4px; }
+  .a-hero p { font-size: 12.5px; color: #7A4E1E; margin-bottom: 14px; }
+  .a-btn3d {
+    display: inline-block;
+    background: #2EC4B6;
+    color: #fff;
+    font-family: 'Baloo 2', monospace;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 11px 26px;
+    border-radius: 16px;
+    border-bottom: 4px solid #1D9488;
+  }
+  .a-row { display: flex; gap: 10px; margin-bottom: 10px; }
+  .a-card {
+    flex: 1;
+    background: #fff;
+    border-radius: 18px;
+    padding: 12px;
+    border-bottom: 3px solid #EDE4D3;
+  }
+  .a-card .ic { font-size: 22px; margin-bottom: 4px; }
+  .a-card b { font-family: 'Baloo 2', monospace; font-size: 12.5px; display: block; color: #3A2C1E; }
+  .a-card span { font-size: 10.5px; color: #B0A08A; }
+  .a-ladder { background: #fff; border-radius: 18px; padding: 12px 14px; border-bottom: 3px solid #EDE4D3; }
+  .a-ladder b { font-family: 'Baloo 2', monospace; font-size: 12.5px; color: #3A2C1E; display:block; margin-bottom:8px; }
+  .a-steps { display: flex; gap: 5px; }
+  .a-step { flex: 1; height: 8px; border-radius: 4px; background: #F0E9DC; }
+  .a-step.done { background: #2EC4B6; }
+  .a-nav {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 0 16px; background: #fff; border-top: 1px solid #F0E9DC;
+  }
+  .a-nav .item { text-align: center; font-size: 9.5px; color: #B0A08A; font-weight: 700; font-family: 'Mulish', monospace;}
+  .a-nav .item.active { color: #C9660E; }
+  .a-nav .ic { font-size: 20px; display: block; margin-bottom: 2px; }
+
+  /* ============ OPCIÓN B — "Cuento Ilustrado" (Khan Kids-forward) ============ */
+  .screen-b {
+    background: #FFF1EC;
+    font-family: 'Nunito', monospace;
+  }
+  .b-top { padding: 16px 18px 6px; display:flex; align-items:center; justify-content:space-between; }
+  .b-greeting { font-family: 'Fredoka', monospace; font-size: 16px; font-weight: 600; color: #A63E5A; }
+  .b-badge { background: #FFD9C7; border-radius: 12px; padding: 5px 10px; font-size: 11px; font-weight: 800; color: #C4502B; }
+  .b-body { flex: 1; padding: 6px 18px 12px; }
+  .b-storycard {
+    background: #FFDCC9;
+    border-radius: 30px 30px 30px 8px;
+    padding: 22px 20px;
+    text-align: center;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .b-corner {
+    position: absolute; top: 0; right: 0;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 0 26px 26px 0;
+    border-color: transparent #FFF1EC transparent transparent;
+  }
+  .b-illust { font-size: 58px; margin-bottom: 4px; }
+  .b-storycard h3 { font-family: 'Fredoka', monospace; font-size: 20px; font-weight: 600; color: #7A2A42; margin-bottom: 4px; }
+  .b-storycard p { font-size: 12px; color: #9A4A5E; margin-bottom: 14px; }
+  .b-cta {
+    background: #4FB6C9; color: #fff; font-family: 'Fredoka', monospace;
+    font-weight: 600; font-size: 14px; padding: 10px 24px; border-radius: 999px;
+    display: inline-block;
+  }
+  .b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .b-cell {
+    background: #fff; border-radius: 22px; padding: 14px; text-align: center;
+  }
+  .b-cell .ic { font-size: 30px; margin-bottom: 6px; }
+  .b-cell b { font-family: 'Fredoka', monospace; font-size: 12px; color: #6B3547; display: block; }
+  .b-nav {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 10px 14px 16px; background: #FFF1EC;
+  }
+  .b-nav .dot { width: 34px; height: 34px; border-radius: 50%; background: #fff; display:flex; align-items:center; justify-content:center; font-size:17px; }
+  .b-nav .dot.active { background: #4FB6C9; }
+
+  /* ============ OPCIÓN C — "Espejo Mágico" (Speech Blubs-forward, foto real) ============ */
+  .screen-c {
+    background: #FFFBF3;
+    font-family: 'Work Sans', monospace;
+  }
+  .c-top { padding: 18px 18px 8px; display:flex; align-items:center; justify-content:space-between; }
+  .c-name { font-family: 'Comic Neue', monospace; font-size: 18px; font-weight: 700; color: #4A3B1E; }
+  .c-progress { font-size: 11px; color: #A8935F; font-weight: 700; }
+  .c-body { flex: 1; padding: 4px 18px 12px; display: flex; flex-direction: column; }
+  .c-mirror {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #FFE9B8, #F2B23D 70%);
+    border: 6px solid #fff;
+    box-shadow: 0 0 0 4px #F0A93A;
+    display: flex; align-items: center; justify-content: center;
+    margin: 6px auto 14px;
+    position: relative;
+  }
+  .c-mirror .face { font-size: 70px; }
+  .c-rec {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    background: #E4574F; color: #fff; font-size: 10px; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px; font-family: 'Work Sans', monospace;
+  }
+  .c-caption { text-align: center; margin-bottom: 14px; }
+  .c-caption b { font-family: 'Comic Neue', monospace; font-size: 16px; color: #4A3B1E; display: block; }
+  .c-caption span { font-size: 12px; color: #A8935F; }
+  .c-timeline { background: #fff; border-radius: 18px; padding: 12px 14px; margin-bottom: 10px; }
+  .c-timeline b { font-family: 'Comic Neue', monospace; font-size: 12.5px; color: #4A3B1E; display:block; margin-bottom: 8px; }
+  .c-tl-row { display: flex; align-items: center; gap: 8px; padding: 4px 0; }
+  .c-tl-dot { width: 20px; height: 20px; border-radius: 50%; background: #F0A93A; flex-shrink: 0; font-size: 10px; color: #fff; display:flex; align-items:center; justify-content:center; font-weight: 800; }
+  .c-tl-dot.pending { background: #F0E7D4; color: #C9BB98; }
+  .c-tl-row span { font-size: 12px; color: #6B5C3E; }
+  .c-nav {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 0 16px; background: #fff; border-top: 1px solid #F5EEDD;
+  }
+  .c-nav .item { text-align: center; font-size: 9.5px; color: #C9BB98; font-weight: 700; }
+  .c-nav .item.active { color: #F0A93A; }
+  .c-nav .ic { font-size: 19px; display: block; margin-bottom: 2px; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>SuperErre — 3 direcciones de identidad visual</h1>
+  <p>Misma pantalla (la primera victoria: "El Rugido del León") resuelta 3 veces. Elige una, combina lo mejor de dos, o pide otras 3.</p>
+</div>
+
+<div class="board">
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">A</div>
+      <h2>Racha de León</h2>
+      <p>Inspirada en Duolingo: mascota protagonista, racha visible, botones "3D" que se hunden al tocar. Cálida y competitiva-amable.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-a">
+        <div class="a-top">
+          <div><div class="a-greeting">¡Hola!</div><div class="a-name">Mateo</div></div>
+          <div class="a-streak">🔥<b>3 días</b></div>
+        </div>
+        <div class="a-body">
+          <div class="a-hero">
+            <div class="a-hero-lion">🦁</div>
+            <h3>¡El Rugido del León!</h3>
+            <p>Imita el sonido y gana tu primera estrella</p>
+            <div class="a-btn3d">Grabar GRRR</div>
+          </div>
+          <div class="a-row">
+            <div class="a-card"><div class="ic">👅</div><b>Praxias</b><span>5 ejercicios</span></div>
+            <div class="a-card"><div class="ic">🎈</div><b>Minijuego</b><span>Se desbloquea</span></div>
+          </div>
+          <div class="a-ladder">
+            <b>Escalera Fonética</b>
+            <div class="a-steps">
+              <div class="a-step done"></div><div class="a-step done"></div><div class="a-step"></div><div class="a-step"></div><div class="a-step"></div>
+            </div>
+          </div>
+        </div>
+        <div class="a-nav">
+          <div class="item active"><span class="ic">🦁</span>Jugar</div>
+          <div class="item"><span class="ic">🪜</span>Escalera</div>
+          <div class="item"><span class="ic">🎈</span>Premios</div>
+          <div class="item"><span class="ic">👤</span>Mamá</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">B</div>
+      <h2>Cuento Ilustrado</h2>
+      <p>Inspirada en Khan Academy Kids: cards grandes tipo página de libro, texto mínimo, ícono-primero. Suave y aspiracional.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-b">
+        <div class="b-top">
+          <div class="b-greeting">Hola, Mateo</div>
+          <div class="b-badge">⭐ 12</div>
+        </div>
+        <div class="b-body">
+          <div class="b-storycard">
+            <div class="b-corner"></div>
+            <div class="b-illust">🦁</div>
+            <h3>El Rugido del León</h3>
+            <p>Toca y ruge fuerte: ¡GRRR!</p>
+            <div class="b-cta">Empezar</div>
+          </div>
+          <div class="b-grid">
+            <div class="b-cell"><div class="ic">👅</div><b>Praxias</b></div>
+            <div class="b-cell"><div class="ic">🏴‍☠️</div><b>Pirata</b></div>
+            <div class="b-cell"><div class="ic">🪜</div><b>Sílabas</b></div>
+            <div class="b-cell"><div class="ic">🎈</div><b>Juego</b></div>
+          </div>
+        </div>
+        <div class="b-nav">
+          <div class="dot active">🏠</div>
+          <div class="dot">🪜</div>
+          <div class="dot">🎈</div>
+          <div class="dot">👤</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">C</div>
+      <h2>Espejo Mágico</h2>
+      <p>Inspirada en Speech Blubs: marco circular tipo espejo/cámara con niños reales, progreso en línea de tiempo. Cálida y confiable.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-c">
+        <div class="c-top">
+          <div class="c-name">Mateo practica</div>
+          <div class="c-progress">Día 3 · 2/5 sonidos</div>
+        </div>
+        <div class="c-body">
+          <div class="c-mirror">
+            <div class="face">🦁</div>
+            <div class="c-rec">● Grabando</div>
+          </div>
+          <div class="c-caption">
+            <b>"¡GRRR!" como el león</b>
+            <span>Toca el espejo e imítalo</span>
+          </div>
+          <div class="c-timeline">
+            <b>Tu camino de la R</b>
+            <div class="c-tl-row"><div class="c-tl-dot">✓</div><span>Praxias de lengua</span></div>
+            <div class="c-tl-row"><div class="c-tl-dot">✓</div><span>Sonido del león</span></div>
+            <div class="c-tl-row"><div class="c-tl-dot pending">3</div><span>Sílaba RA</span></div>
+          </div>
+        </div>
+        <div class="c-nav">
+          <div class="item active"><span class="ic">🪞</span>Practicar</div>
+          <div class="item"><span class="ic">🪜</span>Escalera</div>
+          <div class="item"><span class="ic">🎈</span>Premios</div>
+          <div class="item"><span class="ic">👤</span>Mamá</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

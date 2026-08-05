@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperErre — Dirección combinada v2 (C + F, mapa restaurado)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EDEAE2;
+    font-family: 'Quicksand', monospace;
+    padding: 40px 24px 80px;
+    color: #22332E;
+  }
+  .intro { max-width: 780px; margin: 0 auto 36px; text-align: center; }
+  .intro .tag { display:inline-block; background:#22332E; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:10px; letter-spacing:0.03em; }
+  .intro h1 { font-family:'Baloo 2', monospace; font-size:28px; margin-bottom:8px; color:#22332E; font-weight:800; }
+  .intro p { font-size:14.5px; color:#6B6558; line-height:1.6; }
+
+  .wrap { display:flex; gap:44px; flex-wrap:wrap; justify-content:center; align-items:flex-start; max-width:1000px; margin:0 auto; }
+
+  .phone { width:375px; max-width:92vw; height:780px; border-radius:40px; border:10px solid #1A1815; overflow:hidden; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.18); flex-shrink:0; }
+  .screen { width:100%; height:100%; background:#FFF6E4; display:flex; flex-direction:column; overflow:hidden; }
+
+  .top { padding:16px 18px 6px; display:flex; align-items:center; justify-content:space-between; }
+  .top-name { font-family:'Baloo 2', monospace; font-size:19px; font-weight:700; color:#22332E; }
+  .streak { background:#F0A93A; color:#fff; border-radius:999px; padding:5px 12px; font-size:11.5px; font-weight:700; }
+
+  .mirror-wrap { padding:6px 24px 2px; text-align:center; }
+  .mirror { width:140px; height:140px; margin:0 auto; border-radius:50%; position:relative;
+    background: radial-gradient(circle at 35% 30%, #FFE9B8, #F0A93A 72%);
+    border: 5px solid #fff;
+    box-shadow: 0 0 0 4px #F0A93A, 0 0 0 8px #FFF6E4, 0 0 0 11px #2FB6A8;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .mirror .face { font-size: 62px; }
+  .rec { margin-top:8px; display:inline-block; background:#E8604A; color:#fff; font-size:10px; font-weight:700; padding:3px 10px; border-radius:999px; }
+  .caption { text-align:center; margin:8px 0 10px; }
+  .caption b { font-family:'Baloo 2', monospace; font-size:16px; color:#22332E; font-weight:700; display:block; }
+  .caption span { font-size:11.5px; color:#8A8270; }
+
+  /* ===== MAPA restaurado (estilo F) recoloreado en la paleta unificada ===== */
+  .map { flex:1; margin:2px 18px 8px; border-radius:22px; position:relative; overflow:hidden;
+    background: linear-gradient(180deg, #FFEFCD 0%, #BEE4DD 55%, #9FD8CE 100%);
+    padding:14px;
+  }
+  .map-title { font-size:10.5px; font-weight:700; color:#5E6B57; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:6px; }
+  .dash { position:absolute; border-top:3px dashed rgba(34,51,46,0.28); }
+  .isle { position:absolute; width:56px; height:56px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow:0 3px 0 rgba(0,0,0,0.1); }
+  .isle.done { background:#2FB6A8; border:4px solid #fff; }
+  .isle.current { background:#F0A93A; border:4px solid #fff; width:66px; height:66px; font-size:28px; }
+  .isle.locked { background:#F0E7D2; border:4px solid #fff; opacity:0.85; }
+  .isle.chest { background:#fff; border:4px solid #F0A93A; }
+  .isle.flag { background:#E8604A; border:4px solid #fff; }
+  .i1 { top:44px; left:16px; }
+  .i2 { top:96px; left:108px; }
+  .i3 { top:56px; left:198px; }
+  .i4 { top:132px; left:60px; }
+  .i5 { top:168px; left:190px; }
+  .map-badge { position:absolute; bottom:12px; left:14px; right:14px; background:#fff; border-radius:16px; padding:9px 13px; display:flex; align-items:center; gap:9px; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+  .map-badge .ic { font-size:22px; }
+  .map-badge b { font-family:'Baloo 2', monospace; font-size:13px; color:#22332E; font-weight:700; display:block; }
+  .map-badge span { font-size:10px; color:#8A8270; }
+
+  .nav { display:flex; justify-content:space-around; align-items:center; padding:12px 0 16px; background:#fff; border-top:2px solid #F2EBD8; }
+  .nav .item { text-align:center; font-size:9.5px; color:#C9BB98; font-weight:700; }
+  .nav .item.active { color:#E8604A; }
+  .nav .ic { font-size:20px; display:block; margin-bottom:2px; }
+
+  .legend { width:340px; max-width:92vw; }
+  .legend h3 { font-family:'Baloo 2', monospace; font-size:17px; margin-bottom:12px; font-weight:700; }
+  .legend .row { display:flex; align-items:flex-start; gap:10px; margin-bottom:14px; }
+  .legend .swatch { width:22px; height:22px; border-radius:7px; flex-shrink:0; margin-top:2px; }
+  .legend p { font-size:13px; line-height:1.55; color:#3A362C; }
+  .legend b { color:#22332E; }
+  .legend .from { font-size:11px; color:#9A8F6F; display:block; margin-top:2px; }
+  hr { border:none; border-top:1px solid #DCD5C2; margin:18px 0; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <div class="tag">V2 — MAPA RESTAURADO + TIPOGRAFÍA MÁS LEGIBLE</div>
+  <h1>La Isla del Espejo</h1>
+  <p>Se mantiene el espejo del león intacto. El mapa vuelve a ser un mapa real — islas regadas y conectadas por caminos, como en F — pero recoloreado dentro de la misma paleta dorado/turquesa/coral. Tipografía cambiada de Bangers a Baloo 2, mucho más legible y ya validada por Duolingo/Khan Kids.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="phone">
+    <div class="screen">
+      <div class="top">
+        <div class="top-name">Isla de Mateo</div>
+        <div class="streak">🔥 3 días</div>
+      </div>
+
+      <div class="mirror-wrap">
+        <div class="mirror"><div class="face">🦁</div></div>
+        <div class="rec">● Grabando</div>
+        <div class="caption">
+          <b>"¡GRRR!" como el león</b>
+          <span>Toca el espejo e imítalo</span>
+        </div>
+      </div>
+
+      <div class="map">
+        <div class="map-title">Tu mapa de islas</div>
+        <div class="dash" style="top:70px; left:60px; width:60px; transform:rotate(20deg);"></div>
+        <div class="dash" style="top:118px; left:150px; width:70px; transform:rotate(-24deg);"></div>
+        <div class="dash" style="top:150px; left:108px; width:78px; transform:rotate(14deg);"></div>
+        <div class="isle done i1">🐼</div>
+        <div class="isle current i2">🦁</div>
+        <div class="isle chest i3">💰</div>
+        <div class="isle locked i4">🦜</div>
+        <div class="isle flag i5">🏴‍☠️</div>
+        <div class="map-badge">
+          <div class="ic">🧭</div>
+          <div><b>1 de 4 islas conquistadas</b><span>2 cofres esperando</span></div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <div class="item active"><span class="ic">🪞</span>Espejo</div>
+        <div class="item"><span class="ic">🗺️</span>Isla</div>
+        <div class="item"><span class="ic">💰</span>Cofres</div>
+        <div class="item"><span class="ic">👤</span>Mamá</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h3>Qué cambió por tu feedback</h3>
+    <div class="row">
+      <div class="swatch" style="background:#F0A93A;"></div>
+      <p><b>El mapa volvió a ser mapa</b> — islas en posiciones libres, conectadas por caminos punteados, cofre y bandera pirata como en la F original. Ya no es una lista lineal.<span class="from">restaurado de F</span></p>
+    </div>
+    <div class="row">
+      <div class="swatch" style="background:#2FB6A8;"></div>
+      <p><b>Fondo del mapa</b> — degradé arena→agua turquesa (en vez del verde-mar plano de F), para que combine con el anillo del espejo sin perder la sensación de océano.<span class="from">recoloreado de F</span></p>
+    </div>
+    <div class="row">
+      <div class="swatch" style="background:#22332E;"></div>
+      <p><b>Tipografía cambiada</b>: fuera Bangers (condensada, difícil de leer en textos cortos) → ahora <b>Baloo 2</b>, redondeada y clara — la misma familia que usan Duolingo/apps educativas grandes, mucho más legible para un padre leyendo rápido.<span class="from">nuevo, por tu feedback</span></p>
+    </div>
+    <hr>
+    <p>El espejo del león (lo que más te gustó) no se tocó: mismo tamaño, mismo anillo dorado+turquesa, misma posición protagonista arriba.</p>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SuperErre — 3 direcciones nuevas (D, E, F)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@500;600;700&family=Chewy&family=Rubik:wght@400;600;800&family=Bangers&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #EDEAE2;
+    font-family: 'Rubik', monospace;
+    padding: 40px 24px 80px;
+    color: #2C2A26;
+  }
+  .intro { max-width: 940px; margin: 0 auto 40px; text-align: center; }
+  .intro h1 { font-family: 'Rubik', monospace; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .intro p { font-size: 14.5px; color: #6B655A; line-height: 1.5; }
+  .intro .tag { display:inline-block; background:#2C2A26; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:999px; margin-bottom:10px; letter-spacing:0.03em; }
+  .board { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .option { width: 375px; max-width: 92vw; }
+  .option-label { text-align: center; margin-bottom: 14px; }
+  .option-label .letter { display:inline-block; width:32px; height:32px; line-height:32px; border-radius:50%; background:#2C2A26; color:#fff; font-family:'Rubik', monospace; font-weight:800; font-size:15px; margin-bottom:8px; }
+  .option-label h2 { font-family:'Rubik', monospace; font-size:18px; font-weight:800; }
+  .option-label p { font-size:13px; color:#6B655A; margin-top:4px; line-height:1.5; padding:0 6px; }
+  .phone { width:375px; max-width:92vw; height:740px; border-radius:40px; border:10px solid #1A1815; overflow:hidden; position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.18); }
+  .screen { width:100%; height:100%; display:flex; flex-direction:column; overflow:hidden; }
+
+  /* ============ OPCIÓN D — "Bloques" (Lingokids-forward) ============ */
+  .screen-d { background:#fff; font-family:'Quicksand', monospace; }
+  .d-top { padding:16px 16px 8px; display:flex; align-items:center; justify-content:space-between; }
+  .d-name { font-family:'Fredoka', monospace; font-size:17px; font-weight:600; color:#2C2A26; }
+  .d-streak { background:#FFCB3D; border-radius:999px; padding:5px 11px; font-size:11.5px; font-weight:700; color:#5A4200; }
+  .d-blocks { flex:1; display:flex; flex-direction:column; gap:10px; padding:6px 16px 12px; overflow:hidden; }
+  .d-block { border-radius:24px; padding:14px 16px; display:flex; align-items:center; gap:12px; position:relative; }
+  .d-block.b1 { background:#3DD6E0; }
+  .d-block.b2 { background:#FFCB3D; }
+  .d-block.b3 { background:#FF6FA0; }
+  .d-block.b4 { background:#8A5CF0; }
+  .d-mascot { width:52px; height:52px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; border:3px solid #2C2A26; flex-shrink:0; }
+  .d-block .info { flex:1; }
+  .d-block .info b { font-family:'Fredoka', monospace; font-size:14px; color:#1E1B14; display:block; }
+  .d-block .info span { font-size:11px; color:#3A3626; opacity:0.75; }
+  .d-card { background:#fff; border:3px solid #2C2A26; border-radius:16px; padding:5px 10px; font-family:'Fredoka', monospace; font-size:18px; font-weight:600; }
+  .d-lock { background:rgba(255,255,255,0.7); border-radius:16px; padding:5px 9px; font-size:14px; }
+  .d-nav { display:flex; justify-content:space-around; align-items:center; padding:12px 0 16px; background:#fff; border-top:2px solid #F2EFE7; }
+  .d-nav .item { text-align:center; font-size:9.5px; color:#B0A896; font-weight:700; }
+  .d-nav .item.active { color:#FF6FA0; }
+  .d-nav .ic { font-size:20px; display:block; margin-bottom:2px; }
+
+  /* ============ OPCIÓN E — "Liga de Campeones R" (competitivo/gamer) ============ */
+  .screen-e { background:#FFF7E8; font-family:'Rubik', monospace; }
+  .e-top { padding:16px 18px 6px; display:flex; align-items:center; justify-content:space-between; }
+  .e-lvl { display:flex; align-items:center; gap:8px; }
+  .e-lvl-badge { width:34px; height:34px; border-radius:50%; background:#F2A93B; border:3px solid #E8B23D; display:flex; align-items:center; justify-content:center; font-family:'Chewy', monospace; font-size:15px; color:#fff; }
+  .e-lvl b { font-size:12px; color:#8A5E1E; font-weight:700; display:block; }
+  .e-lvl span { font-size:10px; color:#B08A45; }
+  .e-trophy { font-size:22px; }
+  .e-xp { margin:10px 18px 4px; background:#F2E4C4; border-radius:999px; height:14px; position:relative; overflow:hidden; }
+  .e-xp-fill { background:#3E7BD1; height:100%; width:62%; border-radius:999px; }
+  .e-xp-label { text-align:center; font-size:10px; color:#8A5E1E; margin-bottom:8px; font-weight:700; }
+  .e-path { flex:1; padding:6px 18px 10px; display:flex; flex-direction:column; align-items:center; gap:14px; position:relative; }
+  .e-node { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; border:4px solid #fff; box-shadow:0 3px 0 rgba(0,0,0,0.12); position:relative; }
+  .e-node.done { background:#3E7BD1; }
+  .e-node.current { background:#E85C4A; width:78px; height:78px; font-size:32px; }
+  .e-node.locked { background:#E8DCC0; }
+  .e-medal { position:absolute; top:-6px; right:-4px; background:#F2A93B; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; font-size:12px; border:2px solid #fff; }
+  .e-label { font-family:'Chewy', monospace; font-size:12px; color:#8A5E1E; text-align:center; }
+  .e-nav { display:flex; justify-content:space-around; align-items:center; padding:12px 0 16px; background:#fff; border-top:2px solid #F2E4C4; }
+  .e-nav .item { text-align:center; font-size:9.5px; color:#C9B98C; font-weight:700; }
+  .e-nav .item.active { color:#E85C4A; }
+  .e-nav .ic { font-size:20px; display:block; margin-bottom:2px; }
+
+  /* ============ OPCIÓN F — "Isla del Tesoro R" (aventura/mapa) ============ */
+  .screen-f { background:#FFF3DC; font-family:'Poppins', monospace; }
+  .f-top { padding:16px 18px 4px; display:flex; align-items:center; justify-content:space-between; }
+  .f-name { font-family:'Bangers', monospace; font-size:20px; letter-spacing:0.02em; color:#1E5C54; }
+  .f-streak { background:#2FB6A8; color:#fff; border-radius:10px; padding:5px 10px; font-size:11px; font-weight:700; }
+  .f-map { flex:1; margin:6px 14px 10px; border-radius:22px; background:linear-gradient(180deg,#BEE8E2,#9FDCD3); position:relative; padding:16px; overflow:hidden; }
+  .f-path { position:absolute; inset:0; }
+  .f-dash { position:absolute; border-top:3px dashed rgba(30,92,84,0.4); }
+  .f-island { position:absolute; width:58px; height:58px; border-radius:50%; background:#FFF3DC; border:4px solid #E8B23D; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 3px 0 rgba(0,0,0,0.1); }
+  .f-island.chest { background:#E8B23D; border-color:#fff; }
+  .f-island.flag { background:#E8604A; border-color:#fff; }
+  .f-i1 { top:20px; left:20px; }
+  .f-i2 { top:70px; left:120px; }
+  .f-i3 { top:40px; left:220px; }
+  .f-i4 { top:120px; left:60px; }
+  .f-i5 { top:150px; left:190px; }
+  .f-badge { position:absolute; bottom:10px; left:14px; right:14px; background:#fff; border-radius:16px; padding:10px 14px; display:flex; align-items:center; gap:10px; box-shadow:0 4px 10px rgba(0,0,0,0.08); }
+  .f-badge b { font-family:'Bangers', monospace; font-size:14px; color:#1E5C54; letter-spacing:0.02em; display:block; }
+  .f-badge span { font-size:10.5px; color:#7A9A94; }
+  .f-nav { display:flex; justify-content:space-around; align-items:center; padding:12px 0 16px; background:#fff; border-top:2px solid #EFE4C8; }
+  .f-nav .item { text-align:center; font-size:9.5px; color:#C9BB98; font-weight:700; }
+  .f-nav .item.active { color:#2FB6A8; }
+  .f-nav .ic { font-size:20px; display:block; margin-bottom:2px; }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <div class="tag">SEGUNDA TANDA — con gamificación visible</div>
+  <h1>SuperErre — 3 direcciones nuevas (D, E, F)</h1>
+  <p>La opción D toma el lenguaje visual de Lingokids (bloques de color plano + personajes de contorno grueso) que trajiste como referencia. Las 3 ahora muestran racha, niveles y progreso desbloqueable — la gamificación a la vista, no solo en el backend.</p>
+</div>
+
+<div class="board">
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">D</div>
+      <h2>Bloques (inspirada en Lingokids)</h2>
+      <p>Paneles de color plano con mascotas de contorno grueso, tipografía redondeada bold. Cada bloque es un ejercicio; el candado se abre al completar el anterior.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-d">
+        <div class="d-top">
+          <div class="d-name">Hola, Mateo</div>
+          <div class="d-streak">🔥 3 días</div>
+        </div>
+        <div class="d-blocks">
+          <div class="d-block b1">
+            <div class="d-mascot">🦁</div>
+            <div class="info"><b>Rugido del León</b><span>Sonido R aislado</span></div>
+            <div class="d-card">✓</div>
+          </div>
+          <div class="d-block b2">
+            <div class="d-mascot">🐼</div>
+            <div class="info"><b>Praxias de lengua</b><span>5 ejercicios</span></div>
+            <div class="d-card">✓</div>
+          </div>
+          <div class="d-block b3">
+            <div class="d-mascot">🦜</div>
+            <div class="info"><b>Sílaba RA</b><span>Escalera Fonética</span></div>
+            <div class="d-card">2/5</div>
+          </div>
+          <div class="d-block b4">
+            <div class="d-mascot">🎈</div>
+            <div class="info"><b>Minijuego</b><span>Revienta globos</span></div>
+            <div class="d-lock">🔒</div>
+          </div>
+        </div>
+        <div class="d-nav">
+          <div class="item active"><span class="ic">🏠</span>Jugar</div>
+          <div class="item"><span class="ic">🪜</span>Escalera</div>
+          <div class="item"><span class="ic">🎈</span>Premios</div>
+          <div class="item"><span class="ic">👤</span>Mamá</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">E</div>
+      <h2>Liga de Campeones R</h2>
+      <p>Camino de niveles tipo videojuego: barra de XP arriba, medallas por hito, nodo actual grande y siguientes bloqueados. Máxima gamificación visible.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-e">
+        <div class="e-top">
+          <div class="e-lvl"><div class="e-lvl-badge">4</div><div><b>Nivel 4</b><span>Explorador R</span></div></div>
+          <div class="e-trophy">🏆</div>
+        </div>
+        <div class="e-xp"><div class="e-xp-fill"></div></div>
+        <div class="e-xp-label">620 / 1000 XP para el nivel 5</div>
+        <div class="e-path">
+          <div><div class="e-node done">✓</div></div>
+          <div><div class="e-node done">✓<div class="e-medal">🥇</div></div></div>
+          <div><div class="e-node current">🦁</div><div class="e-label">Hoy</div></div>
+          <div><div class="e-node locked">🔒</div></div>
+          <div><div class="e-node locked">🔒</div></div>
+        </div>
+        <div class="e-nav">
+          <div class="item active"><span class="ic">🎮</span>Jugar</div>
+          <div class="item"><span class="ic">🏆</span>Medallas</div>
+          <div class="item"><span class="ic">🎈</span>Tienda</div>
+          <div class="item"><span class="ic">👤</span>Mamá</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option">
+    <div class="option-label">
+      <div class="letter">F</div>
+      <h2>Isla del Tesoro R</h2>
+      <p>Mapa de aventura: cada ejercicio es una isla conectada por un camino punteado, cofres como recompensa y una bandera como meta final. Coherente con el modo "Pirata" de tu MVP.</p>
+    </div>
+    <div class="phone">
+      <div class="screen screen-f">
+        <div class="f-top">
+          <div class="f-name">Isla de Mateo</div>
+          <div class="f-streak">🔥 3 días</div>
+        </div>
+        <div class="f-map">
+          <div class="f-path">
+            <div class="f-dash" style="top:48px; left:60px; width:65px; transform:rotate(18deg);"></div>
+            <div class="f-dash" style="top:98px; left:150px; width:75px; transform:rotate(-20deg);"></div>
+            <div class="f-dash" style="top:135px; left:110px; width:85px; transform:rotate(12deg);"></div>
+          </div>
+          <div class="f-island f-i1">🦁</div>
+          <div class="f-island f-i2 chest">💰</div>
+          <div class="f-island f-i3">🦜</div>
+          <div class="f-island f-i4 flag">🏴‍☠️</div>
+          <div class="f-island f-i5">🔒</div>
+          <div class="f-badge">
+            <div style="font-size:26px;">🧭</div>
+            <div><b>3 islas conquistadas</b><span>2 cofres por abrir</span></div>
+          </div>
+        </div>
+        <div class="f-nav">
+          <div class="item active"><span class="ic">🗺️</span>Mapa</div>
+          <div class="item"><span class="ic">💰</span>Cofres</div>
+          <div class="item"><span class="ic">🎈</span>Juegos</div>
+          <div class="item"><span class="ic">👤</span>Mamá</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
