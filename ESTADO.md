@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: Instalación del SO + ingesta del RESUMEN FINAL validado (idea, avatar, propuesta de valor) / Siguiente acción exacta: Confirmar Plan Maestro con el usuario y arrancar Sesión 1 (Constitución del Producto, Avatar, monetización, arquitectura)
+⏸️ CHECKPOINT — Última acción completada: Constitución del Producto cerrada (onboarding padre-primero, gate de adulto pre-pago, límites éticos) / Siguiente acción exacta: Presentar Plan Maestro final al usuario y esperar OK para arrancar Sesión 2 (diseño visual)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante imitación de niños reales en video (peer modeling), ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
@@ -29,6 +29,14 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Diseño del paywall: gratis = módulo de Praxias + Onomatopeyas iniciales; $19.99 USD pago único desbloquea Escalera Fonética completa + minijuegos + todos los niveles
 - Trial: freemium sin tarjeta de crédito (no es trial temporizado, es acceso gratuito limitado por funciones)
 - Pricing: $19.99 USD pago único (benchmark competencia: $14.99/mes o $59.99/año)
+
+## Constitución del Producto (Sesión 1 — decidido con el usuario)
+- Onboarding: el padre/madre configura primero (nombre y edad del niño) antes de entregar el celular — personaliza la experiencia y genera confianza antes del paywall
+- Gate de pago: puerta de adulto (challenge simple, ej. mantener presionado / operación matemática fácil) ANTES de mostrar paywall o cobrar — evita compras accidentales de un niño de 4-7 años
+- Límites éticos que la app NUNCA cruza:
+  1. Nunca publicidad ni compras dirigidas al niño (solo el padre ve ofertas, tras el gate de adulto)
+  2. Nunca sube audio/video fuera del dispositivo — voz y cámara del niño 100% locales, nunca a servidor
+  3. Nunca usa culpa o presión emocional para vender — copy siempre en tono de aliento, nunca miedo parental
 
 ## Gamificación y retención (Sesión 3 — el loop central)
 - Loop del hábito (Hooked): Gatillo notificación/rutina diaria → Acción imitar sonido/video corto → Recompensa filtro AR + stickers/fiesta visual → Inversión progreso en Escalera Fonética
@@ -64,18 +72,19 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
   3. Escalera Fonética (RA/RE/RI/RO/RU) — práctica progresiva de sílabas y palabras clave
   4. Minijuego de Recompensa — se desbloquea tras completar 2 ejercicios
 - Qué NO construir todavía: reconocimiento de voz en la nube (usar detección local de audio/volumen), trazado de letras/caligrafía, paneles multi-paciente para clínicas
-- Modelo de IA: por definir en Sesión 1 (probablemente no crítico para el MVP — el filtro AR y detección de audio son locales, no requieren IA generativa)
+- Modelo de IA: ninguno requerido para el MVP — el filtro AR y la detección de voz/volumen son 100% locales en el dispositivo (sin llamadas a proveedores de IA), coherente con la promesa de privacidad y con "qué NO construir todavía" del resumen validado
+- Base de datos (Supabase/Postgres, decisión de implementación — no reabrir): tablas `parents` (cuenta que paga, vinculada a auth.users), `children` (nombre, edad, vinculado a parent_id — el niño NUNCA tiene su propia cuenta/login), `exercise_progress` (child_id, ejercicio, fecha, completado), `purchases` (parent_id, estado, fecha, origen webhook Hotmart). RLS: un parent solo lee/escribe sus propios children y su propio purchases/progress vía child_id → parent_id
+- Auth (Supabase Auth, decisión de implementación — no reabrir): login SOLO para el padre/madre (email/magic link o Google) — el niño interactúa desde el dispositivo ya logueado por el padre, sin credenciales propias. Coherente con COPPA (menor de 13 años nunca crea cuenta ni ingresa datos personales directamente)
 
 ## Sesiones completadas ✅
 - Sesión 0 — Instalación del SO + git init — verificado 2026-08-04
 
 ## Sesión en progreso 🔧
-- Sesión 1 — Constitución del Producto, Avatar, monetización y arquitectura — recolectando datos del RESUMEN FINAL del usuario, falta cerrar preguntas de Constitución (03) y presentar Plan Maestro
+- Sesión 1 — cerrada en lo esencial (Avatar, monetización, Constitución del Producto, arquitectura/BD/auth). Falta solo presentar el Plan Maestro final y esperar el OK del usuario para pasar a Sesión 2.
 
 ## Próximas sesiones 📋
-- Sesión 1 (completar): FICHA-AVATAR.md formal, decisiones de arquitectura/BD/auth, Plan Maestro aprobado
-- Sesión 2: Identidad visual y sistema de diseño (paleta, tipografía, FICHA-ARTE.md)
-- Sesión 3: Página de ventas
+- Sesión 2: Identidad visual y sistema de diseño (paleta, tipografía, 3 opciones A/B/C, FICHA-ARTE.md)
+- Sesión 3: Página de ventas (10 secciones canónicas)
 
 ## Problemas conocidos ⚠️
 - Ninguno por ahora
