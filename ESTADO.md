@@ -1,0 +1,88 @@
+# ESTADO — SuperErre
+Última actualización: 2026-08-04 | Sesión actual: 1
+
+⏸️ CHECKPOINT — Última acción completada: Instalación del SO + ingesta del RESUMEN FINAL validado (idea, avatar, propuesta de valor) / Siguiente acción exacta: Confirmar Plan Maestro con el usuario y arrancar Sesión 1 (Constitución del Producto, Avatar, monetización, arquitectura)
+
+## Qué es esta app (3 líneas máximo)
+App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante imitación de niños reales en video (peer modeling), ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
+
+## Promesa central
+"Ayudo a mamás de niños de 4 a 7 años con dificultad para decir la R a lograr que sus hijos suelten la lengua y pronuncien palabras como 'carro' y 'perro' con claridad en 15 días, sin tener que pelear todas las tardes con ejercicios aburridos frente al espejo ni pagar fortunas en terapias."
+
+## Reporte de validación (Sesión 1) — YA APORTADO POR EL USUARIO (RESUMEN FINAL validado, no se re-valida)
+- Veredicto: Excelente oportunidad — nicho desatendido en español (educación infantil + fonoaudiología)
+- Apps de referencia: Speech Blubs (cobros no autorizados $59.99, difícil cancelar), Pronunciar la R / Bzngr (UI anticuada, aburrida), Writing Wizard/LetterSchool (foco en trazado, no en articulación)
+- Lo que los usuarios odian de la competencia (nuestra oportunidad): cobros/suscripciones opacas y no autorizadas; apps repetitivas que aburren rápido; funciones ocultas tras muros de pago progresivos
+- Brecha LATAM confirmada: sí — mercado hispanohablante saturado de apps de trazado/estimulación general, pero sin herramienta enfocada 100% en destrabar la R con gamificación moderna y pago justo
+- Precio de referencia del mercado: $14.99/mes o $59.99/año (competencia) vs. nuestro pago único $19.99
+
+## Avatar y venta (Sesión 1 — NO cambiar sin validar)
+- FICHA-AVATAR.md: pendiente de crear formalmente en Sesión 1 (datos ya recolectados abajo)
+- Resumen: Carolina, 34 años, mamá LATAM clase media/media-alta, hijo Mateo (5) con rotacismo · dolor #1: culpa/impotencia al ver a su hijo burlado en el colegio por decir "cawo" en vez de "carro" · deseo #1: escuchar a su hijo decir "carro"/"perro" con claridad y orgullo · nivel de consciencia: Problem & Solution Aware (4/5) · sofisticación de mercado: alta (ya probó espejo, YouTube, apps con cobro sorpresa)
+- Objeciones clave: cobro sorpresa/suscripción oculta · miedo a que aburra en 3 días · "¿reemplaza terapeuta?" · privacidad de micrófono/cámara de su hijo
+- Razones de compra dominantes: 1) Escapar del dolor mental (culpa/miedo al bullying) 2) Evitar esfuerzo (el padre no sabe enseñar la biomecánica) 3) Ahorrar dinero (pago único vs. suscripción trampa)
+- Landing: pendiente — usará la ESTRUCTURA CANÓNICA de 10 secciones del 19
+
+## Estrategia de monetización (Sesión 1 — NO cambiar sin validar)
+- Modelo: Freemium con desbloqueo de pago único (decidido por el usuario en su investigación previa — se respeta, no se reabre)
+- Justificación: el dolor #1 del avatar es la desconfianza a cobros recurrentes ocultos; un pago único transparente elimina la objeción de compra más fuerte del nicho
+- Diseño del paywall: gratis = módulo de Praxias + Onomatopeyas iniciales; $19.99 USD pago único desbloquea Escalera Fonética completa + minijuegos + todos los niveles
+- Trial: freemium sin tarjeta de crédito (no es trial temporizado, es acceso gratuito limitado por funciones)
+- Pricing: $19.99 USD pago único (benchmark competencia: $14.99/mes o $59.99/año)
+
+## Gamificación y retención (Sesión 3 — el loop central)
+- Loop del hábito (Hooked): Gatillo notificación/rutina diaria → Acción imitar sonido/video corto → Recompensa filtro AR + stickers/fiesta visual → Inversión progreso en Escalera Fonética
+- Mecánicas elegidas: minijuego de recompensa (reventar globos/estrellas) desbloqueado cada 2 ejercicios; progreso visible en Escalera Fonética (RA-RE-RI-RO-RU)
+- Primera victoria que celebra el onboarding (<60s): "El Rugido del León" — imita el sonido frente al micrófono y activa filtro de León animado
+- Notificaciones de re-enganche: pendiente de diseñar en Sesión 4
+
+## Secuencia maestra de construcción (NO saltar)
+- Estado de la secuencia: Sesión 1 en curso (Constitución, Avatar, monetización, arquitectura)
+- Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
+- Landing: pendiente — protagonista: el "Rugido del León" (primera victoria) — CTA primario: pendiente
+- Onboarding: pendiente
+- Paywall: pendiente
+- Login/Auth: pendiente
+- App interna: pendiente — secciones: Praxias, Onomatopeyas/AR, Escalera Fonética, Minijuego (máx 4-5)
+- Servicios externos: pendiente — GitHub/Supabase/Vercel/Resend/dominio/Hotmart
+
+## Puertas de etapa (aprobacion antes de avanzar)
+- Landing: no iniciada
+- Onboarding: no iniciada
+- Paywall: no iniciada
+- Login/Auth: no iniciada
+- App interna: no iniciada
+- Servicios externos: bloqueados
+- Certificado /100: pendiente
+
+## Decisiones técnicas (NO re-discutir sin pedirlo el usuario)
+- Framework: Next.js (App Router) — decidido el 2026-08-04. Razón: la app necesita landing con SEO/conversión, API routes para webhook de Hotmart, y posible BFF si se usa IA — Next.js es el default del stack pineado (51) para este perfil.
+- Stack: scaffold canónico de 51-STACK-PINEADO.md (Next 16, Tailwind v4, shadcn/ui, Supabase con @supabase/ssr)
+- Features del MVP (orden de prioridad):
+  1. Gimnasia de Lengua (Praxias) — 5 rutinas en video corto con niños reales
+  2. Modo Onomatopeyas y Sonidos — imitación con activación de micrófono + filtros AR/stickers
+  3. Escalera Fonética (RA/RE/RI/RO/RU) — práctica progresiva de sílabas y palabras clave
+  4. Minijuego de Recompensa — se desbloquea tras completar 2 ejercicios
+- Qué NO construir todavía: reconocimiento de voz en la nube (usar detección local de audio/volumen), trazado de letras/caligrafía, paneles multi-paciente para clínicas
+- Modelo de IA: por definir en Sesión 1 (probablemente no crítico para el MVP — el filtro AR y detección de audio son locales, no requieren IA generativa)
+
+## Sesiones completadas ✅
+- Sesión 0 — Instalación del SO + git init — verificado 2026-08-04
+
+## Sesión en progreso 🔧
+- Sesión 1 — Constitución del Producto, Avatar, monetización y arquitectura — recolectando datos del RESUMEN FINAL del usuario, falta cerrar preguntas de Constitución (03) y presentar Plan Maestro
+
+## Próximas sesiones 📋
+- Sesión 1 (completar): FICHA-AVATAR.md formal, decisiones de arquitectura/BD/auth, Plan Maestro aprobado
+- Sesión 2: Identidad visual y sistema de diseño (paleta, tipografía, FICHA-ARTE.md)
+- Sesión 3: Página de ventas
+
+## Problemas conocidos ⚠️
+- Ninguno por ahora
+
+## Pendientes del usuario (acciones que el usuario debe hacer)
+- [ ] Ninguno todavía — se avisará cuando lleguemos a cuentas/dominio/claves (Sesión 6+)
+
+## Notas para la próxima sesión
+- El usuario ya trajo el RESUMEN FINAL VALIDADO + Perfil de Cliente Ideal (Carolina/Mateo) + Propuesta de Valor con las 10 razones de Jim Edwards. NO re-validar la idea ni re-investigar mercado — ya está hecho. Ir directo a completar B3 (Constitución) y presentar el Plan Maestro B5.
+- Verificar edad mínima de usuarios finales (niños 4-7) implica consideraciones COPPA/privacidad reforzadas — ya contemplado en el resumen (procesamiento 100% local de audio/cámara).
