@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: Segunda pasada de elevación — agregadas palabras reales de práctica (carro/perro/rana/ferrocarril/tenedor/guitarra) en hero (chips), Solución, Oferta y CTA final; 29 frases clave en negrita repartidas por toda la página para escaneo rápido de un padre. Build + typecheck limpios, verificado en navegador / Siguiente acción exacta: proponer Sesión 4 (onboarding + paywall + login)
+⏸️ CHECKPOINT — Última acción completada: Sección Oferta reforzada con anclaje de precio (comparación visual: fonoaudiólogo $40/sesión vs. otras apps $59.99/año vs. SuperErre $19.99 pago único) + tagline "la única app sin suscripciones engañosas" + descripción de "acceso ilimitado". Build + typecheck limpios, verificado en navegador / Siguiente acción exacta: proponer Sesión 4 (onboarding + paywall + login)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante la mascota animada "el León" que muestra dónde poner la lengua, ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
