@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MiniDemo } from "./MiniDemo";
+import { IconShieldCheck } from "./icons";
 
 export function Hero() {
   return (
@@ -24,7 +25,8 @@ export function Hero() {
             >
               Probar el Espejo gratis
             </Link>
-            <span className="text-sm text-txt-tertiary">
+            <span className="inline-flex items-center gap-2 text-sm text-txt-tertiary">
+              <IconShieldCheck className="h-4 w-4 text-brand-secondary shrink-0" />
               Sin tarjeta · Funciona 100% en el celular
             </span>
           </div>

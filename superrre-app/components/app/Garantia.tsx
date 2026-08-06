@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { IconShieldCheck } from "./icons";
 
 export function Garantia() {
@@ -19,6 +20,12 @@ export function Garantia() {
           <p className="mt-3 text-xs text-txt-tertiary">
             Respaldado por la política de reembolso de Hotmart (7 días).
           </p>
+          <Link
+            href="/onboarding"
+            className="mt-6 inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-sm px-6 py-3 shadow-md transition-colors"
+          >
+            Probar el Espejo gratis →
+          </Link>
         </div>
       </div>
     </section>

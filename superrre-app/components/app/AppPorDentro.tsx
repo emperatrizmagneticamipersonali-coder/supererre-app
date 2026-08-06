@@ -1,27 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { IconMirror, IconMic, IconCompass, IconCoin } from "./icons";
 
 const pantallas = [
   {
     nombre: "El Espejo del León",
     resultado: "Su primer rugido, en menos de un minuto",
     tono: "primary",
+    icon: IconMirror,
   },
   {
     nombre: "Isla de Praxias",
     resultado: "5 minutos de gimnasia de lengua, jugando",
     tono: "secondary",
+    icon: IconMic,
   },
   {
     nombre: "Mapa de Islas",
     resultado: "Su progreso, visible en un camino que quiere recorrer",
     tono: "accent",
+    icon: IconCompass,
   },
   {
     nombre: "Cofre de Premios",
     resultado: "La recompensa que se gana tras cada logro real",
     tono: "primary",
+    icon: IconCoin,
   },
 ] as const;
 
@@ -82,6 +88,11 @@ export function AppPorDentro() {
                 className={`h-96 rounded-xl border-4 border-txt-primary/90 overflow-hidden flex flex-col items-center justify-center text-center px-4 ${tono[p.tono].soft}`}
               >
                 <span
+                  className={`flex h-12 w-12 items-center justify-center rounded-full mb-4 text-txt-on-brand ${tono[p.tono].solid}`}
+                >
+                  <p.icon className="h-6 w-6" />
+                </span>
+                <span
                   className={`text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4 text-txt-on-brand ${tono[p.tono].solid}`}
                 >
                   Próximamente
@@ -106,6 +117,15 @@ export function AppPorDentro() {
               }`}
             />
           ))}
+        </div>
+
+        <div className="mt-9 text-center">
+          <Link
+            href="/onboarding"
+            className="inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-sm px-6 py-3 shadow-md transition-colors"
+          >
+            Probar el Espejo gratis →
+          </Link>
         </div>
       </div>
     </section>

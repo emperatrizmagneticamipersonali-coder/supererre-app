@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: Sesión 3 (página de ventas) CERRADA — landing con las 10 secciones canónicas verificada: build limpio, eslint sin errores, linter de diseño del SO sin violaciones, renderizado confirmado en el navegador (dev server en localhost:3000) / Siguiente acción exacta: presentar cierre al usuario y proponer arrancar Sesión 4 (onboarding + paywall + login)
+⏸️ CHECKPOINT — Última acción completada: Elevación de la landing a estándar premium/escaneable — FICHA-AVATAR.md creada formalmente, espejo del león agrandado (192px + decoraciones) como ancla visual del hero, íconos añadidos a Agitación/Solución/App-por-dentro/CTA-final/FAQ, párrafos largos convertidos en bloques escaneables, CTAs repetidos tras mecanismo/carrusel/garantía (7 CTAs a /onboarding en total). Build + typecheck + eslint limpios, verificado sin overflow horizontal a 375px / Siguiente acción exacta: proponer Sesión 4 (onboarding + paywall + login)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante la mascota animada "el León" que muestra dónde poner la lengua, ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
