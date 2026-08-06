@@ -13,12 +13,16 @@ export function CtaFinal() {
       <div className="mx-auto max-w-2xl px-5 sm:px-8 text-center">
         <span className="text-5xl mb-4 inline-block">🦁💛</span>
         <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-txt-primary text-balance">
-          Imagina la próxima vez que pida un jugo…
+          Imagina la próxima vez que diga &ldquo;perro&rdquo; sin
+          pensarlo…
         </h2>
         <p className="mt-4 text-lg text-txt-secondary leading-relaxed">
-          Y diga &ldquo;jugo de fresa&rdquo;, clarito, sin pensarlo. Sé la
-          mamá que encontró la forma de ayudarlo sin pelear ni gastar de
-          más.
+          O &ldquo;carro&rdquo;. O hasta &ldquo;ferrocarril&rdquo;.{" "}
+          <strong className="text-txt-primary font-semibold">
+            Clarito, con la R bien puesta.
+          </strong>{" "}
+          Sé la mamá que encontró la forma de ayudarlo sin pelear ni
+          gastar de más.
         </p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -43,7 +47,7 @@ export function CtaFinal() {
         <p className="mt-10 text-xs text-txt-tertiary leading-relaxed max-w-md mx-auto">
           PS: SuperErre convierte la práctica de la R en 5 minutos de
           juego con el Espejo del León. Empiezas gratis, desbloqueas todo
-          por $19.99 una sola vez, y si en 7 días tu hijo no logra su
+          por <strong className="text-txt-secondary font-semibold">$19.99 una sola vez</strong>, y si en 7 días tu hijo no logra su
           primer intento real de sonido, te devolvemos el pago.
         </p>
       </div>

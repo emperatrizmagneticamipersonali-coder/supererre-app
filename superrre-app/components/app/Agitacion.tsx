@@ -19,8 +19,11 @@ export function Agitacion() {
                 10-15 min diarios
               </p>
               <p className="text-sm text-txt-secondary mt-1">
-                de pelea que terminan igual: él frustrado, tú con culpa, y
-                la R sigue sin salir.
+                de pelea que terminan igual: él frustrado, tú con culpa, y{" "}
+                <strong className="text-txt-primary font-semibold">
+                  la R sigue sin salir
+                </strong>
+                .
               </p>
             </div>
           </div>
@@ -35,7 +38,11 @@ export function Agitacion() {
               </p>
               <p className="text-sm text-txt-secondary mt-1">
                 Mateo entra a primaria diciendo &ldquo;cawo&rdquo; — y
-                ahora también debe leer y escribir esa letra.
+                ahora también debe{" "}
+                <strong className="text-txt-primary font-semibold">
+                  leer y escribir esa letra
+                </strong>
+                .
               </p>
             </div>
           </div>

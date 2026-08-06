@@ -13,9 +13,16 @@ export function Garantia() {
             La Garantía del Primer Rugido
           </h2>
           <p className="mt-4 text-sm text-txt-secondary leading-relaxed">
-            Si en 7 días tu hijo no logra su primer intento real de sonido
-            con el Espejo del León, te devolvemos el pago. Un correo, sin
-            preguntas, sin formularios.
+            Si en{" "}
+            <strong className="text-txt-primary font-semibold">
+              7 días
+            </strong>{" "}
+            tu hijo no logra su primer intento real de sonido con el
+            Espejo del León,{" "}
+            <strong className="text-txt-primary font-semibold">
+              te devolvemos el pago
+            </strong>
+            . Un correo, sin preguntas, sin formularios.
           </p>
           <p className="mt-3 text-xs text-txt-tertiary">
             Respaldado por la política de reembolso de Hotmart (7 días).

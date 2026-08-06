@@ -14,27 +14,71 @@ const preguntas = [
   {
     icon: IconCoin,
     q: "¿Me van a cobrar de más sin avisar, como otras apps?",
-    a: "No. SuperErre es un pago único de $19.99, una sola vez. Sin suscripción, sin renovación automática, sin sorpresas en la tarjeta.",
+    a: (
+      <>
+        No. SuperErre es un{" "}
+        <strong className="text-txt-primary font-semibold">
+          pago único de $19.99, una sola vez
+        </strong>
+        . Sin suscripción, sin renovación automática, sin sorpresas en la
+        tarjeta.
+      </>
+    ),
   },
   {
     icon: IconMirror,
     q: "¿Mi hijo va a perder el interés en 3 días?",
-    a: "Cada sesión dura 5 minutos y desbloquea algo nuevo — un filtro, una isla, un minijuego. No es la repetición sin fin que cansa a los niños en otras apps.",
+    a: (
+      <>
+        Cada sesión dura{" "}
+        <strong className="text-txt-primary font-semibold">
+          5 minutos
+        </strong>{" "}
+        y desbloquea algo nuevo — un filtro, una isla, un minijuego. No es
+        la repetición sin fin que cansa a los niños en otras apps.
+      </>
+    ),
   },
   {
     icon: IconGraduation,
     q: "¿Reemplaza a un fonoaudiólogo?",
-    a: "No. Es una herramienta de práctica diaria en casa. Si el rotacismo persiste más allá de los 6-7 años, sigue siendo importante consultar a un especialista.",
+    a: (
+      <>
+        No. Es una{" "}
+        <strong className="text-txt-primary font-semibold">
+          herramienta de práctica diaria en casa
+        </strong>
+        . Si el rotacismo persiste más allá de los 6-7 años, sigue siendo
+        importante consultar a un especialista.
+      </>
+    ),
   },
   {
     icon: IconEye,
     q: "¿Es seguro que use el micrófono y la cámara de mi hijo?",
-    a: "Sí. Todo el audio y el video se procesan dentro del celular — nunca se suben a internet ni se guardan en ningún servidor.",
+    a: (
+      <>
+        Sí. Todo el audio y el video se procesan{" "}
+        <strong className="text-txt-primary font-semibold">
+          dentro del celular
+        </strong>{" "}
+        — nunca se suben a internet ni se guardan en ningún servidor.
+      </>
+    ),
   },
   {
     icon: IconShieldCheck,
     q: "¿Y si no funciona para mi hijo?",
-    a: "Tienes la Garantía del Primer Rugido: si en 7 días no ves su primer intento real de sonido, te devolvemos el pago completo.",
+    a: (
+      <>
+        Tienes la Garantía del Primer Rugido: si en 7 días no ves su
+        primer intento real de sonido,{" "}
+        <strong className="text-txt-primary font-semibold">
+          te devolvemos el pago completo
+        </strong>
+        .
+      </>
+    ),
   },
 ];
 

@@ -2,7 +2,11 @@ import Link from "next/link";
 import { IconCheck, IconLock } from "./icons";
 
 const stack = [
-  { linea: "Escalera Fonética completa (RA, RE, RI, RO, RU)", valor: "$40" },
+  {
+    linea: "Escalera Fonética completa (RA, RE, RI, RO, RU)",
+    valor: "$40",
+    ejemplo: "carro · perro · rana · ferrocarril · tenedor · guitarra",
+  },
   { linea: "Modo Pirata — sonidos y onomatopeyas extra", valor: "$15" },
   { linea: "Minijuegos de recompensa ilimitados", valor: "$20" },
   { linea: "Acceso de por vida, sin suscripción", valor: "$10" },
@@ -22,8 +26,11 @@ export function Oferta() {
           Un precio justo, una sola vez
         </h2>
         <p className="mt-3 text-center text-txt-secondary max-w-md mx-auto">
-          Sin suscripción mensual, sin cobros sorpresa. Empiezas gratis y
-          decides si desbloqueas todo.
+          Sin suscripción mensual,{" "}
+          <strong className="text-txt-primary font-semibold">
+            sin cobros sorpresa
+          </strong>
+          . Empiezas gratis y decides si desbloqueas todo.
         </p>
 
         <div className="mt-10 grid sm:grid-cols-2 gap-5 items-stretch">
@@ -80,15 +87,19 @@ export function Oferta() {
             </p>
             <ul className="mt-6 space-y-3 flex-1">
               {stack.map((s) => (
-                <li
-                  key={s.linea}
-                  className="flex items-start justify-between gap-2 text-sm text-txt-primary"
-                >
-                  <span className="flex items-start gap-2">
-                    <IconCheck className="h-4 w-4 mt-1 text-brand-primary shrink-0" />
-                    {s.linea}
-                  </span>
-                  <span className="text-txt-tertiary shrink-0">{s.valor}</span>
+                <li key={s.linea}>
+                  <div className="flex items-start justify-between gap-2 text-sm text-txt-primary">
+                    <span className="flex items-start gap-2">
+                      <IconCheck className="h-4 w-4 mt-1 text-brand-primary shrink-0" />
+                      <strong className="font-semibold">{s.linea}</strong>
+                    </span>
+                    <span className="text-txt-tertiary shrink-0">{s.valor}</span>
+                  </div>
+                  {s.ejemplo && (
+                    <p className="pl-6 mt-1 text-xs text-txt-tertiary">
+                      {s.ejemplo}
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>

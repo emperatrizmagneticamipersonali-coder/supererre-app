@@ -9,28 +9,60 @@ import {
 const dolores = [
   {
     icon: IconHeartCrack,
-    texto:
-      '¿Tu hijo dice "cawo" en vez de "carro" y sientes que se burlan de él en el cole?',
+    texto: (
+      <>
+        ¿Tu hijo dice &ldquo;cawo&rdquo; en vez de{" "}
+        <strong className="font-semibold">&ldquo;carro&rdquo;</strong> y
+        sientes que <strong className="font-semibold">se burlan de él</strong>{" "}
+        en el cole?
+      </>
+    ),
   },
   {
     icon: IconMic,
-    texto:
-      '¿Le pides que repita "perro" y termina llorando: "¡no puedo, no me sale!"?',
+    texto: (
+      <>
+        ¿Le pides que repita &ldquo;perro&rdquo; y termina llorando:{" "}
+        <strong className="font-semibold">
+          &ldquo;¡no puedo, no me sale!&rdquo;
+        </strong>
+        ?
+      </>
+    ),
   },
   {
     icon: IconMirror,
-    texto:
-      "¿Ya lo intentaste frente al espejo y ni tú sabes bien dónde va la lengua por dentro?",
+    texto: (
+      <>
+        ¿Ya lo intentaste frente al espejo y ni tú sabes bien{" "}
+        <strong className="font-semibold">dónde va la lengua</strong> por
+        dentro?
+      </>
+    ),
   },
   {
     icon: IconAlarmClock,
-    texto:
-      "¿Te da miedo que entre a primaria sin poder pronunciar ni escribir bien la R?",
+    texto: (
+      <>
+        ¿Te da miedo que entre a primaria{" "}
+        <strong className="font-semibold">
+          sin poder pronunciar ni escribir bien la R
+        </strong>
+        ?
+      </>
+    ),
   },
   {
     icon: IconCoin,
-    texto:
-      'Bajaste una app "gratis" y al séptimo día te cobraron $60 dólares sin avisar?',
+    texto: (
+      <>
+        Bajaste una app &ldquo;gratis&rdquo; y al séptimo día te{" "}
+        <strong className="font-semibold">
+          cobraron $60 dólares sin avisar
+        </strong>
+        ?
+      </>
+    ),
   },
 ];
 

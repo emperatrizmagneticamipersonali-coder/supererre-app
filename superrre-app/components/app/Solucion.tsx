@@ -6,22 +6,46 @@ const pasos = [
     n: "1",
     icon: IconEye,
     titulo: "Ve al León mostrar el truco",
-    texto:
-      'Tu hijo toca la pantalla y ve al León animado hacer el sonido "¡GRRR!", mostrando paso a paso dónde poner la lengua.',
+    texto: (
+      <>
+        Tu hijo toca la pantalla y ve al León animado hacer el sonido
+        &ldquo;¡GRRR!&rdquo;, mostrando paso a paso{" "}
+        <strong className="font-semibold text-txt-primary">
+          dónde poner la lengua
+        </strong>
+        .
+      </>
+    ),
   },
   {
     n: "2",
     icon: IconMic,
     titulo: "Imita frente al Espejo",
-    texto:
-      "Repite el sonido frente al Espejo del León — el micrófono detecta el intento, siempre en el celular, nunca en internet.",
+    texto: (
+      <>
+        Repite el sonido frente al Espejo del León — el micrófono detecta
+        el intento, siempre en el celular,{" "}
+        <strong className="font-semibold text-txt-primary">
+          nunca en internet
+        </strong>
+        .
+      </>
+    ),
   },
   {
     n: "3",
     icon: IconSparkles,
-    titulo: "Gana su primera estrella",
-    texto:
-      "La pantalla se llena de fiesta, el filtro de león se activa sobre su cara, y consigue su primer logro visible.",
+    titulo: "Practica palabras reales",
+    texto: (
+      <>
+        Avanza por la Escalera Fonética diciendo{" "}
+        <strong className="font-semibold text-txt-primary">
+          &ldquo;carro&rdquo;, &ldquo;perro&rdquo;, &ldquo;rana&rdquo;
+        </strong>{" "}
+        y hasta &ldquo;ferrocarril&rdquo;, ganando una estrella por cada
+        logro.
+      </>
+    ),
   },
 ];
 
@@ -37,8 +61,11 @@ export function Solucion() {
             <strong className="text-txt-primary font-semibold">
               El Espejo del León
             </strong>{" "}
-            resuelve esto mostrándole a tu hijo, con animación clara, dónde
-            va la lengua.
+            resuelve esto mostrándole a tu hijo, con animación clara,{" "}
+            <strong className="text-txt-primary font-semibold">
+              dónde va la lengua
+            </strong>
+            .
           </p>
         </div>
 
@@ -87,8 +114,10 @@ export function Solucion() {
               </p>
             </div>
             <p className="text-sm text-txt-on-secondary-soft leading-relaxed">
-              Tu hijo sigue al León paso a paso, y en minutos logra su
-              primer intento real de R.
+              Tu hijo sigue al León paso a paso, y en minutos dice{" "}
+              <strong className="font-semibold">&ldquo;carro&rdquo;</strong>{" "}
+              o <strong className="font-semibold">&ldquo;perro&rdquo;</strong>{" "}
+              con su primer intento real de R.
             </p>
           </div>
         </div>

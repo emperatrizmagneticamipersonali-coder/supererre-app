@@ -14,10 +14,31 @@ export function Hero() {
             De &ldquo;cawo&rdquo; a &ldquo;carro&rdquo; en 15 días
           </h1>
           <p className="mt-5 text-lg text-txt-secondary max-w-md leading-relaxed">
-            El Espejo del León le muestra a tu hijo, con animación paso a
-            paso, cómo mover la lengua — 5 minutos al día, sin pelear
-            frente al espejo.
+            <strong className="text-txt-primary font-semibold">
+              El Espejo del León
+            </strong>{" "}
+            le muestra a tu hijo, con animación paso a paso, cómo mover la
+            lengua —{" "}
+            <strong className="text-txt-primary font-semibold">
+              5 minutos al día
+            </strong>
+            , sin pelear frente al espejo.
           </p>
+
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold text-txt-tertiary uppercase tracking-wide mr-1">
+              Practica con:
+            </span>
+            {["carro", "perro", "rana", "ferrocarril"].map((palabra) => (
+              <span
+                key={palabra}
+                className="rounded-full bg-surface-secondary text-txt-primary text-sm font-bold px-3 py-1"
+              >
+                {palabra}
+              </span>
+            ))}
+          </div>
+
           <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:items-center">
             <Link
               href="/onboarding"
@@ -27,7 +48,7 @@ export function Hero() {
             </Link>
             <span className="inline-flex items-center gap-2 text-sm text-txt-tertiary">
               <IconShieldCheck className="h-4 w-4 text-brand-secondary shrink-0" />
-              Sin tarjeta · Funciona 100% en el celular
+              Sin tarjeta · Funciona <strong className="text-txt-primary font-semibold">100% en el celular</strong>
             </span>
           </div>
         </div>
