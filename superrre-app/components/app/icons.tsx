@@ -118,6 +118,39 @@ export function IconSparkles({ className }: IconProps) {
   );
 }
 
+export function IconChevronLeft({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+      <path d="m15 6-6 6 6 6" className={base} />
+    </svg>
+  );
+}
+
+export function IconX({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 6l12 12M18 6 6 18" className={base} />
+    </svg>
+  );
+}
+
+export function IconMail({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2" className={base} />
+      <path d="m4 7 8 6 8-6" className={base} />
+    </svg>
+  );
+}
+
+export function IconStar({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3.5 14.5 9l6 .8-4.4 4 1.2 5.9L12 16.9 6.7 19.7l1.2-5.9-4.4-4 6-.8L12 3.5Z" className={base} />
+    </svg>
+  );
+}
+
 export function IconEye({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

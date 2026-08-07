@@ -1,7 +1,7 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Última acción completada: Sección Oferta reforzada con anclaje de precio (comparación visual: fonoaudiólogo $40/sesión vs. otras apps $59.99/año vs. SuperErre $19.99 pago único) + tagline "la única app sin suscripciones engañosas" + descripción de "acceso ilimitado". Build + typecheck limpios, verificado en navegador / Siguiente acción exacta: proponer Sesión 4 (onboarding + paywall + login)
+⏸️ CHECKPOINT — Sesión 4 CERRADA: onboarding + paywall + login construidos y probados de punta a punta en el navegador (nombre → edad → dolor → reconocimiento personalizado → loading "construyendo el mundo de X" → primera victoria interactiva (Rugido del León) → celebración → paywall con plan gratis/completo → puerta de adulto (challenge matemático) → login con magic link mock, estados enviando/enviado/reenvío con cooldown). Build + typecheck + eslint limpios, sin overflow a 375px. Rutas: /onboarding, /login. Modelo pago único (no trial/mensual) reflejado correctamente en el paywall / Siguiente acción exacta: proponer Sesión 5 (app interna: Praxias, Onomatopeyas/AR, Escalera Fonética, Minijuego)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante la mascota animada "el León" que muestra dónde poner la lengua, ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
@@ -52,20 +52,20 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Notificaciones de re-enganche: pendiente de diseñar en Sesión 4
 
 ## Secuencia maestra de construcción (NO saltar)
-- Estado de la secuencia: Sesión 1 en curso (Constitución, Avatar, monetización, arquitectura)
-- Ruta aprobada: `/` → `/onboarding` → `/paywall` → `/login` → `/app`
-- Landing: pendiente — protagonista: el "Rugido del León" (primera victoria) — CTA primario: pendiente
-- Onboarding: pendiente
-- Paywall: pendiente
-- Login/Auth: pendiente
+- Estado de la secuencia: Sesión 4 cerrada — lista para Sesión 5 (app interna)
+- Ruta aprobada: `/` → `/onboarding` (incluye paywall y gate de adulto embebidos) → `/login` → `/app`
+- Landing: construida y verificada — protagonista: el Espejo del León (primera victoria) — CTA primario: "Probar el Espejo gratis"
+- Onboarding: construido y verificado — nombre → edad → dolor → reconocimiento → loading → primera victoria → celebración
+- Paywall: construido y verificado (embebido al final del onboarding) — Gratis vs. Espejo Completo $19.99 pago único, con puerta de adulto antes del CTA de pago
+- Login/Auth: construido y verificado (UI con mock de magic link — Supabase real se conecta en Sesión 6)
 - App interna: pendiente — secciones: Praxias, Onomatopeyas/AR, Escalera Fonética, Minijuego (máx 4-5)
 - Servicios externos: pendiente — GitHub/Supabase/Vercel/Resend/dominio/Hotmart
 
 ## Puertas de etapa (aprobacion antes de avanzar)
-- Landing: no iniciada
-- Onboarding: no iniciada
-- Paywall: no iniciada
-- Login/Auth: no iniciada
+- Landing: aprobada — verificada en navegador con el usuario a lo largo de varias iteraciones
+- Onboarding: aprobada — probada de punta a punta en navegador (nombre/edad/dolor/reconocimiento/loading/victoria/celebración)
+- Paywall: aprobada — probada en navegador, personalización con nombre confirmada
+- Login/Auth: aprobada (UI) — mock de magic link probado (estados enviando/enviado/reenvío)
 - App interna: no iniciada
 - Servicios externos: bloqueados
 - Certificado /100: pendiente
