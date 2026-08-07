@@ -18,6 +18,7 @@ type Step =
   | "nombre"
   | "edad"
   | "dolor"
+  | "interes"
   | "reconocimiento"
   | "loading"
   | "victoria"
@@ -34,6 +35,18 @@ const DOLORES = [
   "No estoy segura, por eso estoy aquí",
 ];
 
+const NIVEL_POR_DOLOR: Record<string, string> = {
+  "Dice L o W en vez de R (“cawo”, “lolo”)": "Sustitución de sonido",
+  "No pronuncia la R en ninguna palabra": "Punto de partida",
+  "A veces sí, a veces no": "En transición",
+  "No estoy segura, por eso estoy aquí": "Primer diagnóstico",
+};
+
+const INTERESES = [
+  { id: "leon", label: "Los leones y animales feroces", emoji: "🦁" },
+  { id: "pirata", label: "Los piratas y los tesoros", emoji: "🏴‍☠️" },
+] as const;
+
 const LOADING_LINES = (nombre: string, edad: string) => [
   `Preparando el mundo de ${nombre}`,
   `Ajustando los ejercicios a sus ${edad}`,
@@ -49,6 +62,7 @@ export function OnboardingFlow() {
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState("");
   const [dolor, setDolor] = useState("");
+  const [interes, setInteres] = useState<(typeof INTERESES)[number]["id"] | "">("");
   const [victoriaStage, setVictoriaStage] = useState<
     "idle" | "playing" | "done"
   >("idle");
@@ -84,7 +98,7 @@ export function OnboardingFlow() {
 
       {step === "edad" && (
         <>
-          <FunnelHeader progress={45} onBack={() => setStep("nombre")} />
+          <FunnelHeader progress={35} onBack={() => setStep("nombre")} />
           <StepEdad
             nombre={nombre}
             value={edad}
@@ -98,11 +112,25 @@ export function OnboardingFlow() {
 
       {step === "dolor" && (
         <>
-          <FunnelHeader progress={72} onBack={() => setStep("edad")} />
+          <FunnelHeader progress={58} onBack={() => setStep("edad")} />
           <StepDolor
             value={dolor}
             onSelect={(v) => {
               setDolor(v);
+              setTimeout(() => setStep("interes"), 320);
+            }}
+          />
+        </>
+      )}
+
+      {step === "interes" && (
+        <>
+          <FunnelHeader progress={80} onBack={() => setStep("dolor")} />
+          <StepInteres
+            nombre={nombre}
+            value={interes}
+            onSelect={(v) => {
+              setInteres(v);
               setTimeout(() => setStep("reconocimiento"), 320);
             }}
           />
@@ -111,9 +139,10 @@ export function OnboardingFlow() {
 
       {step === "reconocimiento" && (
         <>
-          <FunnelHeader progress={95} onBack={() => setStep("dolor")} />
+          <FunnelHeader progress={96} onBack={() => setStep("interes")} />
           <StepReconocimiento
             nombre={nombre}
+            nivel={NIVEL_POR_DOLOR[dolor] || "Primer diagnóstico"}
             onNext={() => setStep("loading")}
           />
         </>
@@ -146,6 +175,8 @@ export function OnboardingFlow() {
       {step === "paywall" && (
         <StepPaywall
           nombre={nombre}
+          nivel={NIVEL_POR_DOLOR[dolor] || "Primer diagnóstico"}
+          interes={interes}
           onGratis={() => irALogin("free")}
           onCompleto={() => setStep("gate")}
           onCerrar={() => router.push("/")}
@@ -276,23 +307,61 @@ function StepDolor({
   );
 }
 
+/* ============ Paso: Interés del niño (para personalizar el mapa) ============ */
+function StepInteres({
+  nombre,
+  value,
+  onSelect,
+}: {
+  nombre: string;
+  value: string;
+  onSelect: (v: (typeof INTERESES)[number]["id"]) => void;
+}) {
+  const n = nombre || "tu hijo";
+  return (
+    <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
+      <h1 className="font-display font-extrabold text-3xl text-txt-primary leading-tight text-balance">
+        ¿Qué le apasiona más a {n}?
+      </h1>
+      <p className="mt-2 text-sm text-txt-secondary">
+        Elegimos con esto qué mundo abre primero en su Mapa de Islas.
+      </p>
+      <div className="mt-8 flex flex-col gap-3">
+        {INTERESES.map((i) => (
+          <Chip
+            key={i.id}
+            label={`${i.emoji}  ${i.label}`}
+            selected={value === i.id}
+            onClick={() => onSelect(i.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ============ Paso: Reconocimiento ============ */
 function StepReconocimiento({
   nombre,
+  nivel,
   onNext,
 }: {
   nombre: string;
+  nivel: string;
   onNext: () => void;
 }) {
   const n = nombre || "tu hijo";
   return (
     <div className="flex-1 flex flex-col px-5 pt-10 pb-6 text-center items-center animate-fade-up">
-      <span className="text-6xl mb-6">🦁</span>
-      <h1 className="font-display font-extrabold text-2xl text-txt-primary text-balance">
+      <span className="text-6xl mb-4">🦁</span>
+      <span className="inline-flex items-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-xs font-bold px-3 py-2 mb-2">
+        Nivel de {n}: {nivel}
+      </span>
+      <h1 className="mt-2 font-display font-extrabold text-2xl text-txt-primary text-balance">
         Buena noticia
       </h1>
       <p className="mt-4 text-base text-txt-secondary leading-relaxed max-w-sm">
-        No es que {n} sea perezoso:{" "}
+        No es pereza de {n}:{" "}
         <strong className="text-txt-primary font-semibold">
           el sonido de la R esconde un movimiento de la lengua que casi
           nadie le explica bien
@@ -512,16 +581,24 @@ function StepCelebracion({
 /* ============ Paso: Paywall ============ */
 function StepPaywall({
   nombre,
+  nivel,
+  interes,
   onGratis,
   onCompleto,
   onCerrar,
 }: {
   nombre: string;
+  nivel: string;
+  interes: string;
   onGratis: () => void;
   onCompleto: () => void;
   onCerrar: () => void;
 }) {
   const n = nombre || "tu hijo";
+  const bulletTema =
+    interes === "pirata"
+      ? `El Modo Pirata de ${n} desbloqueado, con mapas y tesoros`
+      : `Más aventuras con su León en el Mapa de Islas`;
   return (
     <div className="flex-1 flex flex-col px-5 pt-4 pb-8 overflow-y-auto">
       <button
@@ -536,13 +613,14 @@ function StepPaywall({
         El Plan de {n} está listo
       </h1>
       <p className="mt-2 text-sm text-txt-secondary">
-        Hecho con sus respuestas de hoy.
+        Nivel: <strong className="text-txt-primary font-semibold">{nivel}</strong> · hecho con sus respuestas de hoy.
       </p>
 
       <div className="mt-6 rounded-2xl bg-surface-secondary p-5 space-y-3">
         {[
           `Ejercicios ajustados a la edad de ${n}`,
           "El Espejo del León y su primer rugido, ya guardados",
+          bulletTema,
           "Escalera Fonética completa: carro, perro, rana, ferrocarril",
         ].map((b) => (
           <div key={b} className="flex items-start gap-3">
