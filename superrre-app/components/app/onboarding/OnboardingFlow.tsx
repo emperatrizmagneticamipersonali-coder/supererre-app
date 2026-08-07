@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FunnelHeader } from "./FunnelHeader";
 import { Chip } from "./Chip";
+import { MascotBubble } from "./MascotBubble";
 import {
   IconCheck,
   IconPlay,
@@ -12,6 +13,7 @@ import {
   IconX,
   IconShieldCheck,
   IconCoin,
+  IconMic,
 } from "../icons";
 
 type Step =
@@ -63,9 +65,6 @@ export function OnboardingFlow() {
   const [edad, setEdad] = useState("");
   const [dolor, setDolor] = useState("");
   const [interes, setInteres] = useState<(typeof INTERESES)[number]["id"] | "">("");
-  const [victoriaStage, setVictoriaStage] = useState<
-    "idle" | "playing" | "done"
-  >("idle");
   const [gateOptions] = useState(() => {
     const correct = GATE_CHALLENGE.a + GATE_CHALLENGE.b;
     const opts = [correct - 3, correct, correct + 4].sort(
@@ -157,15 +156,7 @@ export function OnboardingFlow() {
       )}
 
       {step === "victoria" && (
-        <StepVictoria
-          nombre={nombre}
-          stage={victoriaStage}
-          onPlay={() => {
-            setVictoriaStage("playing");
-            setTimeout(() => setVictoriaStage("done"), 1400);
-          }}
-          onNext={() => setStep("celebracion")}
-        />
+        <StepVictoria nombre={nombre} onDone={() => setStep("celebracion")} />
       )}
 
       {step === "celebracion" && (
@@ -219,10 +210,8 @@ function StepNombre({
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
-      <h1 className="font-display font-extrabold text-3xl text-txt-primary leading-tight text-balance">
-        ¿Cómo se llama tu hijo o hija?
-      </h1>
-      <p className="mt-2 text-sm text-txt-secondary">
+      <MascotBubble>¿Cómo se llama tu hijo o hija?</MascotBubble>
+      <p className="mt-3 pl-16 text-sm text-txt-secondary">
         Vamos a personalizar todo con su nombre.
       </p>
       <input
@@ -260,9 +249,7 @@ function StepEdad({
 }) {
   return (
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
-      <h1 className="font-display font-extrabold text-3xl text-txt-primary leading-tight text-balance">
-        ¿Cuántos años tiene {nombre || "tu hijo"}?
-      </h1>
+      <MascotBubble>¿Cuántos años tiene {nombre || "tu hijo"}?</MascotBubble>
       <div className="mt-8 flex flex-col gap-3">
         {EDADES.map((e) => (
           <Chip
@@ -287,10 +274,8 @@ function StepDolor({
 }) {
   return (
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
-      <h1 className="font-display font-extrabold text-3xl text-txt-primary leading-tight text-balance">
-        ¿Cómo dice la R hoy?
-      </h1>
-      <p className="mt-2 text-sm text-txt-secondary">
+      <MascotBubble>¿Cómo dice la R hoy?</MascotBubble>
+      <p className="mt-3 pl-16 text-sm text-txt-secondary">
         Esto nos ayuda a armar sus primeros ejercicios.
       </p>
       <div className="mt-8 flex flex-col gap-3">
@@ -320,10 +305,8 @@ function StepInteres({
   const n = nombre || "tu hijo";
   return (
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
-      <h1 className="font-display font-extrabold text-3xl text-txt-primary leading-tight text-balance">
-        ¿Qué le apasiona más a {n}?
-      </h1>
-      <p className="mt-2 text-sm text-txt-secondary">
+      <MascotBubble>¿Qué le apasiona más a {n}?</MascotBubble>
+      <p className="mt-3 pl-16 text-sm text-txt-secondary">
         Elegimos con esto qué mundo abre primero en su Mapa de Islas.
       </p>
       <div className="mt-8 flex flex-col gap-3">
@@ -353,7 +336,13 @@ function StepReconocimiento({
   const n = nombre || "tu hijo";
   return (
     <div className="flex-1 flex flex-col px-5 pt-10 pb-6 text-center items-center animate-fade-up">
-      <span className="text-6xl mb-4">🦁</span>
+      <div className="flex items-end gap-2 mb-4" aria-hidden="true">
+        <span className="text-7xl">🦁</span>
+        <span className="text-4xl mb-1">🦁</span>
+      </div>
+      <p className="text-xs text-txt-tertiary -mt-3 mb-1">
+        {n} y su León guía
+      </p>
       <span className="inline-flex items-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-xs font-bold px-3 py-2 mb-2">
         Nivel de {n}: {nivel}
       </span>
@@ -425,19 +414,36 @@ function StepLoading({
       aria-live="polite"
       aria-busy={pct < 100}
     >
+      <div className="relative flex items-end justify-center gap-3">
+        <div className="h-32 w-24 rounded-2xl border-4 border-txt-primary/90 bg-brand-secondary-soft flex items-center justify-center overflow-hidden">
+          <span className="text-4xl animate-breathe" aria-hidden="true">
+            🗺️
+          </span>
+        </div>
+        <span className="text-6xl -ml-2 animate-float-slow" aria-hidden="true">
+          🦁
+        </span>
+        <span
+          className="absolute -top-4 -right-2 text-2xl animate-float-slow-alt"
+          aria-hidden="true"
+        >
+          ✨
+        </span>
+      </div>
+
       <div
-        className="relative h-32 w-32 rounded-full flex items-center justify-center"
+        className="relative h-24 w-24 rounded-full flex items-center justify-center mt-6"
         style={{
           background: `conic-gradient(var(--brand-primary) ${pct * 3.6}deg, var(--surface-tertiary) 0deg)`,
         }}
       >
-        <div className="h-24 w-24 rounded-full bg-surface-base flex items-center justify-center">
-          <span className="font-display font-extrabold text-2xl text-txt-primary tabular-nums">
+        <div className="h-16 w-16 rounded-full bg-surface-base flex items-center justify-center">
+          <span className="font-display font-extrabold text-lg text-txt-primary tabular-nums">
             {Math.round(pct)}%
           </span>
         </div>
       </div>
-      <h1 className="mt-8 font-display font-bold text-xl text-txt-primary">
+      <h1 className="mt-6 font-display font-bold text-xl text-txt-primary">
         Construyendo el mundo de {nombre || "tu hijo"}…
       </h1>
       <div className="mt-8 flex flex-col gap-3 items-start w-full max-w-xs">
@@ -474,27 +480,113 @@ function StepLoading({
   );
 }
 
-/* ============ Paso: Primera Victoria (El Rugido del León) ============ */
+/* ============ Paso: Primera Victoria (El Rugido del León, con micrófono real) ============ */
+type VictoriaStage =
+  | "idle"
+  | "pidiendo-permiso"
+  | "escuchando"
+  | "detectado"
+  | "sin-microfono";
+
+const UMBRAL_RUGIDO = 32; // volumen RMS (0-100) que cuenta como "rugido"
+const SOSTENER_MS = 350; // cuánto debe durar el sonido para contar como intento real
+
 function StepVictoria({
   nombre,
-  stage,
-  onPlay,
-  onNext,
+  onDone,
 }: {
   nombre: string;
-  stage: "idle" | "playing" | "done";
-  onPlay: () => void;
-  onNext: () => void;
+  onDone: () => void;
 }) {
+  const [stage, setStage] = useState<VictoriaStage>("idle");
+  const [nivelVoz, setNivelVoz] = useState(0);
+
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const sostenidoDesdeRef = useRef<number | null>(null);
+
+  function detener() {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    audioCtxRef.current?.close().catch(() => {});
+    streamRef.current = null;
+    audioCtxRef.current = null;
+  }
+
+  useEffect(() => () => detener(), []);
+
+  async function empezarAEscuchar() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setStage("sin-microfono");
+      return;
+    }
+    setStage("pidiendo-permiso");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      streamRef.current = stream;
+      const ctx = new AudioContext();
+      audioCtxRef.current = ctx;
+      const source = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+
+      setStage("escuchando");
+      sostenidoDesdeRef.current = null;
+
+      const loop = () => {
+        analyser.getByteTimeDomainData(data);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+          const v = (data[i] - 128) / 128;
+          sum += v * v;
+        }
+        const rms = Math.sqrt(sum / data.length) * 100 * 3.2;
+        setNivelVoz(Math.min(100, rms));
+
+        if (rms >= UMBRAL_RUGIDO) {
+          if (sostenidoDesdeRef.current === null) {
+            sostenidoDesdeRef.current = performance.now();
+          } else if (
+            performance.now() - sostenidoDesdeRef.current >=
+            SOSTENER_MS
+          ) {
+            detener();
+            setStage("detectado");
+            return;
+          }
+        } else {
+          sostenidoDesdeRef.current = null;
+        }
+        rafRef.current = requestAnimationFrame(loop);
+      };
+      rafRef.current = requestAnimationFrame(loop);
+    } catch {
+      setStage("sin-microfono");
+    }
+  }
+
+  const escala = 1 + Math.min(nivelVoz, 100) / 220; // el león "respira" con la voz
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-fade-up">
-      {stage === "idle" && (
+      {(stage === "idle" || stage === "pidiendo-permiso") && (
         <p className="text-sm font-bold text-txt-tertiary uppercase tracking-wide mb-6">
           Dale el celular a {nombre || "tu hijo"}
         </p>
       )}
+      {stage === "escuchando" && (
+        <p className="text-sm font-bold text-brand-secondary uppercase tracking-wide mb-6 flex items-center gap-2">
+          <IconMic className="h-4 w-4" /> Escuchando…
+        </p>
+      )}
+
       <button
-        onClick={onPlay}
+        onClick={stage === "idle" ? empezarAEscuchar : undefined}
         disabled={stage !== "idle"}
         className="relative flex h-48 w-48 items-center justify-center rounded-full transition-transform active:scale-95"
         style={{
@@ -502,12 +594,13 @@ function StepVictoria({
             "radial-gradient(circle at 35% 30%, var(--brand-primary-light), var(--brand-primary) 72%)",
           boxShadow:
             "0 0 0 6px var(--surface-primary), 0 0 0 11px var(--brand-primary), 0 0 0 15px var(--surface-primary), 0 0 0 19px var(--brand-secondary)",
+          transform: stage === "escuchando" ? `scale(${escala})` : undefined,
         }}
         aria-label="Tocar el espejo del león"
       >
         <span
           className={`text-8xl select-none ${
-            stage === "playing" ? "animate-breathe" : ""
+            stage === "pidiendo-permiso" ? "animate-breathe" : ""
           }`}
         >
           🦁
@@ -525,25 +618,46 @@ function StepVictoria({
             Toca al León y ruge con él: ¡GRRR!
           </p>
         )}
-        {stage === "playing" && (
-          <p className="text-lg font-bold text-txt-on-primary-soft">
-            &ldquo;¡GRRR!&rdquo; — muy bien…
+        {stage === "pidiendo-permiso" && (
+          <p className="text-lg font-bold text-txt-primary">
+            Permite el micrófono para que el León te escuche…
           </p>
         )}
-        {stage === "done" && (
+        {stage === "escuchando" && (
+          <p className="text-lg font-bold text-txt-on-primary-soft">
+            Ahora ruge fuerte: &ldquo;¡GRRR!&rdquo;
+          </p>
+        )}
+        {stage === "detectado" && (
           <div className="flex items-center gap-2 text-brand-secondary animate-pop-in justify-center">
             <IconSparkles className="h-6 w-6" />
-            <p className="text-lg font-bold">¡Primer rugido conseguido!</p>
+            <p className="text-lg font-bold">
+              ¡El León te escuchó rugir!
+            </p>
           </div>
+        )}
+        {stage === "sin-microfono" && (
+          <p className="text-sm text-txt-secondary max-w-xs">
+            No pudimos usar el micrófono. No hay problema — toca el botón
+            de abajo para seguir de todos modos.
+          </p>
         )}
       </div>
 
-      {stage === "done" && (
+      {stage === "detectado" && (
         <button
-          onClick={onNext}
+          onClick={onDone}
           className="mt-8 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
         >
           Continuar
+        </button>
+      )}
+      {stage === "sin-microfono" && (
+        <button
+          onClick={onDone}
+          className="mt-4 w-full max-w-xs rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4 transition-colors"
+        >
+          Continuar sin micrófono
         </button>
       )}
     </div>
