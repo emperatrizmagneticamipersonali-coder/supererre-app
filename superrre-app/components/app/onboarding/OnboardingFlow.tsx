@@ -23,6 +23,7 @@ type Step =
   | "interes"
   | "reconocimiento"
   | "loading"
+  | "revelacion"
   | "victoria"
   | "celebracion"
   | "paywall"
@@ -151,8 +152,12 @@ export function OnboardingFlow() {
         <StepLoading
           nombre={nombre}
           edad={edad}
-          onDone={() => setStep("victoria")}
+          onDone={() => setStep("revelacion")}
         />
+      )}
+
+      {step === "revelacion" && (
+        <StepRevelacion nombre={nombre} onDone={() => setStep("victoria")} />
       )}
 
       {step === "victoria" && (
@@ -250,14 +255,19 @@ function StepEdad({
   return (
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
       <MascotBubble>¿Cuántos años tiene {nombre || "tu hijo"}?</MascotBubble>
-      <div className="mt-8 flex flex-col gap-3">
+      <div className="mt-8 grid grid-cols-2 gap-3">
         {EDADES.map((e) => (
-          <Chip
+          <button
             key={e}
-            label={e}
-            selected={value === e}
             onClick={() => onSelect(e)}
-          />
+            className={`rounded-2xl py-6 text-center font-display font-bold text-xl transition-colors active:scale-[0.98] ${
+              value === e
+                ? "border-2 border-brand-primary bg-brand-primary-soft text-txt-on-primary-soft"
+                : "border border-border-default bg-surface-primary text-txt-primary"
+            }`}
+          >
+            {e}
+          </button>
         ))}
       </div>
     </div>
@@ -476,6 +486,31 @@ function StepLoading({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+/* ============ Paso: Revelación ("el camino está listo") ============ */
+function StepRevelacion({
+  nombre,
+  onDone,
+}: {
+  nombre: string;
+  onDone: () => void;
+}) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2200);
+    return () => clearTimeout(t);
+  }, [onDone]);
+
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-bubble-pop">
+      <span className="text-8xl mb-2" aria-hidden="true">
+        🦁
+      </span>
+      <h1 className="mt-4 font-display font-extrabold text-2xl sm:text-3xl text-txt-primary text-balance">
+        ¡El camino de {nombre || "tu hijo"} está listo!
+      </h1>
     </div>
   );
 }
