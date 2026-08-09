@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FunnelHeader } from "./FunnelHeader";
 import { Chip } from "./Chip";
 import { MascotBubble } from "./MascotBubble";
+import { useRugidoDetector } from "@/hooks/useRugidoDetector";
 import {
   IconCheck,
   IconPlay,
@@ -80,7 +81,9 @@ export function OnboardingFlow() {
   }
 
   function irALogin(plan: "free" | "completo") {
-    router.push(`/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}`);
+    router.push(
+      `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}`
+    );
   }
 
   return (
@@ -516,16 +519,6 @@ function StepRevelacion({
 }
 
 /* ============ Paso: Primera Victoria (El Rugido del León, con micrófono real) ============ */
-type VictoriaStage =
-  | "idle"
-  | "pidiendo-permiso"
-  | "escuchando"
-  | "detectado"
-  | "sin-microfono";
-
-const UMBRAL_RUGIDO = 32; // volumen RMS (0-100) que cuenta como "rugido"
-const SOSTENER_MS = 350; // cuánto debe durar el sonido para contar como intento real
-
 function StepVictoria({
   nombre,
   onDone,
@@ -533,78 +526,7 @@ function StepVictoria({
   nombre: string;
   onDone: () => void;
 }) {
-  const [stage, setStage] = useState<VictoriaStage>("idle");
-  const [nivelVoz, setNivelVoz] = useState(0);
-
-  const streamRef = useRef<MediaStream | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const sostenidoDesdeRef = useRef<number | null>(null);
-
-  function detener() {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    streamRef.current?.getTracks().forEach((t) => t.stop());
-    audioCtxRef.current?.close().catch(() => {});
-    streamRef.current = null;
-    audioCtxRef.current = null;
-  }
-
-  useEffect(() => () => detener(), []);
-
-  async function empezarAEscuchar() {
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setStage("sin-microfono");
-      return;
-    }
-    setStage("pidiendo-permiso");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      streamRef.current = stream;
-      const ctx = new AudioContext();
-      audioCtxRef.current = ctx;
-      const source = ctx.createMediaStreamSource(stream);
-      const analyser = ctx.createAnalyser();
-      analyser.fftSize = 512;
-      source.connect(analyser);
-      const data = new Uint8Array(analyser.frequencyBinCount);
-
-      setStage("escuchando");
-      sostenidoDesdeRef.current = null;
-
-      const loop = () => {
-        analyser.getByteTimeDomainData(data);
-        let sum = 0;
-        for (let i = 0; i < data.length; i++) {
-          const v = (data[i] - 128) / 128;
-          sum += v * v;
-        }
-        const rms = Math.sqrt(sum / data.length) * 100 * 3.2;
-        setNivelVoz(Math.min(100, rms));
-
-        if (rms >= UMBRAL_RUGIDO) {
-          if (sostenidoDesdeRef.current === null) {
-            sostenidoDesdeRef.current = performance.now();
-          } else if (
-            performance.now() - sostenidoDesdeRef.current >=
-            SOSTENER_MS
-          ) {
-            detener();
-            setStage("detectado");
-            return;
-          }
-        } else {
-          sostenidoDesdeRef.current = null;
-        }
-        rafRef.current = requestAnimationFrame(loop);
-      };
-      rafRef.current = requestAnimationFrame(loop);
-    } catch {
-      setStage("sin-microfono");
-    }
-  }
-
+  const { estado: stage, nivelVoz, empezar } = useRugidoDetector();
   const escala = 1 + Math.min(nivelVoz, 100) / 220; // el león "respira" con la voz
 
   return (
@@ -621,7 +543,7 @@ function StepVictoria({
       )}
 
       <button
-        onClick={stage === "idle" ? empezarAEscuchar : undefined}
+        onClick={stage === "idle" ? empezar : undefined}
         disabled={stage !== "idle"}
         className="relative flex h-48 w-48 items-center justify-center rounded-full transition-transform active:scale-95"
         style={{

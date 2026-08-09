@@ -1,7 +1,8 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-04 | Sesión actual: 1
 
-⏸️ CHECKPOINT — Tercera pulida del onboarding: el usuario compartió un video de referencia (app "Keiki") con animaciones y estilo de preguntas. Se extrajeron ~24 fotogramas del video (método: copiar el video a public/, capturarlo con canvas+Web Audio en el navegador, guardarlo vía una ruta API temporal — ya eliminada tras el análisis) y se aplicaron los patrones válidos con nuestro León: (1) MascotBubble rediseñado con "cola" de nube de dos puntos (más fiel al globo de pensamiento de la referencia) y animación de aparición con rebote (bubble-pop); (2) pregunta de edad convertida a grilla 2x2 de chips compactos (antes lista vertical), igual que su patrón para respuestas numéricas cortas; (3) nueva pantalla "revelación" ("¡El camino de [nombre] está listo!") insertada entre el loading y la primera victoria, replicando su pantalla de reveal antes del registro. No se copió: su color violeta de fondo (mantenemos nuestra paleta arena/dorado/turquesa, cosa juzgada de FICHA-ARTE.md), el registro con contraseña (mantenemos magic link, decisión de 26-AUTH-MODERNO), ni los pop-ups clínicos tipo "¿su hijo tiene TDAH?" durante el loading (fuera de alcance de nuestro producto). Verificado: build + typecheck + eslint limpios, grilla de edad confirmada por posición real de los botones, sin overflow a 375px. Archivos temporales de análisis (video, capturas, ruta API de debug) eliminados del repo / Siguiente acción exacta: proponer Sesión 5 (app interna: Praxias, Onomatopeyas/AR, Escalera Fonética, Minijuego)
+⏸️ CHECKPOINT — Sesión 5 CERRADA: app interna construida y probada de punta a punta. 6 pantallas nuevas bajo /app (con AppNav inferior: Mapa/Escalera/Premios/Mamá): (1) /app — Mapa de Islas (hub con racha de estrellas, 4 nodos con estado bloqueado/desbloqueado real); (2) /app/praxias — 5 ejercicios de gimnasia de lengua con instrucción + auto-reporte "Ya lo intenté"; (3) /app/sonidos — Modo León/Pirata con detección real de micrófono (hook useRugidoDetector extraído y reutilizado del onboarding); (4) /app/escalera — Escalera Fonética RA-RU con palabras reales (carro/perro/rana/ferrocarril/guitarra), gate free=solo RA vs completo=todas; (5) /app/premios — minijuego de reventar globos, se desbloquea tras 2 ejercicios Y plan completo; (6) /app/mama — resumen de progreso + upsell si plan free. Progreso persistido en localStorage vía lib/progress.ts con patrón useSyncExternalStore (reactivo entre pantallas). LoginForm ahora escribe el progreso inicial (nombre/plan/interés) y tiene una salida "modo de prueba" honesta hacia /app (el magic link real llega con Resend en Sesión 6).
+BUGS REALES ENCONTRADOS Y CORREGIDOS EN VERIFICACIÓN: (a) bucle infinito de React por getSnapshot sin cachear en useSyncExternalStore — corregido con caché a nivel de módulo; (b) cuando el micrófono fallaba, el texto decía "igual anotamos tu intento" pero el código nunca llamaba a onDetectado() — corregido en /app/sonidos y /app/escalera para que el fallback SÍ registre el intento, cumpliendo lo que el copy promete. Verificado con datos reales en el navegador (Mateo, plan completo): estrellas suben de 1→2→3, Escalera avanza de silaba, Premios se desbloquea exactamente al segundo ejercicio, minijuego funciona. Build + typecheck + eslint limpios, sin overflow a 375px, consola sin errores en pestaña limpia / Siguiente acción exacta: proponer Sesión 6 (servicios externos reales: GitHub, Supabase, IA si aplica, Vercel, Resend, dominio, Hotmart)
 
 ## Qué es esta app (3 líneas máximo)
 App gamificada en español para que niños de 4-7 años destraben la pronunciación de la letra R (rotacismo), mediante la mascota animada "el León" que muestra dónde poner la lengua, ejercicios de praxias linguales, sonidos/onomatopeyas con filtros AR y una escalera fonética progresiva. Dirigida a padres LATAM clase media/media-alta. Monetización: freemium con pago único ($19.99 USD) para desbloquear todo — sin suscripciones.
@@ -52,13 +53,13 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Notificaciones de re-enganche: pendiente de diseñar en Sesión 4
 
 ## Secuencia maestra de construcción (NO saltar)
-- Estado de la secuencia: Sesión 4 cerrada — lista para Sesión 5 (app interna)
+- Estado de la secuencia: Sesión 5 cerrada — lista para Sesión 6 (servicios externos)
 - Ruta aprobada: `/` → `/onboarding` (incluye paywall y gate de adulto embebidos) → `/login` → `/app`
 - Landing: construida y verificada — protagonista: el Espejo del León (primera victoria) — CTA primario: "Probar el Espejo gratis"
 - Onboarding: construido y verificado — nombre → edad → dolor → reconocimiento → loading → primera victoria → celebración
 - Paywall: construido y verificado (embebido al final del onboarding) — Gratis vs. Espejo Completo $19.99 pago único, con puerta de adulto antes del CTA de pago
 - Login/Auth: construido y verificado (UI con mock de magic link — Supabase real se conecta en Sesión 6)
-- App interna: pendiente — secciones: Praxias, Onomatopeyas/AR, Escalera Fonética, Minijuego (máx 4-5)
+- App interna: construida y verificada — secciones: Mapa de Islas (hub), Praxias, Sonidos (León/Pirata con mic real), Escalera Fonética, Premios, Mamá
 - Servicios externos: pendiente — GitHub/Supabase/Vercel/Resend/dominio/Hotmart
 
 ## Puertas de etapa (aprobacion antes de avanzar)
@@ -66,7 +67,7 @@ App gamificada en español para que niños de 4-7 años destraben la pronunciaci
 - Onboarding: aprobada — probada de punta a punta en navegador (nombre/edad/dolor/reconocimiento/loading/victoria/celebración)
 - Paywall: aprobada — probada en navegador, personalización con nombre confirmada
 - Login/Auth: aprobada (UI) — mock de magic link probado (estados enviando/enviado/reenvío)
-- App interna: no iniciada
+- App interna: aprobada — probada de punta a punta en navegador con progreso real (estrellas, desbloqueos, minijuego)
 - Servicios externos: bloqueados
 - Certificado /100: pendiente
 

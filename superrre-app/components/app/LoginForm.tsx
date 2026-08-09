@@ -2,15 +2,19 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconMail, IconLock } from "./icons";
+import { iniciarProgreso } from "@/lib/progress";
 
 type EstadoEnvio = "idle" | "enviando" | "enviado" | "error";
 
 export function LoginForm() {
   const params = useSearchParams();
+  const router = useRouter();
   const plan = params.get("plan") === "completo" ? "completo" : "free";
   const nombre = params.get("nombre") || "";
+  const interes =
+    params.get("interes") === "pirata" ? "pirata" : ("leon" as const);
 
   const [email, setEmail] = useState("");
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
@@ -20,6 +24,7 @@ export function LoginForm() {
     if (!email.includes("@") || estado === "enviando") return;
     setEstado("enviando");
     setTimeout(() => {
+      iniciarProgreso({ nombre, plan, interes });
       setEstado("enviado");
       setCooldown(60);
       const id = setInterval(() => {
@@ -106,6 +111,19 @@ export function LoginForm() {
             >
               {cooldown > 0 ? `Reenviar en ${cooldown}s` : "Reenviar enlace"}
             </button>
+
+            <div className="mt-10 border-t border-border-default pt-6">
+              <p className="text-xs text-txt-tertiary mb-3">
+                Modo de prueba (esto se activa solo con el correo real
+                cuando publiquemos la app):
+              </p>
+              <button
+                onClick={() => router.push("/app")}
+                className="text-sm font-semibold text-txt-secondary underline underline-offset-2"
+              >
+                Simular clic en el enlace y entrar
+              </button>
+            </div>
           </div>
         )}
       </div>

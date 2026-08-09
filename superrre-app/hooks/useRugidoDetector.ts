@@ -1,0 +1,96 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+export type EstadoDeteccion =
+  | "idle"
+  | "pidiendo-permiso"
+  | "escuchando"
+  | "detectado"
+  | "sin-microfono";
+
+const UMBRAL_SONIDO = 32; // volumen RMS (0-100) que cuenta como "intento real"
+const SOSTENER_MS = 350; // cuánto debe durar el sonido para contar
+
+/** Detecta un intento de sonido real por micrófono — 100% local, nunca se sube a internet. */
+export function useRugidoDetector() {
+  const [estado, setEstado] = useState<EstadoDeteccion>("idle");
+  const [nivelVoz, setNivelVoz] = useState(0);
+
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const sostenidoDesdeRef = useRef<number | null>(null);
+
+  function detener() {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    audioCtxRef.current?.close().catch(() => {});
+    streamRef.current = null;
+    audioCtxRef.current = null;
+  }
+
+  useEffect(() => () => detener(), []);
+
+  function reiniciar() {
+    detener();
+    setEstado("idle");
+    setNivelVoz(0);
+  }
+
+  async function empezar() {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setEstado("sin-microfono");
+      return;
+    }
+    setEstado("pidiendo-permiso");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+      streamRef.current = stream;
+      const ctx = new AudioContext();
+      audioCtxRef.current = ctx;
+      const source = ctx.createMediaStreamSource(stream);
+      const analyser = ctx.createAnalyser();
+      analyser.fftSize = 512;
+      source.connect(analyser);
+      const data = new Uint8Array(analyser.frequencyBinCount);
+
+      setEstado("escuchando");
+      sostenidoDesdeRef.current = null;
+
+      const loop = () => {
+        analyser.getByteTimeDomainData(data);
+        let sum = 0;
+        for (let i = 0; i < data.length; i++) {
+          const v = (data[i] - 128) / 128;
+          sum += v * v;
+        }
+        const rms = Math.sqrt(sum / data.length) * 100 * 3.2;
+        setNivelVoz(Math.min(100, rms));
+
+        if (rms >= UMBRAL_SONIDO) {
+          if (sostenidoDesdeRef.current === null) {
+            sostenidoDesdeRef.current = performance.now();
+          } else if (
+            performance.now() - sostenidoDesdeRef.current >=
+            SOSTENER_MS
+          ) {
+            detener();
+            setEstado("detectado");
+            return;
+          }
+        } else {
+          sostenidoDesdeRef.current = null;
+        }
+        rafRef.current = requestAnimationFrame(loop);
+      };
+      rafRef.current = requestAnimationFrame(loop);
+    } catch {
+      setEstado("sin-microfono");
+    }
+  }
+
+  return { estado, nivelVoz, empezar, reiniciar };
+}
