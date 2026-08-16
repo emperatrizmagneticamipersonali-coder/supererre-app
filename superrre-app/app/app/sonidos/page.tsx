@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProgreso, marcarSonidoHecho } from "@/lib/progress";
+import { MODOS } from "@/lib/sonidos-data";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
+import { useHablar } from "@/hooks/useHablar";
+import { BotonEscuchar } from "@/components/app/BotonEscuchar";
+import { Celebracion } from "@/components/app/Celebracion";
+import { VideoCompanero } from "@/components/app/VideoCompanero";
+import { RevelacionPremio } from "@/components/app/RevelacionPremio";
 import {
   IconCheck,
   IconChevronLeft,
@@ -11,25 +17,6 @@ import {
   IconPlay,
   IconSparkles,
 } from "@/components/app/icons";
-
-const MODOS = {
-  leon: {
-    nombre: "Modo León",
-    emoji: "🦁",
-    sonidos: [
-      { id: "rugido", nombre: "El Rugido", pista: "¡GRRR!" },
-      { id: "ronroneo", nombre: "El Ronroneo", pista: "rrrrr…" },
-    ],
-  },
-  pirata: {
-    nombre: "Modo Pirata",
-    emoji: "🏴‍☠️",
-    sonidos: [
-      { id: "grito", nombre: "El Grito Pirata", pista: "¡ARRR!" },
-      { id: "tesoro", nombre: "El Grito del Tesoro", pista: "¡ARRR, tesoro!" },
-    ],
-  },
-} as const;
 
 export default function SonidosPage() {
   const router = useRouter();
@@ -39,24 +26,52 @@ export default function SonidosPage() {
   );
   const modo = modoOverride ?? (p.interes === "pirata" ? "pirata" : "leon");
   const [sonidoId, setSonidoId] = useState<string | null>(null);
+  const [premioAReclamar, setPremioAReclamar] = useState<string | null>(null);
+  const [accesorioAReclamar, setAccesorioAReclamar] = useState<string | null>(
+    null
+  );
 
   const data = MODOS[modo];
   const sonido = data.sonidos.find((s) => s.id === sonidoId) || null;
+  const idxSonido = data.sonidos.findIndex((s) => s.id === sonidoId);
+  const siguienteSonido =
+    idxSonido >= 0 && idxSonido < data.sonidos.length - 1
+      ? data.sonidos[idxSonido + 1]
+      : null;
 
   if (sonido) {
     return (
       <SonidoDetector
+        key={sonido.id}
         emoji={data.emoji}
         nombre={sonido.nombre}
         pista={sonido.pista}
+        videoDemo={sonido.videoDemo}
         onVolver={() => setSonidoId(null)}
+        onSiguiente={siguienteSonido ? () => setSonidoId(siguienteSonido.id) : null}
         onDetectado={() => marcarSonidoHecho(`${modo}-${sonido.id}`)}
+        onReclamar={() => {
+          // el modo León es el único con figurita/accesorio definidos por ahora
+          if (modo === "leon") {
+            setPremioAReclamar("sonidos-leon");
+            setAccesorioAReclamar("gafas");
+          }
+          setSonidoId(null);
+        }}
       />
     );
   }
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
+      <RevelacionPremio
+        figuritaId={premioAReclamar}
+        accesorioId={premioAReclamar ? null : accesorioAReclamar}
+        onCerrar={(tipo) => {
+          if (tipo === "figurita") setPremioAReclamar(null);
+          else setAccesorioAReclamar(null);
+        }}
+      />
       <h1 className="font-display font-extrabold text-2xl text-txt-primary">
         El Espejo del León
       </h1>
@@ -75,7 +90,7 @@ export default function SonidosPage() {
                 : "border-border-default bg-surface-primary"
             }`}
           >
-            <span className="text-3xl">{MODOS[m].emoji}</span>
+            <span className="text-4xl">{MODOS[m].emoji}</span>
             <p className="mt-1 text-sm font-bold text-txt-primary">
               {MODOS[m].nombre}
             </p>
@@ -84,7 +99,7 @@ export default function SonidosPage() {
       </div>
 
       <div className="mt-6 flex flex-col gap-3">
-        {data.sonidos.map((s) => {
+        {data.sonidos.map((s, i) => {
           const hechoYa = p.sonidosHechos.includes(`${modo}-${s.id}`);
           return (
             <button
@@ -97,7 +112,7 @@ export default function SonidosPage() {
               </span>
               <div className="flex-1">
                 <p className="font-display font-bold text-sm text-txt-primary">
-                  {s.nombre}
+                  Nivel {i + 1} · {s.nombre}
                 </p>
                 <p className="text-xs text-txt-secondary">{s.pista}</p>
               </div>
@@ -121,30 +136,54 @@ export default function SonidosPage() {
   );
 }
 
+const DURACION_SONIDO_SEG = 8;
+
 function SonidoDetector({
   emoji,
   nombre,
   pista,
+  videoDemo,
   onVolver,
+  onSiguiente,
   onDetectado,
+  onReclamar,
 }: {
   emoji: string;
   nombre: string;
   pista: string;
+  videoDemo?: string;
   onVolver: () => void;
+  onSiguiente: (() => void) | null;
   onDetectado: () => void;
+  onReclamar: () => void;
 }) {
   const { estado, nivelVoz, empezar } = useRugidoDetector();
+  const { hablar } = useHablar();
+  const [segundos, setSegundos] = useState(DURACION_SONIDO_SEG);
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const marco = estado === "detectado";
+  const completado = estado === "detectado" || estado === "sin-microfono";
+  const completadoSinSiguiente = completado && !onSiguiente;
 
   useEffect(() => {
     if (estado === "detectado" || estado === "sin-microfono") onDetectado();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado]);
 
+  useEffect(() => {
+    hablar(pista);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (estado !== "escuchando" || segundos <= 0) return;
+    const t = setTimeout(() => setSegundos((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [estado, segundos]);
+
   return (
     <div className="flex-1 flex flex-col px-5 pt-4 pb-8">
+      <Celebracion activa={completado} />
       <button
         onClick={onVolver}
         aria-label="Atrás"
@@ -155,14 +194,25 @@ function SonidoDetector({
 
       <div className="flex-1 flex flex-col items-center justify-center text-center px-4">
         {estado === "escuchando" && (
-          <p className="text-sm font-bold text-brand-secondary uppercase tracking-wide mb-6 flex items-center gap-2">
-            <IconMic className="h-4 w-4" /> Escuchando…
-          </p>
+          <div className="mb-6 flex flex-col items-center gap-2">
+            <p className="text-sm font-bold text-brand-secondary uppercase tracking-wide flex items-center gap-2">
+              <IconMic className="h-4 w-4" /> Escuchando…
+            </p>
+            <span
+              className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm font-bold tabular-nums ${
+                segundos > 0
+                  ? "bg-brand-accent-soft text-brand-accent"
+                  : "bg-brand-secondary-soft text-txt-on-secondary-soft"
+              }`}
+            >
+              ⏱ {segundos > 0 ? `${segundos}s` : "¡Listo!"}
+            </span>
+          </div>
         )}
         <button
           onClick={estado === "idle" ? empezar : undefined}
           disabled={estado !== "idle"}
-          className="relative flex h-40 w-40 items-center justify-center rounded-full transition-transform active:scale-95"
+          className="relative flex h-48 w-48 items-center justify-center rounded-full transition-transform active:scale-95"
           style={{
             background:
               "radial-gradient(circle at 35% 30%, var(--brand-primary-light), var(--brand-primary) 72%)",
@@ -172,7 +222,11 @@ function SonidoDetector({
           }}
           aria-label={`Practicar ${nombre}`}
         >
-          <span className="text-7xl select-none">{emoji}</span>
+          {videoDemo ? (
+            <VideoCompanero src={videoDemo} size={148} />
+          ) : (
+            <span className="text-8xl select-none">{emoji}</span>
+          )}
           {estado === "idle" && (
             <span className="absolute -bottom-1 -right-1 flex h-10 w-10 items-center justify-center rounded-full bg-brand-accent text-txt-on-brand shadow-md">
               <IconPlay className="h-5 w-5" />
@@ -183,29 +237,43 @@ function SonidoDetector({
         <h1 className="mt-6 font-display font-extrabold text-xl text-txt-primary">
           {nombre}
         </h1>
-        <p className="mt-2 text-base text-txt-secondary">
-          Di: <strong className="text-txt-primary">{pista}</strong>
-        </p>
+        <div className="mt-2 flex items-center gap-3">
+          <p className="text-base text-txt-secondary">
+            Di: <strong className="text-txt-primary">{pista}</strong>
+          </p>
+          <BotonEscuchar texto={pista} />
+        </div>
 
-        {marco && (
+        {marco && !completadoSinSiguiente && (
           <div className="mt-4 flex items-center gap-2 text-brand-secondary animate-pop-in">
             <IconSparkles className="h-5 w-5" />
             <p className="font-bold">¡Muy bien!</p>
           </div>
         )}
-        {estado === "sin-microfono" && (
-          <p className="mt-4 text-sm text-txt-secondary max-w-xs">
+        {estado === "sin-microfono" && !completadoSinSiguiente && (
+          <p className="mt-4 text-sm text-txt-secondary max-w-64">
             No pudimos usar el micrófono, pero igual anotamos tu intento.
           </p>
+        )}
+        {completadoSinSiguiente && (
+          <div className="mt-4 flex flex-col items-center gap-2 animate-pop-in">
+            <span className="text-5xl" aria-hidden="true">
+              🎉
+            </span>
+            <p className="text-lg font-bold text-txt-primary text-balance">
+              ¡Terminaste esta sección de ejercicios!
+            </p>
+            <p className="text-sm text-txt-secondary">Te ganaste un premio.</p>
+          </div>
         )}
       </div>
 
       {(marco || estado === "sin-microfono") && (
         <button
-          onClick={onVolver}
+          onClick={onSiguiente ?? onReclamar}
           className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
         >
-          Continuar
+          {onSiguiente ? "Siguiente" : "Reclamar mi premio"}
         </button>
       )}
     </div>

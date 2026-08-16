@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useProgreso, totalEjerciciosHechos } from "@/lib/progress";
-import { IconShieldCheck, IconCoin, IconCheck } from "@/components/app/icons";
+import { useProgreso, totalEjerciciosHechos, planDiarioPorEdad } from "@/lib/progress";
+import { nivelPorId } from "@/lib/escalera-data";
+import { IconShieldCheck, IconCoin, IconCheck, IconAlarmClock } from "@/components/app/icons";
 
 export default function MamaPage() {
   const router = useRouter();
   const p = useProgreso();
+  const plan = planDiarioPorEdad(p.edad);
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
@@ -29,20 +31,39 @@ export default function MamaPage() {
         </div>
       </div>
 
+      <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-default p-4">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft">
+          <IconAlarmClock className="h-5 w-5" />
+        </span>
+        <div>
+          <p className="font-display font-bold text-sm text-txt-primary">
+            Plan recomendado: {plan.texto}
+          </p>
+          <p className="text-xs text-txt-secondary mt-0.5">
+            Para {p.edad} años, mejor pocos minutos todos los días que una
+            sesión larga de vez en cuando.
+          </p>
+        </div>
+      </div>
+
       {p.palabrasHechas.length > 0 && (
         <div className="mt-4 rounded-2xl border border-border-default p-4">
           <p className="text-xs font-bold uppercase tracking-wide text-txt-tertiary mb-2">
-            Palabras que ya dijo
+            Sílabas, palabras y oraciones que ya dijo
           </p>
           <div className="flex flex-wrap gap-2">
-            {p.palabrasHechas.map((w) => (
-              <span
-                key={w}
-                className="rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-sm font-bold px-3 py-1"
-              >
-                {w}
-              </span>
-            ))}
+            {p.palabrasHechas.map((id) => {
+              const nivel = nivelPorId(id);
+              if (!nivel) return null;
+              return (
+                <span
+                  key={id}
+                  className="rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-sm font-bold px-3 py-1"
+                >
+                  {nivel.texto}
+                </span>
+              );
+            })}
           </div>
         </div>
       )}

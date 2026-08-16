@@ -151,11 +151,42 @@ export function IconStar({ className }: IconProps) {
   );
 }
 
+export function IconStarFilled({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className}>
+      <path
+        d="M12 3.5 14.5 9l6 .8-4.4 4 1.2 5.9L12 16.9 6.7 19.7l1.2-5.9-4.4-4 6-.8L12 3.5Z"
+        className="fill-current"
+      />
+    </svg>
+  );
+}
+
 export function IconEye({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
       <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" className={base} />
       <circle cx="12" cy="12" r="2.5" className={base} />
+    </svg>
+  );
+}
+
+export function IconFlame({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path
+        d="M12 2c1 3-3 4-3 8a3 3 0 0 0 6 0c0-1.5-1-2-1-3 2 1 4 3.5 4 6.5a6 6 0 0 1-12 0C6 8 10 6 12 2Z"
+        className={base}
+      />
+    </svg>
+  );
+}
+
+export function IconVolume({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" className={base} />
+      <path d="M17 8.5a5 5 0 0 1 0 7M19.5 6a8.5 8.5 0 0 1 0 12" className={base} />
     </svg>
   );
 }

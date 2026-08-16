@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import { FunnelHeader } from "./FunnelHeader";
 import { Chip } from "./Chip";
 import { MascotBubble } from "./MascotBubble";
+import { Mascota, MASCOTA_SRC } from "../Mascota";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
+import { useVideoChromaKey } from "@/hooks/useVideoChromaKey";
 import {
   IconCheck,
   IconPlay,
@@ -21,7 +23,6 @@ type Step =
   | "nombre"
   | "edad"
   | "dolor"
-  | "interes"
   | "reconocimiento"
   | "loading"
   | "revelacion"
@@ -51,10 +52,14 @@ const INTERESES = [
   { id: "pirata", label: "Los piratas y los tesoros", emoji: "🏴‍☠️" },
 ] as const;
 
-const LOADING_LINES = (nombre: string, edad: string) => [
+const LOADING_LINES = (
+  nombre: string,
+  edad: string,
+  tema: "leon" | "pirata"
+) => [
   `Preparando el mundo de ${nombre}`,
   `Ajustando los ejercicios a sus ${edad}`,
-  "Cargando el Espejo del León",
+  tema === "pirata" ? "Cargando el Espejo del Pirata" : "Cargando el Espejo del León",
   `Sirviendo la primera estrella de ${nombre}`,
 ];
 
@@ -66,7 +71,9 @@ export function OnboardingFlow() {
   const [nombre, setNombre] = useState("");
   const [edad, setEdad] = useState("");
   const [dolor, setDolor] = useState("");
-  const [interes, setInteres] = useState<(typeof INTERESES)[number]["id"] | "">("");
+  // Elegir entre León/Pirata está pausado por ahora (solo León) — se
+  // reactiva más adelante reponiendo el paso "interes" del funnel.
+  const interes: "leon" | "pirata" = "leon";
   const [gateOptions] = useState(() => {
     const correct = GATE_CHALLENGE.a + GATE_CHALLENGE.b;
     const opts = [correct - 3, correct, correct + 4].sort(
@@ -81,8 +88,9 @@ export function OnboardingFlow() {
   }
 
   function irALogin(plan: "free" | "completo") {
+    const edadNum = parseInt(edad, 10) || 5;
     router.push(
-      `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}`
+      `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}&edad=${edadNum}`
     );
   }
 
@@ -115,25 +123,11 @@ export function OnboardingFlow() {
 
       {step === "dolor" && (
         <>
-          <FunnelHeader progress={58} onBack={() => setStep("edad")} />
+          <FunnelHeader progress={70} onBack={() => setStep("edad")} />
           <StepDolor
             value={dolor}
             onSelect={(v) => {
               setDolor(v);
-              setTimeout(() => setStep("interes"), 320);
-            }}
-          />
-        </>
-      )}
-
-      {step === "interes" && (
-        <>
-          <FunnelHeader progress={80} onBack={() => setStep("dolor")} />
-          <StepInteres
-            nombre={nombre}
-            value={interes}
-            onSelect={(v) => {
-              setInteres(v);
               setTimeout(() => setStep("reconocimiento"), 320);
             }}
           />
@@ -142,9 +136,10 @@ export function OnboardingFlow() {
 
       {step === "reconocimiento" && (
         <>
-          <FunnelHeader progress={96} onBack={() => setStep("interes")} />
+          <FunnelHeader progress={96} onBack={() => setStep("dolor")} />
           <StepReconocimiento
             nombre={nombre}
+            interes={interes}
             nivel={NIVEL_POR_DOLOR[dolor] || "Primer diagnóstico"}
             onNext={() => setStep("loading")}
           />
@@ -155,16 +150,25 @@ export function OnboardingFlow() {
         <StepLoading
           nombre={nombre}
           edad={edad}
+          interes={interes}
           onDone={() => setStep("revelacion")}
         />
       )}
 
       {step === "revelacion" && (
-        <StepRevelacion nombre={nombre} onDone={() => setStep("victoria")} />
+        <StepRevelacion
+          nombre={nombre}
+          interes={interes}
+          onDone={() => setStep("victoria")}
+        />
       )}
 
       {step === "victoria" && (
-        <StepVictoria nombre={nombre} onDone={() => setStep("celebracion")} />
+        <StepVictoria
+          nombre={nombre}
+          interes={interes}
+          onDone={() => setStep("celebracion")}
+        />
       )}
 
       {step === "celebracion" && (
@@ -339,22 +343,22 @@ function StepInteres({
 /* ============ Paso: Reconocimiento ============ */
 function StepReconocimiento({
   nombre,
+  interes,
   nivel,
   onNext,
 }: {
   nombre: string;
+  interes: string;
   nivel: string;
   onNext: () => void;
 }) {
   const n = nombre || "tu hijo";
+  const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
   return (
     <div className="flex-1 flex flex-col px-5 pt-10 pb-6 text-center items-center animate-fade-up">
-      <div className="flex items-end gap-2 mb-4" aria-hidden="true">
-        <span className="text-7xl">🦁</span>
-        <span className="text-4xl mb-1">🦁</span>
-      </div>
-      <p className="text-xs text-txt-tertiary -mt-3 mb-1">
-        {n} y su León guía
+      <Mascota tema={tema} size={96} className="mb-4" />
+      <p className="text-xs text-txt-tertiary mb-1">
+        {n} y su {tema === "pirata" ? "Pirata" : "León"} guía
       </p>
       <span className="inline-flex items-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-xs font-bold px-3 py-2 mb-2">
         Nivel de {n}: {nivel}
@@ -386,13 +390,16 @@ function StepReconocimiento({
 function StepLoading({
   nombre,
   edad,
+  interes,
   onDone,
 }: {
   nombre: string;
   edad: string;
+  interes: string;
   onDone: () => void;
 }) {
-  const lineas = LOADING_LINES(nombre || "tu hijo", edad || "5 años");
+  const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
+  const lineas = LOADING_LINES(nombre || "tu hijo", edad || "5 años", tema);
   const [activeLine, setActiveLine] = useState(0);
   const [pct, setPct] = useState(4);
 
@@ -433,9 +440,9 @@ function StepLoading({
             🗺️
           </span>
         </div>
-        <span className="text-6xl -ml-2 animate-float-slow" aria-hidden="true">
-          🦁
-        </span>
+        <div className="-ml-2 animate-float-slow" aria-hidden="true">
+          <Mascota tema={tema} size={64} className="shadow-md" />
+        </div>
         <span
           className="absolute -top-4 -right-2 text-2xl animate-float-slow-alt"
           aria-hidden="true"
@@ -496,11 +503,14 @@ function StepLoading({
 /* ============ Paso: Revelación ("el camino está listo") ============ */
 function StepRevelacion({
   nombre,
+  interes,
   onDone,
 }: {
   nombre: string;
+  interes: string;
   onDone: () => void;
 }) {
+  const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
   useEffect(() => {
     const t = setTimeout(onDone, 2200);
     return () => clearTimeout(t);
@@ -508,9 +518,7 @@ function StepRevelacion({
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-bubble-pop">
-      <span className="text-8xl mb-2" aria-hidden="true">
-        🦁
-      </span>
+      <Mascota tema={tema} size={140} className="mb-2" />
       <h1 className="mt-4 font-display font-extrabold text-2xl sm:text-3xl text-txt-primary text-balance">
         ¡El camino de {nombre || "tu hijo"} está listo!
       </h1>
@@ -518,16 +526,40 @@ function StepRevelacion({
   );
 }
 
-/* ============ Paso: Primera Victoria (El Rugido del León, con micrófono real) ============ */
+const COPIA_VICTORIA = {
+  leon: {
+    aria: "Tocar el espejo del león",
+    idle: "Toca al León y ruge con él: ¡GRRR!",
+    permiso: "Permite el micrófono para que el León te escuche…",
+    escuchando: "Ahora ruge fuerte: “¡GRRR!”",
+    detectado: "¡El León te escuchó rugir!",
+  },
+  pirata: {
+    aria: "Tocar el espejo del pirata",
+    idle: "Toca al Pirata y grita con él: ¡ARRR!",
+    permiso: "Permite el micrófono para que el Pirata te escuche…",
+    escuchando: "Ahora grita fuerte: “¡ARRR!”",
+    detectado: "¡El Pirata te escuchó gritar!",
+  },
+} as const;
+
+/* ============ Paso: Primera Victoria (con micrófono real, personalizado) ============ */
 function StepVictoria({
   nombre,
+  interes,
   onDone,
 }: {
   nombre: string;
+  interes: string;
   onDone: () => void;
 }) {
+  const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
+  const copia = COPIA_VICTORIA[tema];
   const { estado: stage, nivelVoz, empezar } = useRugidoDetector();
-  const escala = 1 + Math.min(nivelVoz, 100) / 220; // el león "respira" con la voz
+  const escala = 1 + Math.min(nivelVoz, 100) / 220; // el personaje "respira" con la voz
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useVideoChromaKey(videoRef, canvasRef, "cover");
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-fade-up">
@@ -545,7 +577,7 @@ function StepVictoria({
       <button
         onClick={stage === "idle" ? empezar : undefined}
         disabled={stage !== "idle"}
-        className="relative flex h-48 w-48 items-center justify-center rounded-full transition-transform active:scale-95"
+        className="relative flex h-48 w-48 items-center justify-center rounded-full overflow-hidden transition-transform active:scale-95"
         style={{
           background:
             "radial-gradient(circle at 35% 30%, var(--brand-primary-light), var(--brand-primary) 72%)",
@@ -553,15 +585,26 @@ function StepVictoria({
             "0 0 0 6px var(--surface-primary), 0 0 0 11px var(--brand-primary), 0 0 0 15px var(--surface-primary), 0 0 0 19px var(--brand-secondary)",
           transform: stage === "escuchando" ? `scale(${escala})` : undefined,
         }}
-        aria-label="Tocar el espejo del león"
+        aria-label={copia.aria}
       >
-        <span
-          className={`text-8xl select-none ${
+        <video
+          ref={videoRef}
+          key={tema}
+          src={MASCOTA_SRC[tema]}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="hidden"
+        />
+        <canvas
+          ref={canvasRef}
+          width={192}
+          height={192}
+          className={`h-full w-full rounded-full ${
             stage === "pidiendo-permiso" ? "animate-breathe" : ""
           }`}
-        >
-          🦁
-        </span>
+        />
         {stage === "idle" && (
           <span className="absolute -bottom-1 -right-1 flex h-12 w-12 items-center justify-center rounded-full bg-brand-accent text-txt-on-brand shadow-md">
             <IconPlay className="h-6 w-6" />
@@ -571,26 +614,22 @@ function StepVictoria({
 
       <div className="mt-8 min-h-16">
         {stage === "idle" && (
-          <p className="text-lg font-bold text-txt-primary">
-            Toca al León y ruge con él: ¡GRRR!
-          </p>
+          <p className="text-lg font-bold text-txt-primary">{copia.idle}</p>
         )}
         {stage === "pidiendo-permiso" && (
           <p className="text-lg font-bold text-txt-primary">
-            Permite el micrófono para que el León te escuche…
+            {copia.permiso}
           </p>
         )}
         {stage === "escuchando" && (
           <p className="text-lg font-bold text-txt-on-primary-soft">
-            Ahora ruge fuerte: &ldquo;¡GRRR!&rdquo;
+            {copia.escuchando}
           </p>
         )}
         {stage === "detectado" && (
           <div className="flex items-center gap-2 text-brand-secondary animate-pop-in justify-center">
             <IconSparkles className="h-6 w-6" />
-            <p className="text-lg font-bold">
-              ¡El León te escuchó rugir!
-            </p>
+            <p className="text-lg font-bold">{copia.detectado}</p>
           </div>
         )}
         {stage === "sin-microfono" && (
@@ -666,8 +705,10 @@ function StepPaywall({
   onCerrar: () => void;
 }) {
   const n = nombre || "tu hijo";
+  const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
+  const nombrePersonaje = tema === "pirata" ? "Pirata" : "León";
   const bulletTema =
-    interes === "pirata"
+    tema === "pirata"
       ? `El Modo Pirata de ${n} desbloqueado, con mapas y tesoros`
       : `Más aventuras con su León en el Mapa de Islas`;
   return (
@@ -690,7 +731,9 @@ function StepPaywall({
       <div className="mt-6 rounded-2xl bg-surface-secondary p-5 space-y-3">
         {[
           `Ejercicios ajustados a la edad de ${n}`,
-          "El Espejo del León y su primer rugido, ya guardados",
+          `El Espejo del ${nombrePersonaje} y su primer ${
+            tema === "pirata" ? "grito" : "rugido"
+          }, ya guardados`,
           bulletTema,
           "Escalera Fonética completa: carro, perro, rana, ferrocarril",
         ].map((b) => (

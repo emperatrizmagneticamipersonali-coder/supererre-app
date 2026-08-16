@@ -37,6 +37,11 @@
   --border-default: rgba(34, 51, 46, 0.12);
   --border-strong: rgba(34, 51, 46, 0.22);
 
+  /* Diagrama de boca (pasos del ejercicio) — derivados de los tokens de
+     marca, nunca hex nuevo suelto */
+  --diagram-labio: color-mix(in oklab, var(--brand-accent) 55%, white 45%);
+  --diagram-cavidad: color-mix(in oklab, var(--brand-accent) 65%, black 35%);
+
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1.25rem;

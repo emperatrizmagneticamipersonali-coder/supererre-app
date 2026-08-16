@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IconMail, IconLock } from "./icons";
@@ -15,6 +16,7 @@ export function LoginForm() {
   const nombre = params.get("nombre") || "";
   const interes =
     params.get("interes") === "pirata" ? "pirata" : ("leon" as const);
+  const edad = parseInt(params.get("edad") || "", 10) || 5;
 
   const [email, setEmail] = useState("");
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
@@ -24,7 +26,7 @@ export function LoginForm() {
     if (!email.includes("@") || estado === "enviando") return;
     setEstado("enviando");
     setTimeout(() => {
-      iniciarProgreso({ nombre, plan, interes });
+      iniciarProgreso({ nombre, plan, interes, edad });
       setEstado("enviado");
       setCooldown(60);
       const id = setInterval(() => {
@@ -46,7 +48,14 @@ export function LoginForm() {
           href="/"
           className="inline-flex items-center gap-2 font-display font-bold text-sm text-txt-primary"
         >
-          <span className="text-xl">🦁</span> SuperErre
+          <Image
+            src="/logo-mark.png"
+            alt="SuperErre"
+            width={28}
+            height={28}
+            className="rounded-md"
+          />
+          SuperErre
         </Link>
       </div>
 

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function Footer() {
@@ -5,7 +6,13 @@ export function Footer() {
     <footer className="mt-auto border-t border-border-default py-10">
       <div className="mx-auto max-w-5xl px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-5">
         <div className="flex items-center gap-2">
-          <span className="text-xl">🦁</span>
+          <Image
+            src="/logo-mark.png"
+            alt="SuperErre"
+            width={28}
+            height={28}
+            className="rounded-md"
+          />
           <span className="font-display font-bold text-txt-primary">
             SuperErre
           </span>
