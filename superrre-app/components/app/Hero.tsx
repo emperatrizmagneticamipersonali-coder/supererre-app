@@ -37,6 +37,9 @@ export function Hero() {
                 {palabra}
               </span>
             ))}
+            <span className="rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-3 py-1">
+              y muchas palabras más
+            </span>
           </div>
 
           <div className="mt-7 flex flex-col sm:flex-row gap-3 sm:items-center">

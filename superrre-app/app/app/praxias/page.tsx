@@ -74,7 +74,7 @@ function DemoEjercicio({
         </p>
         {src && (
           <div className="mt-4 flex flex-col items-center">
-            <VideoCompanero src={src} size={96} quieto />
+            <VideoCompanero src={src} size={96} />
             <p className="mt-1 text-xs font-bold text-txt-tertiary">
               {nombrePersonaje} también lo intenta contigo
             </p>

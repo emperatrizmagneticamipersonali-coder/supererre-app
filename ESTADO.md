@@ -1,6 +1,16 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-18 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. Ronda 2 de fixes tras probar el usuario en su celular real (Android + Chrome) el commit anterior (`3f15198`):
+- Logo: la R seguía viéndose baja con el primer recorte — se ajustó de nuevo (menos margen arriba, que sobraba).
+- Hero: agregado chip "y muchas palabras más" (se evitó poner un número específico tipo "30 palabras" porque no era exacto contando el contenido real de `escalera-data.ts` — solo hay 10 "palabra" formales por ahora).
+- Agitacion.tsx: tarjetas "10-15 min diarios"/"En 6 meses, igual" tenían casi el mismo color que el fondo — pasadas a `bg-surface-primary` + sombra.
+- `useRugidoDetector.ts`: usuario confirmó que YA detecta (el fix de `resume()` funcionó) pero sentía que tardaba — bajado `SOSTENER_MS` de 350 a 200.
+- **Causa real de "videos estáticos" en Praxias encontrada**: `VideoCompanero` se usaba con `quieto={true}` en TODOS los ejercicios con pasos (los 9 de Praxias, ya que todos tienen `PASOS_EJERCICIOS`) — era comportamiento INTENCIONAL de una sesión anterior (congelar en un cuadro fijo), pero el usuario lo percibe como bug. Se quitó `quieto` para que el compañero loopee como el resto.
+- Premios "Mi personaje": el accesorio (emoji) se veía "como un sticker" pegado sobre el video del personaje — se agregó `drop-shadow` para integrarlo mejor. Límite honesto: sigue siendo un emoji sobre un video real, no un asset ilustrado a medida — mejora parcial, no resuelve el fondo del problema (haría falta un accesorio dibujado/animado a medida).
+Todo verificado con `tsc --noEmit` (limpio) y push a producción. NO verificado visualmente en este entorno — el panel de preview no compositó ni una sola vez en toda la sesión (Browser pane no se mostró). Toda la verificación de esta ronda depende de que el usuario la pruebe de nuevo en su celular.
+Próximo paso exacto: esperar el nuevo feedback del usuario sobre esta ronda.
+
 ⏸️ CHECKPOINT — Sesión 6/7 SIGUE EN CURSO. Pase de "diseño premium" (skill `diseno`) + lista de 13 puntos que el usuario reportó tras probar la app en su celular real. **BUG CRÍTICO ENCONTRADO Y CORREGIDO**: `hooks/useRugidoDetector.ts` no llamaba `ctx.resume()` tras crear el `AudioContext` — en varios celulares (sobre todo iOS Safari) el contexto arranca "suspended" y el analizador solo lee silencio para siempre, aunque el mic tenga permiso. Esto explica el reporte del usuario ("rugí varias veces y no lo detectó"). Fix: `if (ctx.state === "suspended") await ctx.resume();` antes de conectar el analyser. ⚠️ Falta confirmación del usuario probando en su celular real — no se pudo verificar en este entorno (no hay micrófono real disponible para automatizar la prueba).
 HECHO en este pase (código verificado con `tsc --noEmit`, NO verificado visualmente — el panel de preview no compositó frames en toda la sesión, pendiente capturas reales):
 - Nav inferior: reemplazados los 5 emojis por íconos SVG propios (`IconMap/IconStairs/IconGiftBox/IconUser` nuevos en `icons.tsx`) con chip de fondo en el activo.

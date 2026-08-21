@@ -378,6 +378,7 @@ export default function PremiosPage() {
                         left: `${acc.left}%`,
                         transform: "translateX(-50%)",
                         fontSize: acc.tamaño,
+                        filter: "drop-shadow(0 3px 4px rgba(34,51,46,0.35))",
                       }}
                       aria-hidden="true"
                     >

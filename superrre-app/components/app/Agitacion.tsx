@@ -10,7 +10,7 @@ export function Agitacion() {
         </h2>
 
         <div className="mt-9 grid sm:grid-cols-2 gap-4">
-          <div className="rounded-2xl bg-surface-secondary p-5 flex items-start gap-4">
+          <div className="rounded-2xl bg-surface-primary shadow-sm p-5 flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-accent-soft text-brand-accent">
               <IconAlarmClock className="h-5 w-5" />
             </span>
@@ -28,7 +28,7 @@ export function Agitacion() {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-surface-secondary p-5 flex items-start gap-4">
+          <div className="rounded-2xl bg-surface-primary shadow-sm p-5 flex items-start gap-4">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-accent-soft text-brand-accent">
               <IconGraduation className="h-5 w-5" />
             </span>

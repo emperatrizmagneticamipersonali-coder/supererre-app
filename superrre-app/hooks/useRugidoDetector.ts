@@ -10,7 +10,9 @@ export type EstadoDeteccion =
   | "sin-microfono";
 
 const UMBRAL_SONIDO = 32; // volumen RMS (0-100) que cuenta como "intento real"
-const SOSTENER_MS = 350; // cuánto debe durar el sonido para contar
+const SOSTENER_MS = 200; // cuánto debe durar el sonido para contar — bajado
+// de 350ms: el usuario lo probó real y sintió que tardaba en reconocer el
+// grito, aunque sí lo detectaba
 
 /** Detecta un intento de sonido real por micrófono — 100% local, nunca se sube a internet. */
 export function useRugidoDetector() {
