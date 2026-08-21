@@ -129,11 +129,18 @@ export default function PraxiasPage() {
     setCuenta(null);
   }, [activa]);
 
+  // La indicación se escucha apenas se abre el ejercicio (pantalla "¿Estás
+  // listo?"), no recién cuando arranca el cronómetro — así el niño ya sabe
+  // qué hacer antes de tocar "Empezar" y de la cuenta regresiva.
+  useEffect(() => {
+    if (!activa) return;
+    hablar(activa.instruccion);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activa]);
+
   useEffect(() => {
     if (!activa || !iniciado) return;
-    hablar(activa.instruccion);
     setSegundos(activa.duracionSeg);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activa, iniciado]);
 
   useEffect(() => {

@@ -33,7 +33,7 @@ export const FIGURITAS: Figurita[] = [
   {
     id: "praxias-calentamiento",
     nombre: "Calentamiento",
-    emoji: "🐴",
+    emoji: "🥉",
     lograda: (p) => praxiaNivelCompleto(p, 0),
   },
   {
@@ -45,13 +45,13 @@ export const FIGURITAS: Figurita[] = [
   {
     id: "praxias-casi-listos",
     nombre: "Casi Listos para la R",
-    emoji: "🏍️",
+    emoji: "🥇",
     lograda: (p) => praxiaNivelCompleto(p, 2),
   },
   {
     id: "sonidos-leon",
     nombre: "Rugidos del León",
-    emoji: "🦁",
+    emoji: "🎤",
     lograda: (p) =>
       ["rugido", "ronroneo", "rugido-rey", "gruñido"].every((id) =>
         p.sonidosHechos.includes(`leon-${id}`)
