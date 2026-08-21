@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProgreso, marcarPraxiaHecha } from "@/lib/progress";
+import { useProgreso, marcarPraxiaHecha, factorTiempoPorEdad } from "@/lib/progress";
 import { NIVELES_PRAXIAS, TODAS_LAS_PRAXIAS, type Praxia } from "@/lib/praxias-data";
 import { useHablar } from "@/hooks/useHablar";
 import { BotonEscuchar } from "@/components/app/BotonEscuchar";
@@ -140,8 +140,8 @@ export default function PraxiasPage() {
 
   useEffect(() => {
     if (!activa || !iniciado) return;
-    setSegundos(activa.duracionSeg);
-  }, [activa, iniciado]);
+    setSegundos(Math.round(activa.duracionSeg * factorTiempoPorEdad(p.edad)));
+  }, [activa, iniciado, p.edad]);
 
   useEffect(() => {
     if (!activa || !iniciado || hecho || segundos <= 0) return;

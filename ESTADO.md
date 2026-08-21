@@ -1,6 +1,17 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-18 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. Ronda 3, dos pedidos del usuario:
+**Decisión técnica (DECIDE-INFORMA-AVANZA)**: adaptación real por edad de los ejercicios, con 2 mecanismos (criterio de fonoaudiología, no arbitrario):
+- `factorTiempoPorEdad(edad)` en `lib/progress.ts`: multiplica la duración del cronómetro de Praxias/Sonidos/Escalera — 4 años=1.4x, 5=1.2x, 6=1x (base), 7=0.9x, 8+=0.8x. Los chicos tienen menos control motor/de aire, necesitan más segundos por intento.
+- `ajustePorEdad(edad)` dentro de `hooks/useRugidoDetector.ts`: el hook ahora acepta `edad` opcional y ajusta umbral de volumen + tiempo sostenido — más permisivo para 4-5 años (umbral 24-28, sostener 150-175ms), más exigente para 7-8+ (umbral 34-36, sostener 220-240ms), 6 años = valores base (32/200, sin cambio).
+Ambos threaded desde `p.edad` (useProgreso) en las 3 pantallas de práctica.
+Pendiente de verdad adaptado y NO hecho todavía (quedó fuera de esta ronda, es más trabajo): dificultad/complejidad del CONTENIDO en sí (qué palabras/oraciones ve cada edad) — la Escalera Fonética sigue siendo la misma secuencia fija para todas las edades, solo cambió el tiempo y la tolerancia del micrófono.
+**Otros fixes**: audio de instrucción en Praxias ahora se reproduce apenas se abre el ejercicio (antes del botón "Empezar" y la cuenta 3-2-1, quedó pendiente de un pedido anterior). 3 figuritas del Álbum repetían el mismo emoji que un ícono funcional ya visible en otra pantalla (Calentamiento=🐴 iba a Caballo, Casi Listos=🏍️ a Moto, Rugidos del León=🦁 al personaje) — reemplazadas por 🥉🥇🎤.
+**Pendiente del usuario**: el sticker/emoji de los accesorios de vestir se sigue viendo "chafo" — no hay forma de generar imágenes en este entorno, se le pasaron 4 prompts (mismo estilo que el logo/mascotas) para que los genere con Gemini y los mande quede integrarlos.
+Verificado con `tsc --noEmit` (limpio), NO verificado visualmente (panel de preview sigue sin compositar en toda la sesión).
+Próximo paso exacto: esperar que el usuario pruebe esta ronda + que mande las 4 imágenes de accesorios si las genera.
+
 ⏸️ CHECKPOINT — Sesión 6/7. Ronda 2 de fixes tras probar el usuario en su celular real (Android + Chrome) el commit anterior (`3f15198`):
 - Logo: la R seguía viéndose baja con el primer recorte — se ajustó de nuevo (menos margen arriba, que sobraba).
 - Hero: agregado chip "y muchas palabras más" (se evitó poner un número específico tipo "30 palabras" porque no era exacto contando el contenido real de `escalera-data.ts` — solo hay 10 "palabra" formales por ahora).

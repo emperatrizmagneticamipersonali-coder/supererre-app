@@ -9,15 +9,22 @@ export type EstadoDeteccion =
   | "detectado"
   | "sin-microfono";
 
-const UMBRAL_SONIDO = 32; // volumen RMS (0-100) que cuenta como "intento real"
-const SOSTENER_MS = 200; // cuánto debe durar el sonido para contar — bajado
-// de 350ms: el usuario lo probó real y sintió que tardaba en reconocer el
-// grito, aunque sí lo detectaba
+/** Umbral de volumen y tiempo sostenido según edad — los más chicos tienen
+ * menos control de aire/volumen (les cuesta más sostener un sonido fuerte),
+ * así que se les exige menos; los más grandes ya pueden ser más precisos. */
+function ajustePorEdad(edad?: number): { umbral: number; sostenerMs: number } {
+  if (!edad || edad === 6) return { umbral: 32, sostenerMs: 200 };
+  if (edad <= 4) return { umbral: 24, sostenerMs: 150 };
+  if (edad === 5) return { umbral: 28, sostenerMs: 175 };
+  if (edad === 7) return { umbral: 34, sostenerMs: 220 };
+  return { umbral: 36, sostenerMs: 240 }; // 8 años o más
+}
 
 /** Detecta un intento de sonido real por micrófono — 100% local, nunca se sube a internet. */
-export function useRugidoDetector() {
+export function useRugidoDetector(edad?: number) {
   const [estado, setEstado] = useState<EstadoDeteccion>("idle");
   const [nivelVoz, setNivelVoz] = useState(0);
+  const { umbral: UMBRAL_SONIDO, sostenerMs: SOSTENER_MS } = ajustePorEdad(edad);
 
   const streamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);

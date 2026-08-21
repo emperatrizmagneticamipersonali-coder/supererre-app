@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProgreso, marcarNivelEscaleraHecho } from "@/lib/progress";
+import { useProgreso, marcarNivelEscaleraHecho, factorTiempoPorEdad } from "@/lib/progress";
 import {
   gruposDe,
   INSTRUCCION_POR_TIPO,
@@ -86,6 +86,7 @@ export function EscaleraLetra({
     return (
       <NivelDetector
         nivel={nivelActivo}
+        edad={p.edad}
         onVolver={() => setNivelActivo(null)}
         onDetectado={() => marcarNivelEscaleraHecho(nivelActivo.id)}
         onReclamar={() => {
@@ -287,18 +288,22 @@ const DURACION_NIVEL_SEG = 10;
 
 function NivelDetector({
   nivel,
+  edad,
   onVolver,
   onDetectado,
   onReclamar,
 }: {
   nivel: NivelEscalera;
+  edad: number;
   onVolver: () => void;
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector();
+  const { estado, nivelVoz, empezar } = useRugidoDetector(edad);
   const { hablar } = useHablar();
-  const [segundos, setSegundos] = useState(DURACION_NIVEL_SEG);
+  const [segundos, setSegundos] = useState(
+    Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
+  );
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const completado = estado === "detectado" || estado === "sin-microfono";
   // cada peldaño tiene exactamente 3 niveles (sílaba/palabra/oración,

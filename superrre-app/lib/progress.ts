@@ -147,6 +147,19 @@ export function planDiarioPorEdad(edad: number): {
   return { minutos: 10, texto: "10 minutos al día" };
 }
 
+/** Multiplicador del tiempo de cada ejercicio/cronómetro según edad — los
+ * más chicos tienen menos control motor y de aire y necesitan más segundos
+ * por intento; los más grandes ya son más rápidos y precisos. Mismo
+ * criterio de fonoaudiología que planDiarioPorEdad, aplicado a la duración
+ * de cada intento en vez de al total diario. */
+export function factorTiempoPorEdad(edad: number): number {
+  if (edad <= 4) return 1.4;
+  if (edad === 5) return 1.2;
+  if (edad === 6) return 1;
+  if (edad === 7) return 0.9;
+  return 0.8; // 8 años o más
+}
+
 export function marcarPraxiaHecha(id: string) {
   const p = leerProgreso();
   if (!p.praxiasHechas.includes(id)) {

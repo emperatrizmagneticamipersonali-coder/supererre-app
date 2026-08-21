@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useProgreso, marcarSonidoHecho } from "@/lib/progress";
+import { useProgreso, marcarSonidoHecho, factorTiempoPorEdad } from "@/lib/progress";
 import { MODOS } from "@/lib/sonidos-data";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
 import { useHablar } from "@/hooks/useHablar";
@@ -47,6 +47,7 @@ export default function SonidosPage() {
         nombre={sonido.nombre}
         pista={sonido.pista}
         videoDemo={sonido.videoDemo}
+        edad={p.edad}
         onVolver={() => setSonidoId(null)}
         onSiguiente={siguienteSonido ? () => setSonidoId(siguienteSonido.id) : null}
         onDetectado={() => marcarSonidoHecho(`${modo}-${sonido.id}`)}
@@ -143,6 +144,7 @@ function SonidoDetector({
   nombre,
   pista,
   videoDemo,
+  edad,
   onVolver,
   onSiguiente,
   onDetectado,
@@ -152,14 +154,17 @@ function SonidoDetector({
   nombre: string;
   pista: string;
   videoDemo?: string;
+  edad: number;
   onVolver: () => void;
   onSiguiente: (() => void) | null;
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector();
+  const { estado, nivelVoz, empezar } = useRugidoDetector(edad);
   const { hablar } = useHablar();
-  const [segundos, setSegundos] = useState(DURACION_SONIDO_SEG);
+  const [segundos, setSegundos] = useState(
+    Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
+  );
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const marco = estado === "detectado";
   const completado = estado === "detectado" || estado === "sin-microfono";
