@@ -301,21 +301,34 @@ export default function PremiosPage() {
 
       {pestaña === "album" && (
         <>
-          <p className="mt-4 text-sm text-txt-secondary">
-            {figuritas.length}/{FIGURITAS.length} figuritas · ganás una nueva
-            cada vez que terminás una fase completa.
+          <div className="mt-4 flex items-center gap-3">
+            <div className="flex-1 h-2.5 rounded-full bg-surface-tertiary overflow-hidden">
+              <div
+                className="h-full rounded-full bg-brand-primary transition-[width] duration-500"
+                style={{
+                  width: `${(figuritas.length / FIGURITAS.length) * 100}%`,
+                }}
+              />
+            </div>
+            <span className="text-xs font-bold text-txt-secondary tabular-nums shrink-0">
+              {figuritas.length}/{FIGURITAS.length}
+            </span>
+          </div>
+          <p className="mt-2 text-xs text-txt-tertiary">
+            Ganás una figurita nueva cada vez que terminás una fase completa.
           </p>
           <div className="mt-4 grid grid-cols-3 gap-3">
-            {FIGURITAS.map((f) => {
+            {FIGURITAS.map((f, i) => {
               const lograda = figuritas.some((g) => g.id === f.id);
               return (
                 <div
                   key={f.id}
-                  className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl border p-2 text-center ${
+                  className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl p-2 text-center animate-fade-up ${
                     lograda
-                      ? "border-brand-primary bg-surface-primary"
-                      : "border-border-default bg-surface-secondary"
+                      ? "bg-surface-primary shadow-md ring-2 ring-brand-primary"
+                      : "border-2 border-dashed border-border-default bg-surface-secondary"
                   }`}
+                  style={{ animationDelay: `${i * 40}ms` }}
                 >
                   {lograda ? (
                     <>
@@ -338,39 +351,51 @@ export default function PremiosPage() {
 
       {pestaña === "vestir" && (
         <div className="flex-1 flex flex-col items-center pt-4">
-          <div className="relative" style={{ width: 220, height: 220 }}>
-            <Mascota tema={tema} size={220} />
-            {p.accesorioEquipado &&
-              (() => {
-                const acc = ACCESORIOS.find(
-                  (a) => a.id === p.accesorioEquipado
-                );
-                if (!acc) return null;
-                return (
-                  <span
-                    className="absolute select-none animate-pop-in"
-                    style={{
-                      top: `${acc.top}%`,
-                      left: `${acc.left}%`,
-                      transform: "translateX(-50%)",
-                      fontSize: acc.tamaño,
-                    }}
-                    aria-hidden="true"
-                  >
-                    {acc.emoji}
-                  </span>
-                );
-              })()}
+          <div
+            className="relative flex items-center justify-center rounded-full animate-fade-up"
+            style={{
+              width: 240,
+              height: 240,
+              background:
+                "radial-gradient(circle, var(--surface-primary) 58%, transparent 60%)",
+              boxShadow:
+                "0 0 0 3px var(--surface-primary), 0 0 0 8px var(--brand-primary), 0 0 0 12px var(--surface-primary), 0 0 0 16px var(--brand-secondary)",
+            }}
+          >
+            <div className="relative" style={{ width: 200, height: 200 }}>
+              <Mascota tema={tema} size={200} />
+              {p.accesorioEquipado &&
+                (() => {
+                  const acc = ACCESORIOS.find(
+                    (a) => a.id === p.accesorioEquipado
+                  );
+                  if (!acc) return null;
+                  return (
+                    <span
+                      className="absolute select-none animate-pop-in"
+                      style={{
+                        top: `${acc.top}%`,
+                        left: `${acc.left}%`,
+                        transform: "translateX(-50%)",
+                        fontSize: acc.tamaño,
+                      }}
+                      aria-hidden="true"
+                    >
+                      {acc.emoji}
+                    </span>
+                  );
+                })()}
+            </div>
           </div>
 
-          <p className="mt-4 text-sm text-txt-secondary text-center max-w-56">
+          <p className="mt-6 text-sm text-txt-secondary text-center max-w-56">
             {accesorios.length === 0
               ? "Termina una sección completa para ganar tu primer accesorio."
               : "Toca un accesorio para ponérselo o quitárselo."}
           </p>
 
           <div className="mt-4 grid grid-cols-4 gap-3 w-full max-w-72">
-            {ACCESORIOS.map((a) => {
+            {ACCESORIOS.map((a, i) => {
               const lograda = accesorios.some((g) => g.id === a.id);
               const equipado = p.accesorioEquipado === a.id;
               return (
@@ -379,13 +404,14 @@ export default function PremiosPage() {
                   disabled={!lograda}
                   onClick={() => equiparAccesorio(equipado ? null : a.id)}
                   aria-label={a.nombre}
-                  className={`flex aspect-square flex-col items-center justify-center rounded-2xl border transition-transform active:scale-95 ${
+                  className={`flex aspect-square flex-col items-center justify-center rounded-2xl transition-transform active:scale-95 animate-fade-up ${
                     equipado
-                      ? "border-brand-primary bg-brand-primary-soft"
+                      ? "bg-brand-primary-soft shadow-md ring-2 ring-brand-primary"
                       : lograda
-                      ? "border-border-default bg-surface-primary"
-                      : "border-border-default bg-surface-secondary"
+                      ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
+                      : "border-2 border-dashed border-border-default bg-surface-secondary"
                   }`}
+                  style={{ animationDelay: `${i * 40}ms` }}
                 >
                   {lograda ? (
                     <span className="text-2xl select-none" aria-hidden="true">

@@ -17,6 +17,7 @@ import {
   IconShieldCheck,
   IconCoin,
   IconMic,
+  IconNotebook,
 } from "../icons";
 
 type Step =
@@ -31,7 +32,7 @@ type Step =
   | "paywall"
   | "gate";
 
-const EDADES = ["4 años", "5 años", "6 años", "7 años"];
+const EDADES = ["4 años", "5 años", "6 años", "7 años", "8 años o más"];
 
 const DOLORES = [
   "Dice L o W en vez de R (“cawo”, “lolo”)",
@@ -263,11 +264,15 @@ function StepEdad({
     <div className="flex-1 flex flex-col px-5 pt-8 pb-6 animate-fade-up">
       <MascotBubble>¿Cuántos años tiene {nombre || "tu hijo"}?</MascotBubble>
       <div className="mt-8 grid grid-cols-2 gap-3">
-        {EDADES.map((e) => (
+        {EDADES.map((e, i) => (
           <button
             key={e}
             onClick={() => onSelect(e)}
             className={`rounded-2xl py-6 text-center font-display font-bold text-xl transition-colors active:scale-[0.98] ${
+              i === EDADES.length - 1 && EDADES.length % 2 === 1
+                ? "col-span-2"
+                : ""
+            } ${
               value === e
                 ? "border-2 border-brand-primary bg-brand-primary-soft text-txt-on-primary-soft"
                 : "border border-border-default bg-surface-primary text-txt-primary"
@@ -356,7 +361,7 @@ function StepReconocimiento({
   const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
   return (
     <div className="flex-1 flex flex-col px-5 pt-10 pb-6 text-center items-center animate-fade-up">
-      <Mascota tema={tema} size={96} className="mb-4" />
+      <Mascota tema={tema} size={132} className="mb-4" />
       <p className="text-xs text-txt-tertiary mb-1">
         {n} y su {tema === "pirata" ? "Pirata" : "León"} guía
       </p>
@@ -434,17 +439,18 @@ function StepLoading({
       aria-live="polite"
       aria-busy={pct < 100}
     >
-      <div className="relative flex items-end justify-center gap-3">
-        <div className="h-32 w-24 rounded-2xl border-4 border-txt-primary/90 bg-brand-secondary-soft flex items-center justify-center overflow-hidden">
-          <span className="text-4xl animate-breathe" aria-hidden="true">
-            🗺️
-          </span>
-        </div>
-        <div className="-ml-2 animate-float-slow" aria-hidden="true">
-          <Mascota tema={tema} size={64} className="shadow-md" />
+      <div className="relative flex items-center justify-center">
+        <div className="animate-float-slow" aria-hidden="true">
+          <Mascota tema={tema} size={128} className="shadow-md" />
         </div>
         <span
-          className="absolute -top-4 -right-2 text-2xl animate-float-slow-alt"
+          className="absolute -bottom-1 -right-2 flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-secondary text-txt-on-brand shadow-md animate-breathe"
+          aria-hidden="true"
+        >
+          <IconNotebook className="h-5 w-5" />
+        </span>
+        <span
+          className="absolute -top-3 -left-4 text-2xl animate-float-slow-alt"
           aria-hidden="true"
         >
           ✨

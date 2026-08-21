@@ -182,6 +182,53 @@ export function IconFlame({ className }: IconProps) {
   );
 }
 
+export function IconMap({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z" className={base} />
+      <path d="M9 4v14M15 6v14" className={base} />
+    </svg>
+  );
+}
+
+export function IconStairs({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 20v-4h4v-4h4V8h4V4h4" className={base} />
+      <path d="M4 20h16" className={base} />
+    </svg>
+  );
+}
+
+export function IconGiftBox({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="9" width="16" height="11" rx="1.5" className={base} />
+      <path d="M4 9h16M12 9v11" className={base} />
+      <path d="M12 9C10.5 5.5 6.5 5 6.5 7.5S9.5 9 12 9ZM12 9c1.5-3.5 5.5-4 5.5-1.5S14.5 9 12 9Z" className={base} />
+    </svg>
+  );
+}
+
+export function IconUser({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="3.5" className={base} />
+      <path d="M5 20c0-3.9 3.1-6 7-6s7 2.1 7 6" className={base} />
+    </svg>
+  );
+}
+
+export function IconNotebook({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="3" width="15" height="18" rx="2" className={base} />
+      <path d="M5 7h2M5 11h2M5 15h2" className={base} />
+      <path d="M10 9c3-1.5 6-1 7 .5s-1 3-4 2.5" className={base} />
+    </svg>
+  );
+}
+
 export function IconVolume({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

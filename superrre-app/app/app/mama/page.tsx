@@ -4,34 +4,38 @@ import { useRouter } from "next/navigation";
 import { useProgreso, totalEjerciciosHechos, planDiarioPorEdad } from "@/lib/progress";
 import { nivelPorId } from "@/lib/escalera-data";
 import { IconShieldCheck, IconCoin, IconCheck, IconAlarmClock } from "@/components/app/icons";
+import { useConteo } from "@/hooks/useConteo";
 
 export default function MamaPage() {
   const router = useRouter();
   const p = useProgreso();
   const plan = planDiarioPorEdad(p.edad);
+  const estrellasAnimadas = useConteo(p.estrellas);
+  const ejerciciosAnimados = useConteo(totalEjerciciosHechos(p));
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
-      <h1 className="font-display font-extrabold text-2xl text-txt-primary">
+      <h1 className="font-display font-extrabold text-2xl text-txt-primary animate-fade-up">
         Progreso de {p.nombre || "tu hijo"}
       </h1>
 
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl bg-surface-secondary p-4">
-          <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
-            {p.estrellas}
-          </p>
-          <p className="text-xs text-txt-secondary mt-1">Estrellas ganadas</p>
-        </div>
-        <div className="rounded-2xl bg-surface-secondary p-4">
-          <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
-            {totalEjerciciosHechos(p)}
-          </p>
-          <p className="text-xs text-txt-secondary mt-1">Ejercicios completados</p>
-        </div>
+      <div className="mt-5 rounded-2xl bg-brand-primary-soft p-5 animate-fade-up [animation-delay:60ms]">
+        <p className="text-5xl font-display font-extrabold text-txt-on-primary-soft tabular-nums">
+          {estrellasAnimadas}
+        </p>
+        <p className="text-sm font-semibold text-txt-on-primary-soft mt-1">
+          Estrellas ganadas
+        </p>
       </div>
 
-      <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-default p-4">
+      <div className="mt-3 rounded-2xl bg-surface-tertiary p-4 animate-fade-up [animation-delay:120ms]">
+        <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
+          {ejerciciosAnimados}
+        </p>
+        <p className="text-xs text-txt-secondary mt-1">Ejercicios completados</p>
+      </div>
+
+      <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-default p-4 animate-fade-up [animation-delay:180ms]">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft">
           <IconAlarmClock className="h-5 w-5" />
         </span>
@@ -47,7 +51,7 @@ export default function MamaPage() {
       </div>
 
       {p.palabrasHechas.length > 0 && (
-        <div className="mt-4 rounded-2xl border border-border-default p-4">
+        <div className="mt-4 rounded-2xl border border-border-default p-4 animate-fade-up [animation-delay:240ms]">
           <p className="text-xs font-bold uppercase tracking-wide text-txt-tertiary mb-2">
             Sílabas, palabras y oraciones que ya dijo
           </p>
@@ -68,7 +72,7 @@ export default function MamaPage() {
         </div>
       )}
 
-      <div className="mt-6 rounded-2xl border-2 border-brand-primary bg-surface-primary p-5">
+      <div className="mt-6 rounded-2xl border-2 border-brand-primary bg-surface-primary p-5 animate-fade-up [animation-delay:300ms]">
         {p.plan === "completo" ? (
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary text-txt-on-brand">

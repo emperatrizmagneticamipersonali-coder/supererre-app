@@ -22,11 +22,9 @@ const dolores = [
     icon: IconMic,
     texto: (
       <>
-        ¿Le pides que repita &ldquo;perro&rdquo; y termina llorando:{" "}
-        <strong className="font-semibold">
-          &ldquo;¡no puedo, no me sale!&rdquo;
-        </strong>
-        ?
+        ¿Le pides que repita &ldquo;perro&rdquo; y termina{" "}
+        <strong className="font-semibold">frustrado o llorando</strong>,
+        diciendo: &ldquo;¡no puedo!&rdquo;?
       </>
     ),
   },
@@ -44,9 +42,9 @@ const dolores = [
     icon: IconAlarmClock,
     texto: (
       <>
-        ¿Te da miedo que entre a primaria{" "}
+        ¿Te da miedo que siga creciendo, llegue a adulto, y{" "}
         <strong className="font-semibold">
-          sin poder pronunciar ni escribir bien la R
+          todavía no pueda pronunciar ni escribir bien la R
         </strong>
         ?
       </>

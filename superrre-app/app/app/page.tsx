@@ -7,6 +7,7 @@ import { TODAS_LAS_PRAXIAS } from "@/lib/praxias-data";
 import { MODOS } from "@/lib/sonidos-data";
 import { IconLock, IconCheck, IconFlame } from "@/components/app/icons";
 import { Mascota } from "@/components/app/Mascota";
+import { useConteo } from "@/hooks/useConteo";
 
 type PasoMapa = {
   id: string;
@@ -147,6 +148,8 @@ export default function MapaDeIslasPage() {
   if (indiceActual === -1) indiceActual = 0;
 
   let contadorGlobal = 0;
+  const rachaAnimada = useConteo(calcularRacha(p.diasActivos).actual);
+  const estrellasAnimadas = useConteo(p.estrellas);
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
@@ -164,11 +167,11 @@ export default function MapaDeIslasPage() {
           className="flex items-center gap-2"
           aria-label="Ver racha"
         >
-          <span className="inline-flex items-center gap-1 rounded-full bg-brand-accent-soft text-brand-accent text-sm font-bold px-3 py-2">
-            <IconFlame className="h-4 w-4" /> {calcularRacha(p.diasActivos).actual}
+          <span className="inline-flex items-center gap-1 rounded-full bg-brand-accent-soft text-brand-accent text-sm font-bold px-3 py-2 tabular-nums">
+            <IconFlame className="h-4 w-4" /> {rachaAnimada}
           </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-3 py-2">
-            ⭐ {p.estrellas}
+          <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-3 py-2 tabular-nums">
+            ⭐ {estrellasAnimadas}
           </span>
         </Link>
       </div>

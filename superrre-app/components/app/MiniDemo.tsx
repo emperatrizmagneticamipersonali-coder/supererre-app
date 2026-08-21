@@ -71,22 +71,23 @@ export function MiniDemo() {
           )}
           {stage === "playing" && (
             <p className="text-base font-semibold text-txt-on-primary-soft">
-              &ldquo;¡GRRR!&rdquo; — grabando la imitación…
+              &ldquo;¡GRRR!&rdquo; — así lo escucha el León…
             </p>
           )}
           {stage === "done" && (
             <div className="flex items-center gap-2 text-brand-secondary animate-pop-in">
               <IconSparkles className="h-5 w-5" />
               <p className="text-base font-bold">
-                ¡Primera estrella conseguida!
+                ¡Así se ve la primera estrella!
               </p>
             </div>
           )}
         </div>
 
         <p className="mt-4 text-xs text-txt-tertiary leading-relaxed">
-          Demo del mecanismo real. El audio se procesa siempre en el
-          celular — nunca se sube a internet.
+          Así se va a sentir con tu hijo. En la app real, el Espejo
+          escucha su intento por el micrófono — el audio se procesa
+          siempre en el celular, nunca se sube a internet.
         </p>
       </div>
     </div>

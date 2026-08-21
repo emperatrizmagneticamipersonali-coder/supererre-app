@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IconMap, IconFlame, IconStairs, IconGiftBox, IconUser } from "./icons";
 
 const ITEMS = [
-  { href: "/app", label: "Mapa", emoji: "🗺️" },
-  { href: "/app/racha", label: "Racha", emoji: "🔥" },
-  { href: "/app/escalera", label: "Escalera", emoji: "🪜" },
-  { href: "/app/premios", label: "Premios", emoji: "🎈" },
-  { href: "/app/mama", label: "Mamá", emoji: "👤" },
+  { href: "/app", label: "Mapa", Icon: IconMap },
+  { href: "/app/racha", label: "Racha", Icon: IconFlame },
+  { href: "/app/escalera", label: "Escalera", Icon: IconStairs },
+  { href: "/app/premios", label: "Premios", Icon: IconGiftBox },
+  { href: "/app/mama", label: "Mamá", Icon: IconUser },
 ] as const;
 
 export function AppNav() {
@@ -24,14 +25,20 @@ export function AppNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center gap-1 rounded-xl px-4 py-1 text-xs font-bold transition-colors ${
-              active ? "text-brand-accent" : "text-txt-tertiary"
-            }`}
+            className="flex flex-col items-center gap-1 rounded-xl px-3 py-1 text-xs font-bold transition-colors"
           >
-            <span className="text-xl" aria-hidden="true">
-              {item.emoji}
+            <span
+              className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
+                active
+                  ? "bg-brand-accent-soft text-brand-accent"
+                  : "text-txt-tertiary"
+              }`}
+            >
+              <item.Icon className="h-5 w-5" />
             </span>
-            {item.label}
+            <span className={active ? "text-brand-accent" : "text-txt-tertiary"}>
+              {item.label}
+            </span>
           </Link>
         );
       })}

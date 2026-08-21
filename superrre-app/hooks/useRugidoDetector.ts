@@ -51,6 +51,12 @@ export function useRugidoDetector() {
       streamRef.current = stream;
       const ctx = new AudioContext();
       audioCtxRef.current = ctx;
+      // En varios celulares (sobre todo iOS Safari) el AudioContext arranca
+      // "suspended" incluso con gesto del usuario — sin resume() el analyser
+      // solo lee silencio para siempre y nunca detecta ningún sonido real.
+      if (ctx.state === "suspended") {
+        await ctx.resume();
+      }
       const source = ctx.createMediaStreamSource(stream);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 512;

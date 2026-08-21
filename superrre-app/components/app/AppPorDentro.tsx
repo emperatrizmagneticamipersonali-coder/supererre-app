@@ -71,8 +71,8 @@ export function AppPorDentro() {
           La app por dentro
         </h2>
         <p className="mt-3 text-center text-txt-secondary max-w-md mx-auto">
-          Vistas previas del diseño — la app está en construcción, estas
-          son las pantallas que vamos a montar.
+          Así se ve la app por dentro — cada pantalla ya está lista y
+          funcionando.
         </p>
 
         <div
@@ -95,7 +95,7 @@ export function AppPorDentro() {
                 <span
                   className={`text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4 text-txt-on-brand ${tono[p.tono].solid}`}
                 >
-                  Próximamente
+                  Ya disponible
                 </span>
                 <p className="font-display font-bold text-base text-txt-primary">
                   {p.nombre}

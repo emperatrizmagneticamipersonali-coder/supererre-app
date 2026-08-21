@@ -40,7 +40,19 @@ export function Mascota({
         loop
         muted
         playsInline
-        className="hidden"
+        // display:none frena la decodificación de cuadros en varios
+        // celulares Android/Chrome (para ahorrar batería) — el video queda
+        // "pausado" aunque autoplay siga activo, y el canvas dibuja siempre
+        // el mismo cuadro viejo. Con opacity:0 + tamaño 1px sigue en el
+        // árbol de render (decodifica normal) pero es invisible.
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: "none",
+          overflow: "hidden",
+        }}
       />
       <canvas
         ref={canvasRef}

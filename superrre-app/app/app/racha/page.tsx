@@ -8,6 +8,7 @@ import {
   totalEjerciciosHechos,
 } from "@/lib/progress";
 import { IconFlame } from "@/components/app/icons";
+import { useConteo } from "@/hooks/useConteo";
 
 const DIAS_CORTOS = ["do", "lu", "ma", "mi", "ju", "vi", "sa"];
 
@@ -24,6 +25,9 @@ export default function RachaPage() {
   const nivel = calcularNivel(p);
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
   const activos = new Set(p.diasActivos);
+  const rachaActualAnimada = useConteo(racha.actual);
+  const mejorRachaAnimada = useConteo(racha.mejor);
+  const ejerciciosAnimados = useConteo(totalEjerciciosHechos(p));
 
   const ultimos7 = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
@@ -64,7 +68,7 @@ export default function RachaPage() {
           />
         </div>
         <p className="mt-4 font-display font-extrabold text-4xl text-txt-primary tabular-nums">
-          {racha.actual}
+          {rachaActualAnimada}
         </p>
         <p className="text-sm text-txt-secondary">
           {racha.actual === 1 ? "día seguido" : "días seguidos"}
@@ -107,13 +111,13 @@ export default function RachaPage() {
       <div className="mt-4 flex gap-3">
         <div className="flex-1 rounded-2xl bg-surface-secondary p-4">
           <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
-            {racha.mejor}
+            {mejorRachaAnimada}
           </p>
           <p className="text-xs text-txt-secondary mt-1">Mejor racha</p>
         </div>
         <div className="flex-1 rounded-2xl bg-surface-secondary p-4">
           <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
-            {totalEjerciciosHechos(p)}
+            {ejerciciosAnimados}
           </p>
           <p className="text-xs text-txt-secondary mt-1">Ejercicios en total</p>
         </div>

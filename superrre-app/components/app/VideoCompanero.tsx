@@ -55,7 +55,17 @@ export function VideoCompanero({
         }}
         onSeeked={() => setListo(true)}
         onCanPlay={() => setListo(true)}
-        className="hidden"
+        // display:none frena la decodificación de cuadros en varios
+        // celulares Android/Chrome — el canvas queda pegado en un cuadro
+        // viejo ("video estático"). opacity:0 a 1px sigue decodificando.
+        style={{
+          position: "absolute",
+          width: 1,
+          height: 1,
+          opacity: 0,
+          pointerEvents: "none",
+          overflow: "hidden",
+        }}
       />
       <canvas
         ref={canvasRef}
