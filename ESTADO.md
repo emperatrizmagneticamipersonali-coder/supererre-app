@@ -1,6 +1,14 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-18 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. **Usuario confirmó "ya quedó"** tras la ronda 4 (micrófono más sensible + cronómetro con voz en Praxias). Con esto se da por cerrado el pase de pulido de esta sesión iniciado con el skill `diseno` + la lista de 13 puntos.
+Pendientes reales que quedaron abiertos, no perder de vista:
+- Accesorios de "Mi personaje" (sombrero/gafas/capa/corona) siguen siendo emoji con sombra, no arte a medida — el usuario tiene 4 prompts de imagen listos para generar y mandar cuando quiera.
+- Adaptación por edad: hecho tiempo+tolerancia del detector; el CONTENIDO (dificultad de palabras/oraciones) sigue sin adaptar, quedó explícitamente fuera de esta ronda.
+- AppPorDentro.tsx (landing) sigue con tarjetas placeholder con ícono — pendiente reemplazar por screenshots reales de la app (bloqueado por el panel de preview que no funcionó en toda la sesión).
+- Puntos 13 y 16 de la lista original del usuario (monedas para vestir al León comprándolas, ejercicio de completar frases eligiendo letras correctas) son FEATURES NUEVAS, no se tocaron — quedan en backlog.
+Próximo paso exacto: preguntarle al usuario si sigue puliendo algo más o retoma la Secuencia Maestra (dominio propio / Auth real conectado al código / Hotmart / Resend).
+
 ⏸️ CHECKPOINT — Sesión 6/7. Ronda 4:
 - Praxias: cronómetro ahora también se ESCUCHA (`hablar(String(segundos))` en cada tick). Deliberadamente NO se agregó en Sonidos/Escalera: ahí el micrófono está escuchando activamente durante el cronómetro (`estado==="escuchando"`), y la voz del propio celular podría hacer que el detector se auto-dispare pensando que fue el niño — riesgo real de falso positivo, no un descuido.
 - `useRugidoDetector.ts`: usuario reportó que el rugido/gruñido SIGUE sin detectarse bien pese al fix de `resume()` de la ronda 1. Causa probable: el umbral estaba calibrado pensando en un grito abierto ("¡AAAH!"), pero un "grrrr" real (sonido gutural, poco flujo de aire) da un RMS mucho más bajo aunque el niño se esfuerce igual. Se subió el multiplicador de ganancia de 3.2 a 4.6 (equivale a bajar todos los umbrales por edad ~30% de una sola fuente, en vez de tocar cada valor de la tabla). ⚠️ Sigue sin verificación real del usuario — si esto tampoco alcanza, el siguiente paso sería instrumentar un log temporal del nivelVoz real que lee para calibrar con el dato real en vez de estimar a ciegas.
