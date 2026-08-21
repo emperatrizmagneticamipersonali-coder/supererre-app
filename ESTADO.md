@@ -1,6 +1,12 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-18 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. Ronda 4:
+- Praxias: cronómetro ahora también se ESCUCHA (`hablar(String(segundos))` en cada tick). Deliberadamente NO se agregó en Sonidos/Escalera: ahí el micrófono está escuchando activamente durante el cronómetro (`estado==="escuchando"`), y la voz del propio celular podría hacer que el detector se auto-dispare pensando que fue el niño — riesgo real de falso positivo, no un descuido.
+- `useRugidoDetector.ts`: usuario reportó que el rugido/gruñido SIGUE sin detectarse bien pese al fix de `resume()` de la ronda 1. Causa probable: el umbral estaba calibrado pensando en un grito abierto ("¡AAAH!"), pero un "grrrr" real (sonido gutural, poco flujo de aire) da un RMS mucho más bajo aunque el niño se esfuerce igual. Se subió el multiplicador de ganancia de 3.2 a 4.6 (equivale a bajar todos los umbrales por edad ~30% de una sola fuente, en vez de tocar cada valor de la tabla). ⚠️ Sigue sin verificación real del usuario — si esto tampoco alcanza, el siguiente paso sería instrumentar un log temporal del nivelVoz real que lee para calibrar con el dato real en vez de estimar a ciegas.
+Verificado con tsc (limpio), NO verificado visualmente (panel de preview sigue sin funcionar toda la sesión).
+Próximo paso exacto: esperar que el usuario pruebe de nuevo el rugido y el cronómetro con voz.
+
 ⏸️ CHECKPOINT — Sesión 6/7. Ronda 3, dos pedidos del usuario:
 **Decisión técnica (DECIDE-INFORMA-AVANZA)**: adaptación real por edad de los ejercicios, con 2 mecanismos (criterio de fonoaudiología, no arbitrario):
 - `factorTiempoPorEdad(edad)` en `lib/progress.ts`: multiplica la duración del cronómetro de Praxias/Sonidos/Escalera — 4 años=1.4x, 5=1.2x, 6=1x (base), 7=0.9x, 8+=0.8x. Los chicos tienen menos control motor/de aire, necesitan más segundos por intento.

@@ -149,6 +149,14 @@ export default function PraxiasPage() {
     return () => clearTimeout(t);
   }, [activa, iniciado, hecho, segundos]);
 
+  // el cronómetro se escucha en voz alta (10, 9, 8...) además de verse,
+  // para niños que todavía no leen números
+  useEffect(() => {
+    if (!activa || !iniciado || hecho || segundos <= 0) return;
+    hablar(String(segundos));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [segundos]);
+
   useEffect(() => {
     if (cuenta === null) return;
     if (cuenta === 0) {

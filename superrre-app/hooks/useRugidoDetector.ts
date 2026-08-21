@@ -82,7 +82,10 @@ export function useRugidoDetector(edad?: number) {
           const v = (data[i] - 128) / 128;
           sum += v * v;
         }
-        const rms = Math.sqrt(sum / data.length) * 100 * 3.2;
+        // *4.6 (antes 3.2): un gruñido/rugido real ("grrrr") es naturalmente
+        // más bajo de volumen que un grito abierto tipo "¡AAAH!" aunque el
+        // niño se esfuerce igual — el detector no lo estaba reconociendo.
+        const rms = Math.sqrt(sum / data.length) * 100 * 4.6;
         setNivelVoz(Math.min(100, rms));
 
         if (rms >= UMBRAL_SONIDO) {
