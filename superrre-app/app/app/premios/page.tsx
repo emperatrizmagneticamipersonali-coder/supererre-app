@@ -371,19 +371,20 @@ export default function PremiosPage() {
                   );
                   if (!acc) return null;
                   return (
-                    <span
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={acc.imagen}
+                      alt=""
                       className="absolute select-none animate-pop-in"
                       style={{
                         top: `${acc.top}%`,
                         left: `${acc.left}%`,
-                        transform: "translateX(-50%)",
-                        fontSize: acc.tamaño,
+                        width: acc.ancho,
+                        transform: "translate(-50%, -50%)",
                         filter: "drop-shadow(0 3px 4px rgba(34,51,46,0.35))",
                       }}
                       aria-hidden="true"
-                    >
-                      {acc.emoji}
-                    </span>
+                    />
                   );
                 })()}
             </div>
@@ -415,9 +416,12 @@ export default function PremiosPage() {
                   style={{ animationDelay: `${i * 40}ms` }}
                 >
                   {lograda ? (
-                    <span className="text-2xl select-none" aria-hidden="true">
-                      {a.emoji}
-                    </span>
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={a.imagen}
+                      alt={a.nombre}
+                      className="h-10 w-10 object-contain select-none"
+                    />
                   ) : (
                     <IconLock className="h-4 w-4 text-txt-tertiary" />
                   )}

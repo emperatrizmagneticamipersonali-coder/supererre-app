@@ -1,5 +1,12 @@
 # ESTADO — SuperErre
-Última actualización: 2026-08-18 | Sesión actual: 6/7
+Última actualización: 2026-08-24 | Sesión actual: 6/7
+
+⏸️ CHECKPOINT — Sesión 6/7. El usuario generó y mandó las 4 imágenes de accesorios (prompts que le pasé antes). HECHO:
+- Las imágenes llegaron como JPEG SIN transparencia real (el cuadriculado que se veía era textura dibujada, no alpha) — se les quitó el fondo por código (`lib/accesorios-data.ts` + script ad-hoc de remoción por umbral de gris/luminosidad, mismo enfoque que el logo). Corona/Capa/Sombrero quedaron perfectos. Gafas: el lente tenía un cuadriculado de COLOR (tintado naranja/turquesa, no gris puro) que no se pudo eliminar del todo sin arruinar la nitidez del marco — quedó una textura residual leve, aceptable al tamaño final pero no perfecta. Si en algún momento se ve mal, la solución de fondo sería pedir el lente sin cuadriculado en el prompt original.
+- Guardadas en `superrre-app/public/accesorios/{sombrero,gafas,capa,corona}.png`, redimensionadas a 200-300px (los originales pesaban 1.5MB cada uno).
+- `Accesorio` type ahora tiene `imagen` (ruta) + `ancho` (px) en vez de solo `emoji`+`tamaño`; `top`/`left` ahora son el CENTRO de la imagen (antes eran referencia para texto). Actualizado en 3 lugares: `/app/premios` (retrato + grid de selección) y `RevelacionPremio.tsx` (pantalla de cofre abierto).
+Verificado con tsc (limpio), NO verificado visualmente en la app real (panel de preview sin funcionar toda la sesión) — pendiente que el usuario confirme que las posiciones (top/left/ancho estimados a ojo) calzan bien sobre el personaje real.
+Próximo paso: 2 features nuevas pedidas por el usuario — (1) economía de monedas por ejercicio completado para comprar ropa, (2) ejercicio de completar palabras eligiendo la letra correcta entre R/L/D — se le presentó un plan corto antes de construir (regla de tareas grandes).
 
 ⏸️ CHECKPOINT — Sesión 6/7. **Usuario confirmó "ya quedó"** tras la ronda 4 (micrófono más sensible + cronómetro con voz en Praxias). Con esto se da por cerrado el pase de pulido de esta sesión iniciado con el skill `diseno` + la lista de 13 puntos.
 Pendientes reales que quedaron abiertos, no perder de vista:

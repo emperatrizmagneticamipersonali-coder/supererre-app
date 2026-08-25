@@ -72,9 +72,16 @@ export function RevelacionPremio({
       ) : (
         <div className="flex flex-col items-center gap-3 text-center max-w-sm">
           <IconSparkles className="h-8 w-8 text-brand-primary-light" />
-          <span className="text-8xl select-none">
-            {figurita ? figurita.emoji : accesorio!.emoji}
-          </span>
+          {figurita ? (
+            <span className="text-8xl select-none">{figurita.emoji}</span>
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={accesorio!.imagen}
+              alt=""
+              className="h-32 w-32 object-contain select-none animate-breathe"
+            />
+          )}
           <p className="font-display font-extrabold text-2xl text-txt-on-brand text-balance">
             {figurita ? figurita.nombre : accesorio!.nombre}
           </p>
