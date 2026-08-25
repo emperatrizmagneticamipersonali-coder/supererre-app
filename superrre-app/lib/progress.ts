@@ -25,6 +25,10 @@ export type Progreso = {
   accesoriosVistos: string[];
   /** id del accesorio que el niño eligió ponerle al personaje ahora mismo */
   accesorioEquipado: string | null;
+  /** monedas ganadas (1 por cada ejercicio distinto completado) para gastar en la tienda */
+  monedas: number;
+  /** ids de accesorios de la tienda ya comprados con monedas */
+  accesoriosComprados: string[];
 };
 
 const KEY = "supererre_progreso";
@@ -43,6 +47,8 @@ const DEFAULT_PROGRESO: Progreso = {
   figuritasVistas: [],
   accesoriosVistos: [],
   accesorioEquipado: null,
+  monedas: 0,
+  accesoriosComprados: [],
 };
 
 function isoLocal(d: Date): string {
@@ -165,6 +171,7 @@ export function marcarPraxiaHecha(id: string) {
   if (!p.praxiasHechas.includes(id)) {
     p.praxiasHechas.push(id);
     p.estrellas += 1;
+    p.monedas += 1;
   }
   registrarActividadHoy(p);
   guardar(p);
@@ -176,6 +183,7 @@ export function marcarSonidoHecho(id: string) {
   if (!p.sonidosHechos.includes(id)) {
     p.sonidosHechos.push(id);
     p.estrellas += 1;
+    p.monedas += 1;
   }
   registrarActividadHoy(p);
   guardar(p);
@@ -187,10 +195,24 @@ export function marcarNivelEscaleraHecho(idNivel: string) {
   if (!p.palabrasHechas.includes(idNivel)) {
     p.palabrasHechas.push(idNivel);
     p.estrellas += 1;
+    p.monedas += 1;
   }
   registrarActividadHoy(p);
   guardar(p);
   return p;
+}
+
+/** Compra un accesorio de la tienda con monedas — descuenta el saldo y lo
+ * agrega a la lista de comprados. Devuelve false si no le alcanza (nunca
+ * debería pasar si el botón de compra está bien deshabilitado, pero se
+ * verifica igual acá para no dejar el saldo en negativo). */
+export function comprarAccesorio(id: string, precio: number): boolean {
+  const p = leerProgreso();
+  if (p.monedas < precio || p.accesoriosComprados.includes(id)) return false;
+  p.monedas -= precio;
+  p.accesoriosComprados.push(id);
+  guardar(p);
+  return true;
 }
 
 export function marcarMemoramaGanado(letra: string) {

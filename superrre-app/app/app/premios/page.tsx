@@ -8,6 +8,7 @@ import {
   minijuegoDesbloqueado,
   marcarMemoramaGanado,
   equiparAccesorio,
+  comprarAccesorio,
 } from "@/lib/progress";
 import { letraCompleta } from "@/lib/escalera-data";
 import {
@@ -15,8 +16,15 @@ import {
   PAREJAS_POR_NIVEL,
 } from "@/lib/memorama-data";
 import { FIGURITAS, figuritasLogradas } from "@/lib/figuritas-data";
-import { ACCESORIOS, accesoriosLogrados } from "@/lib/accesorios-data";
-import { IconSparkles, IconLock } from "@/components/app/icons";
+import {
+  ACCESORIOS,
+  ACCESORIOS_TIENDA,
+  accesoriosLogrados,
+  accesoriosComprados,
+  accesorioPorId,
+  type Accesorio,
+} from "@/lib/accesorios-data";
+import { IconSparkles, IconLock, IconCoin } from "@/components/app/icons";
 import { Mascota } from "@/components/app/Mascota";
 import { Celebracion } from "@/components/app/Celebracion";
 
@@ -27,6 +35,39 @@ type Carta = {
   volteada: boolean;
   emparejada: boolean;
 };
+
+/** Dibuja un accesorio sobre el retrato — imagen real si la tiene (los 4
+ * premios de logro), o emoji si no (los de la tienda, sin arte a medida
+ * todavía). */
+function AccesorioOverlay({ acc }: { acc: Accesorio }) {
+  const estilo = {
+    top: `${acc.top}%`,
+    left: `${acc.left}%`,
+    transform: "translate(-50%, -50%)",
+    filter: "drop-shadow(0 3px 4px rgba(34,51,46,0.35))",
+  };
+  if (acc.imagen) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={acc.imagen}
+        alt=""
+        className="absolute select-none animate-pop-in"
+        style={{ ...estilo, width: acc.ancho }}
+        aria-hidden="true"
+      />
+    );
+  }
+  return (
+    <span
+      className="absolute select-none animate-pop-in"
+      style={{ ...estilo, fontSize: acc.tamaño }}
+      aria-hidden="true"
+    >
+      {acc.emoji}
+    </span>
+  );
+}
 
 function barajar<T>(items: T[]): T[] {
   const copia = [...items];
@@ -176,6 +217,15 @@ export default function PremiosPage() {
 
   const figuritas = figuritasLogradas(p);
   const accesorios = accesoriosLogrados(p);
+  const comprados = accesoriosComprados(p);
+  const accEquipado = p.accesorioEquipado
+    ? accesorioPorId(p.accesorioEquipado)
+    : undefined;
+
+  function comprar(a: Accesorio) {
+    if (p.monedas < a.precio! || comprados.some((c) => c.id === a.id)) return;
+    if (comprarAccesorio(a.id, a.precio!)) equiparAccesorio(a.id);
+  }
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
@@ -351,8 +401,12 @@ export default function PremiosPage() {
 
       {pestaña === "vestir" && (
         <div className="flex-1 flex flex-col items-center pt-4">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-4 py-2 tabular-nums">
+            <IconCoin className="h-4 w-4" /> {p.monedas} monedas
+          </span>
+
           <div
-            className="relative flex items-center justify-center rounded-full animate-fade-up"
+            className="relative mt-4 flex items-center justify-center rounded-full animate-fade-up"
             style={{
               width: 240,
               height: 240,
@@ -364,39 +418,20 @@ export default function PremiosPage() {
           >
             <div className="relative" style={{ width: 200, height: 200 }}>
               <Mascota tema={tema} size={200} />
-              {p.accesorioEquipado &&
-                (() => {
-                  const acc = ACCESORIOS.find(
-                    (a) => a.id === p.accesorioEquipado
-                  );
-                  if (!acc) return null;
-                  return (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={acc.imagen}
-                      alt=""
-                      className="absolute select-none animate-pop-in"
-                      style={{
-                        top: `${acc.top}%`,
-                        left: `${acc.left}%`,
-                        width: acc.ancho,
-                        transform: "translate(-50%, -50%)",
-                        filter: "drop-shadow(0 3px 4px rgba(34,51,46,0.35))",
-                      }}
-                      aria-hidden="true"
-                    />
-                  );
-                })()}
+              {accEquipado && <AccesorioOverlay acc={accEquipado} />}
             </div>
           </div>
 
           <p className="mt-6 text-sm text-txt-secondary text-center max-w-56">
-            {accesorios.length === 0
-              ? "Termina una sección completa para ganar tu primer accesorio."
+            {accesorios.length === 0 && comprados.length === 0
+              ? "Termina una sección completa o comprá algo en la tienda para tener tu primer accesorio."
               : "Toca un accesorio para ponérselo o quitárselo."}
           </p>
 
-          <div className="mt-4 grid grid-cols-4 gap-3 w-full max-w-72">
+          <p className="mt-6 self-start text-xs font-bold uppercase tracking-wide text-txt-tertiary">
+            Tus logros
+          </p>
+          <div className="mt-2 grid grid-cols-4 gap-3 w-full">
             {ACCESORIOS.map((a, i) => {
               const lograda = accesorios.some((g) => g.id === a.id);
               const equipado = p.accesorioEquipado === a.id;
@@ -424,6 +459,51 @@ export default function PremiosPage() {
                     />
                   ) : (
                     <IconLock className="h-4 w-4 text-txt-tertiary" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <p className="mt-6 self-start text-xs font-bold uppercase tracking-wide text-txt-tertiary">
+            Tienda
+          </p>
+          <div className="mt-2 grid grid-cols-3 gap-3 w-full">
+            {ACCESORIOS_TIENDA.map((a, i) => {
+              const comprado = comprados.some((c) => c.id === a.id);
+              const equipado = p.accesorioEquipado === a.id;
+              const alcanza = p.monedas >= a.precio!;
+              return (
+                <button
+                  key={a.id}
+                  onClick={() =>
+                    comprado
+                      ? equiparAccesorio(equipado ? null : a.id)
+                      : comprar(a)
+                  }
+                  disabled={!comprado && !alcanza}
+                  aria-label={a.nombre}
+                  className={`flex flex-col items-center justify-center gap-1 rounded-2xl p-2 transition-transform active:scale-95 animate-fade-up ${
+                    equipado
+                      ? "bg-brand-primary-soft shadow-md ring-2 ring-brand-primary"
+                      : comprado
+                      ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
+                      : alcanza
+                      ? "bg-surface-secondary"
+                      : "bg-surface-secondary opacity-50"
+                  }`}
+                  style={{ animationDelay: `${i * 40}ms` }}
+                >
+                  <span className="text-2xl select-none" aria-hidden="true">
+                    {a.emoji}
+                  </span>
+                  <span className="text-xs font-bold text-txt-primary leading-tight text-center">
+                    {a.nombre}
+                  </span>
+                  {!comprado && (
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-txt-on-primary-soft">
+                      <IconCoin className="h-3 w-3" /> {a.precio}
+                    </span>
                   )}
                 </button>
               );

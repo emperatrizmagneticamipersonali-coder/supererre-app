@@ -5,7 +5,7 @@ import { useProgreso, calcularRacha, type Progreso } from "@/lib/progress";
 import { ESCALERA_POR_LETRA } from "@/lib/escalera-data";
 import { TODAS_LAS_PRAXIAS } from "@/lib/praxias-data";
 import { MODOS } from "@/lib/sonidos-data";
-import { IconLock, IconCheck, IconFlame } from "@/components/app/icons";
+import { IconLock, IconCheck, IconFlame, IconCoin } from "@/components/app/icons";
 import { Mascota } from "@/components/app/Mascota";
 import { useConteo } from "@/hooks/useConteo";
 
@@ -150,6 +150,7 @@ export default function MapaDeIslasPage() {
   let contadorGlobal = 0;
   const rachaAnimada = useConteo(calcularRacha(p.diasActivos).actual);
   const estrellasAnimadas = useConteo(p.estrellas);
+  const monedasAnimadas = useConteo(p.monedas);
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
@@ -162,18 +163,27 @@ export default function MapaDeIslasPage() {
             {tema === "pirata" ? "Mar de" : "Isla de"} {p.nombre || "tu hijo"}
           </h1>
         </div>
-        <Link
-          href="/app/racha"
-          className="flex items-center gap-2"
-          aria-label="Ver racha"
-        >
-          <span className="inline-flex items-center gap-1 rounded-full bg-brand-accent-soft text-brand-accent text-sm font-bold px-3 py-2 tabular-nums">
-            <IconFlame className="h-4 w-4" /> {rachaAnimada}
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-3 py-2 tabular-nums">
-            ⭐ {estrellasAnimadas}
-          </span>
-        </Link>
+        <div className="flex flex-col items-end gap-1.5">
+          <Link
+            href="/app/racha"
+            className="flex items-center gap-2"
+            aria-label="Ver racha"
+          >
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-accent-soft text-brand-accent text-sm font-bold px-3 py-2 tabular-nums">
+              <IconFlame className="h-4 w-4" /> {rachaAnimada}
+            </span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-primary-soft text-txt-on-primary-soft text-sm font-bold px-3 py-2 tabular-nums">
+              ⭐ {estrellasAnimadas}
+            </span>
+          </Link>
+          <Link
+            href="/app/premios"
+            className="inline-flex items-center gap-1 rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-xs font-bold px-3 py-1.5 tabular-nums"
+            aria-label="Ver monedas"
+          >
+            <IconCoin className="h-3.5 w-3.5" /> {monedasAnimadas}
+          </Link>
+        </div>
       </div>
 
       {secciones.map((seccion) => {
