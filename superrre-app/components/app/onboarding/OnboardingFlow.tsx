@@ -6,6 +6,7 @@ import { FunnelHeader } from "./FunnelHeader";
 import { Chip } from "./Chip";
 import { MascotBubble } from "./MascotBubble";
 import { Mascota, MASCOTA_SRC } from "../Mascota";
+import type { SeveridadR } from "@/lib/progress";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
 import { useVideoChromaKey } from "@/hooks/useVideoChromaKey";
 import {
@@ -46,6 +47,16 @@ const NIVEL_POR_DOLOR: Record<string, string> = {
   "No pronuncia la R en ninguna palabra": "Punto de partida",
   "A veces sí, a veces no": "En transición",
   "No estoy segura, por eso estoy aquí": "Primer diagnóstico",
+};
+
+// misma respuesta, pero como código — esto SÍ viaja hasta Progreso y
+// personaliza qué tan exigente es el detector de voz (antes se perdía al
+// terminar el onboarding, solo servía para el texto de arriba)
+const SEVERIDAD_POR_DOLOR: Record<string, SeveridadR> = {
+  "Dice L o W en vez de R (“cawo”, “lolo”)": "sustitucion",
+  "No pronuncia la R en ninguna palabra": "omision",
+  "A veces sí, a veces no": "inconsistente",
+  "No estoy segura, por eso estoy aquí": "sin-diagnostico",
 };
 
 const INTERESES = [
@@ -90,8 +101,9 @@ export function OnboardingFlow() {
 
   function irALogin(plan: "free" | "completo") {
     const edadNum = parseInt(edad, 10) || 5;
+    const severidad = SEVERIDAD_POR_DOLOR[dolor] ?? "";
     router.push(
-      `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}&edad=${edadNum}`
+      `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}&edad=${edadNum}&severidad=${severidad}`
     );
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { SeveridadR } from "@/lib/progress";
 
 export type EstadoDeteccion =
   | "idle"
@@ -20,11 +21,24 @@ function ajustePorEdad(edad?: number): { umbral: number; sostenerMs: number } {
   return { umbral: 36, sostenerMs: 240 }; // 8 años o más
 }
 
+/** Multiplicador extra según cómo dice la R hoy (respuesta del onboarding) —
+ * si todavía no la dice en ninguna palabra, cualquier intento real ya es un
+ * progreso enorme y hay que ser más permisivo; si ya la dice a veces, tiene
+ * sentido pedirle un poquito más de precisión para seguir mejorando. */
+function factorSeveridad(severidad?: SeveridadR): number {
+  if (severidad === "omision") return 0.82;
+  if (severidad === "inconsistente") return 1.12;
+  return 1; // sustitucion, sin-diagnostico, o sin dato: usa el valor por edad tal cual
+}
+
 /** Detecta un intento de sonido real por micrófono — 100% local, nunca se sube a internet. */
-export function useRugidoDetector(edad?: number) {
+export function useRugidoDetector(edad?: number, severidad?: SeveridadR) {
   const [estado, setEstado] = useState<EstadoDeteccion>("idle");
   const [nivelVoz, setNivelVoz] = useState(0);
-  const { umbral: UMBRAL_SONIDO, sostenerMs: SOSTENER_MS } = ajustePorEdad(edad);
+  const base = ajustePorEdad(edad);
+  const factor = factorSeveridad(severidad);
+  const UMBRAL_SONIDO = Math.round(base.umbral * factor);
+  const SOSTENER_MS = Math.round(base.sostenerMs * factor);
 
   const streamRef = useRef<MediaStream | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);

@@ -8,6 +8,7 @@ import {
   factorTiempoPorEdad,
   registrarTiempoPracticado,
   segundosRestantesHoy,
+  type SeveridadR,
 } from "@/lib/progress";
 import { siguientePasoSesion } from "@/lib/sesion";
 import { MODOS } from "@/lib/sonidos-data";
@@ -88,6 +89,7 @@ function SonidosContenido() {
         pista={sonido.pista}
         videoDemo={sonido.videoDemo}
         edad={p.edad}
+        severidad={p.severidadR}
         onVolver={() => setSonidoId(null)}
         onSiguiente={siguienteSonido ? () => setSonidoId(siguienteSonido.id) : null}
         onDetectado={() => marcarSonidoHecho(`${modo}-${sonido.id}`)}
@@ -186,6 +188,7 @@ function SonidoDetector({
   pista,
   videoDemo,
   edad,
+  severidad,
   onVolver,
   onSiguiente,
   onDetectado,
@@ -196,12 +199,13 @@ function SonidoDetector({
   pista: string;
   videoDemo?: string;
   edad: number;
+  severidad?: SeveridadR;
   onVolver: () => void;
   onSiguiente: (() => void) | null;
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector(edad);
+  const { estado, nivelVoz, empezar } = useRugidoDetector(edad, severidad);
   const { hablar } = useHablar();
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))

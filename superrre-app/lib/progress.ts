@@ -4,6 +4,24 @@ import { useSyncExternalStore } from "react";
 
 export type Plan = "free" | "completo";
 
+/** Qué tanto dice la R hoy, según lo que respondió el papá/mamá en el
+ * onboarding (paso "¿Cómo dice la R hoy?") — se usa para ajustar qué tan
+ * exigente es el detector de voz, no solo la edad. */
+export type SeveridadR =
+  | "sustitucion" // dice L o W en vez de R
+  | "omision" // no la dice en ninguna palabra
+  | "inconsistente" // a veces sí, a veces no
+  | "sin-diagnostico" // no estaba segura
+  | "";
+
+export const ETIQUETA_SEVERIDAD: Record<SeveridadR, string> = {
+  sustitucion: "Sustitución de sonido",
+  omision: "Punto de partida",
+  inconsistente: "En transición",
+  "sin-diagnostico": "Primer diagnóstico",
+  "": "",
+};
+
 export type Progreso = {
   nombre: string;
   plan: Plan;
@@ -34,6 +52,9 @@ export type Progreso = {
    * plan diario por edad */
   segundosHoy: number;
   fechaSegundosHoy: string;
+  /** respuesta del onboarding sobre cómo dice la R hoy — personaliza qué
+   * tan exigente es el detector de voz (ver useRugidoDetector). */
+  severidadR: SeveridadR;
 };
 
 const KEY = "supererre_progreso";
@@ -56,6 +77,7 @@ const DEFAULT_PROGRESO: Progreso = {
   accesoriosComprados: [],
   segundosHoy: 0,
   fechaSegundosHoy: "",
+  severidadR: "",
 };
 
 function isoLocal(d: Date): string {
@@ -135,6 +157,7 @@ export function iniciarProgreso(datos: {
   plan: Plan;
   interes?: "leon" | "pirata" | "";
   edad?: number;
+  severidadR?: SeveridadR;
 }) {
   const actual = leerProgreso();
   guardar({
@@ -143,6 +166,7 @@ export function iniciarProgreso(datos: {
     plan: datos.plan,
     interes: datos.interes ?? actual.interes,
     edad: datos.edad || actual.edad,
+    severidadR: datos.severidadR ?? actual.severidadR,
   });
 }
 

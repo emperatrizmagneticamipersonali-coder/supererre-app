@@ -8,6 +8,7 @@ import {
   factorTiempoPorEdad,
   registrarTiempoPracticado,
   segundosRestantesHoy,
+  type SeveridadR,
 } from "@/lib/progress";
 import { siguientePasoSesion } from "@/lib/sesion";
 import {
@@ -136,6 +137,7 @@ function EscaleraLetraContenido({
       <NivelDetector
         nivel={nivelActivo}
         edad={p.edad}
+        severidad={p.severidadR}
         onVolver={() => setNivelActivo(null)}
         onDetectado={() => marcarNivelEscaleraHecho(nivelActivo.id)}
         onReclamar={() => {
@@ -339,17 +341,19 @@ const DURACION_NIVEL_SEG = 10;
 function NivelDetector({
   nivel,
   edad,
+  severidad,
   onVolver,
   onDetectado,
   onReclamar,
 }: {
   nivel: NivelEscalera;
   edad: number;
+  severidad?: SeveridadR;
   onVolver: () => void;
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector(edad);
+  const { estado, nivelVoz, empezar } = useRugidoDetector(edad, severidad);
   const { hablar } = useHablar();
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))

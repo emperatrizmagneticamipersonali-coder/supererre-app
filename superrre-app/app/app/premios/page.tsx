@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -18,9 +19,9 @@ import {
 import { FIGURITAS, figuritasLogradas } from "@/lib/figuritas-data";
 import {
   ACCESORIOS,
-  ACCESORIOS_TIENDA,
+  ACCESORIOS_COMPRABLES,
   accesoriosLogrados,
-  accesoriosComprados,
+  accesorioDesbloqueado,
   accesorioPorId,
   type Accesorio,
 } from "@/lib/accesorios-data";
@@ -69,6 +70,58 @@ function AccesorioOverlay({ acc }: { acc: Accesorio }) {
   );
 }
 
+type EstadoArrastre = { acc: Accesorio; x: number; y: number } | null;
+
+/** Arrastrar un accesorio ya conseguido hasta el retrato del personaje para
+ * ponérselo — el niño lo mueve con el dedo hasta la cabeza/cuerpo del León
+ * en vez de que quede una posición fija adivinada. Tocarlo (sin arrastrar)
+ * sigue funcionando igual que antes, esto es un agregado, no un reemplazo. */
+function useArrastrarParaVestir(zonaRef: RefObject<HTMLDivElement | null>) {
+  const [arrastre, setArrastre] = useState<EstadoArrastre>(null);
+
+  function iniciarArrastre(e: React.PointerEvent, acc: Accesorio) {
+    setArrastre({ acc, x: e.clientX, y: e.clientY });
+  }
+
+  useEffect(() => {
+    if (!arrastre) return;
+
+    function mover(e: PointerEvent) {
+      setArrastre((a) => (a ? { ...a, x: e.clientX, y: e.clientY } : a));
+    }
+
+    function soltar(e: PointerEvent) {
+      const zona = zonaRef.current;
+      if (zona) {
+        const r = zona.getBoundingClientRect();
+        const adentro =
+          e.clientX >= r.left &&
+          e.clientX <= r.right &&
+          e.clientY >= r.top &&
+          e.clientY <= r.bottom;
+        if (adentro) {
+          setArrastre((actual) => {
+            if (actual) equiparAccesorio(actual.acc.id);
+            return null;
+          });
+          return;
+        }
+      }
+      setArrastre(null);
+    }
+
+    window.addEventListener("pointermove", mover);
+    window.addEventListener("pointerup", soltar, { once: true });
+    return () => {
+      window.removeEventListener("pointermove", mover);
+      window.removeEventListener("pointerup", soltar);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arrastre !== null]);
+
+  return { arrastre, iniciarArrastre };
+}
+
 function barajar<T>(items: T[]): T[] {
   const copia = [...items];
   for (let i = copia.length - 1; i > 0; i--) {
@@ -99,6 +152,8 @@ export default function PremiosPage() {
   const p = useProgreso();
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
   const mascota = tema === "pirata" ? "🏴‍☠️" : "🦁";
+  const retratoRef = useRef<HTMLDivElement>(null);
+  const { arrastre, iniciarArrastre } = useArrastrarParaVestir(retratoRef);
 
   const letraLDisponible = letraCompleta("R", p.palabrasHechas);
   const [pestaña, setPestaña] = useState<"memorama" | "album" | "vestir">(
@@ -112,6 +167,7 @@ export default function PremiosPage() {
   const [bloqueado, setBloqueado] = useState(false);
   const [jugando, setJugando] = useState(false);
   const [gano, setGano] = useState(false);
+  const [itemAConfirmar, setItemAConfirmar] = useState<Accesorio | null>(null);
 
   const disponible = p.plan === "completo" && minijuegoDesbloqueado(p);
 
@@ -217,14 +273,16 @@ export default function PremiosPage() {
 
   const figuritas = figuritasLogradas(p);
   const accesorios = accesoriosLogrados(p);
-  const comprados = accesoriosComprados(p);
   const accEquipado = p.accesorioEquipado
     ? accesorioPorId(p.accesorioEquipado)
     : undefined;
 
-  function comprar(a: Accesorio) {
-    if (p.monedas < a.precio! || comprados.some((c) => c.id === a.id)) return;
-    if (comprarAccesorio(a.id, a.precio!)) equiparAccesorio(a.id);
+  function confirmarCompra() {
+    if (!itemAConfirmar) return;
+    if (comprarAccesorio(itemAConfirmar.id, itemAConfirmar.precio!)) {
+      equiparAccesorio(itemAConfirmar.id);
+    }
+    setItemAConfirmar(null);
   }
 
   return (
@@ -406,14 +464,18 @@ export default function PremiosPage() {
           </span>
 
           <div
-            className="relative mt-4 flex items-center justify-center rounded-full animate-fade-up"
+            ref={retratoRef}
+            className={`relative mt-4 flex items-center justify-center rounded-full animate-fade-up transition-transform ${
+              arrastre ? "scale-105" : ""
+            }`}
             style={{
               width: 240,
               height: 240,
               background:
                 "radial-gradient(circle, var(--surface-primary) 58%, transparent 60%)",
-              boxShadow:
-                "0 0 0 3px var(--surface-primary), 0 0 0 8px var(--brand-primary), 0 0 0 12px var(--surface-primary), 0 0 0 16px var(--brand-secondary)",
+              boxShadow: arrastre
+                ? "0 0 0 3px var(--surface-primary), 0 0 0 8px var(--brand-accent), 0 0 0 12px var(--surface-primary), 0 0 0 16px var(--brand-secondary)"
+                : "0 0 0 3px var(--surface-primary), 0 0 0 8px var(--brand-primary), 0 0 0 12px var(--surface-primary), 0 0 0 16px var(--brand-secondary)",
             }}
           >
             <div className="relative" style={{ width: 200, height: 200 }}>
@@ -423,9 +485,9 @@ export default function PremiosPage() {
           </div>
 
           <p className="mt-6 text-sm text-txt-secondary text-center max-w-56">
-            {accesorios.length === 0 && comprados.length === 0
+            {!ACCESORIOS_COMPRABLES.some((a) => accesorioDesbloqueado(a, p))
               ? "Termina una sección completa o comprá algo en la tienda para tener tu primer accesorio."
-              : "Toca un accesorio para ponérselo o quitárselo."}
+              : "Arrastrá un accesorio hasta el León para ponérselo, o tocalo."}
           </p>
 
           <p className="mt-6 self-start text-xs font-bold uppercase tracking-wide text-txt-tertiary">
@@ -440,6 +502,9 @@ export default function PremiosPage() {
                   key={a.id}
                   disabled={!lograda}
                   onClick={() => equiparAccesorio(equipado ? null : a.id)}
+                  onPointerDown={
+                    lograda ? (e) => iniciarArrastre(e, a) : undefined
+                  }
                   aria-label={a.nombre}
                   className={`flex aspect-square flex-col items-center justify-center rounded-2xl transition-transform active:scale-95 animate-fade-up ${
                     equipado
@@ -448,7 +513,7 @@ export default function PremiosPage() {
                       ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
                       : "border-2 border-dashed border-border-default bg-surface-secondary"
                   }`}
-                  style={{ animationDelay: `${i * 40}ms` }}
+                  style={{ animationDelay: `${i * 40}ms`, touchAction: "none" }}
                 >
                   {lograda ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -469,38 +534,50 @@ export default function PremiosPage() {
             Comprar con monedas
           </p>
           <div className="mt-2 grid grid-cols-3 gap-3 w-full">
-            {ACCESORIOS_TIENDA.map((a, i) => {
-              const comprado = comprados.some((c) => c.id === a.id);
+            {ACCESORIOS_COMPRABLES.map((a, i) => {
+              const tenido = accesorioDesbloqueado(a, p);
               const equipado = p.accesorioEquipado === a.id;
               const alcanza = p.monedas >= a.precio!;
               return (
                 <button
                   key={a.id}
                   onClick={() =>
-                    comprado
+                    tenido
                       ? equiparAccesorio(equipado ? null : a.id)
-                      : comprar(a)
+                      : setItemAConfirmar(a)
                   }
-                  disabled={!comprado && !alcanza}
+                  onPointerDown={
+                    tenido ? (e) => iniciarArrastre(e, a) : undefined
+                  }
+                  disabled={!tenido && !alcanza}
                   aria-label={a.nombre}
                   className={`flex flex-col items-center justify-center gap-1 rounded-2xl p-2 transition-transform active:scale-95 animate-fade-up ${
                     equipado
                       ? "bg-brand-primary-soft shadow-md ring-2 ring-brand-primary"
-                      : comprado
+                      : tenido
                       ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
                       : alcanza
                       ? "bg-surface-secondary"
                       : "bg-surface-secondary opacity-50"
                   }`}
-                  style={{ animationDelay: `${i * 40}ms` }}
+                  style={{ animationDelay: `${i * 40}ms`, touchAction: "none" }}
                 >
-                  <span className="text-2xl select-none" aria-hidden="true">
-                    {a.emoji}
-                  </span>
+                  {a.imagen ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={a.imagen}
+                      alt=""
+                      className="h-12 w-12 object-contain select-none"
+                    />
+                  ) : (
+                    <span className="text-2xl select-none" aria-hidden="true">
+                      {a.emoji}
+                    </span>
+                  )}
                   <span className="text-xs font-bold text-txt-primary leading-tight text-center">
                     {a.nombre}
                   </span>
-                  {!comprado && (
+                  {!tenido && (
                     <span className="inline-flex items-center gap-1 text-xs font-bold text-txt-on-primary-soft">
                       <IconCoin className="h-3 w-3" /> {a.precio}
                     </span>
@@ -509,6 +586,83 @@ export default function PremiosPage() {
               );
             })}
           </div>
+
+          {itemAConfirmar && (
+            <div
+              className="fixed inset-0 z-50 flex items-end justify-center px-5 pb-8 sm:items-center"
+              style={{ backgroundColor: "var(--surface-overlay)" }}
+              onClick={() => setItemAConfirmar(null)}
+            >
+              <div
+                className="w-full max-w-xs rounded-3xl bg-surface-primary p-6 text-center shadow-lg animate-pop-in"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {itemAConfirmar.imagen ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={itemAConfirmar.imagen}
+                    alt=""
+                    className="mx-auto h-20 w-20 object-contain select-none"
+                  />
+                ) : (
+                  <span className="text-5xl" aria-hidden="true">
+                    {itemAConfirmar.emoji}
+                  </span>
+                )}
+                <p className="mt-3 font-display font-bold text-lg text-txt-primary">
+                  {itemAConfirmar.nombre}
+                </p>
+                <p className="mt-1 text-sm text-txt-secondary">
+                  Esto te costará{" "}
+                  <strong className="text-txt-primary">
+                    {itemAConfirmar.precio} monedas
+                  </strong>
+                  .
+                </p>
+                <button
+                  onClick={confirmarCompra}
+                  className="mt-5 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3"
+                >
+                  Sí, comprar
+                </button>
+                <button
+                  onClick={() => setItemAConfirmar(null)}
+                  className="mt-2 w-full text-center text-sm text-txt-secondary underline underline-offset-2 py-2"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {arrastre && (
+            <div
+              className="pointer-events-none fixed z-[70]"
+              style={{
+                left: arrastre.x,
+                top: arrastre.y,
+                transform: "translate(-50%, -50%) scale(1.15)",
+              }}
+              aria-hidden="true"
+            >
+              {arrastre.acc.imagen ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={arrastre.acc.imagen}
+                  alt=""
+                  className="opacity-90 drop-shadow-lg"
+                  style={{ width: arrastre.acc.ancho ?? 80 }}
+                />
+              ) : (
+                <span
+                  className="opacity-90 drop-shadow-lg"
+                  style={{ fontSize: (arrastre.acc.tamaño ?? 32) * 1.3 }}
+                >
+                  {arrastre.acc.emoji}
+                </span>
+              )}
+            </div>
+          )}
         </div>
       )}
 

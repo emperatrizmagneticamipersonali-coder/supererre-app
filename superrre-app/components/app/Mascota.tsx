@@ -28,7 +28,7 @@ export function Mascota({
 
   return (
     <div
-      className={`inline-flex items-center justify-center ${className ?? ""}`}
+      className={`relative inline-flex items-center justify-center ${className ?? ""}`}
       style={{ width: size, height: size }}
     >
       <video
@@ -40,6 +40,7 @@ export function Mascota({
         loop
         muted
         playsInline
+        preload="auto"
         // display:none frena la decodificación de cuadros en varios
         // celulares Android/Chrome (para ahorrar batería) — el video queda
         // "pausado" aunque autoplay siga activo, y el canvas dibuja siempre

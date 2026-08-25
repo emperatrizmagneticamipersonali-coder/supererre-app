@@ -41,6 +41,8 @@ export const ACCESORIOS: Accesorio[] = [
     ancho: 110,
     lograda: (p) =>
       TODAS_LAS_PRAXIAS.every((ex) => p.praxiasHechas.includes(ex.id)),
+    // también se puede comprar directo con monedas, sin esperar a lograrlo
+    precio: 150,
   },
   {
     id: "gafas",
@@ -54,6 +56,7 @@ export const ACCESORIOS: Accesorio[] = [
       ["rugido", "ronroneo", "rugido-rey", "gruñido"].every((id) =>
         p.sonidosHechos.includes(`leon-${id}`)
       ),
+    precio: 180,
   },
   {
     id: "capa",
@@ -64,6 +67,7 @@ export const ACCESORIOS: Accesorio[] = [
     left: 50,
     ancho: 130,
     lograda: (p) => letraCompleta("R", p.palabrasHechas),
+    precio: 250,
   },
   {
     id: "corona",
@@ -74,6 +78,7 @@ export const ACCESORIOS: Accesorio[] = [
     left: 50,
     ancho: 95,
     lograda: (p) => letraCompleta("L", p.palabrasHechas),
+    precio: 300,
   },
 ];
 
@@ -147,8 +152,18 @@ export function accesorioPorId(id: string): Accesorio | undefined {
   return TODOS_LOS_ACCESORIOS.find((a) => a.id === id);
 }
 
+/** true si ya lo tiene, sin importar el camino: lo logró completando una
+ * sección, o lo compró con monedas (sombrero/gafas/capa/corona admiten los
+ * dos caminos; los de la tienda solo se compran). */
+export function accesorioDesbloqueado(a: Accesorio, p: Progreso): boolean {
+  if (a.lograda && a.lograda(p)) return true;
+  if (p.accesoriosComprados.includes(a.id)) return true;
+  return false;
+}
+
+/** Los 4 premios de logro que el niño ya tiene disponibles (logrados o comprados). */
 export function accesoriosLogrados(p: Progreso): Accesorio[] {
-  return ACCESORIOS.filter((a) => a.lograda!(p));
+  return ACCESORIOS.filter((a) => accesorioDesbloqueado(a, p));
 }
 
 export function accesoriosComprados(p: Progreso): Accesorio[] {
@@ -157,5 +172,14 @@ export function accesoriosComprados(p: Progreso): Accesorio[] {
 
 /** Todo lo que el niño ya tiene disponible para ponerse — logrado o comprado. */
 export function accesoriosDisponibles(p: Progreso): Accesorio[] {
-  return [...accesoriosLogrados(p), ...accesoriosComprados(p)];
+  return TODOS_LOS_ACCESORIOS.filter((a) => accesorioDesbloqueado(a, p));
 }
+
+/** Todo lo que se puede comprar en la tienda con monedas — incluye los 4
+ * premios de logro (para que el niño los vea y quiera juntar monedas para
+ * ellos, aunque también se puedan ganar completando una sección) y los 6
+ * de la tienda chica. */
+export const ACCESORIOS_COMPRABLES: Accesorio[] = [
+  ...ACCESORIOS,
+  ...ACCESORIOS_TIENDA,
+];

@@ -1,15 +1,38 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useProgreso, totalEjerciciosHechos, planDiarioPorEdad } from "@/lib/progress";
+import {
+  useProgreso,
+  totalEjerciciosHechos,
+  planDiarioPorEdad,
+  ETIQUETA_SEVERIDAD,
+} from "@/lib/progress";
 import { nivelPorId } from "@/lib/escalera-data";
-import { IconShieldCheck, IconCoin, IconCheck, IconAlarmClock } from "@/components/app/icons";
+import {
+  IconShieldCheck,
+  IconCoin,
+  IconCheck,
+  IconAlarmClock,
+  IconMic,
+} from "@/components/app/icons";
 import { useConteo } from "@/hooks/useConteo";
+
+const DESCRIPCION_SEVERIDAD: Record<string, string> = {
+  sustitucion:
+    "le pedimos un intento un poco más preciso para ayudarlo a refinar el sonido de la R.",
+  omision:
+    "el detector es más flexible al principio, para celebrar cada intento real como el progreso que es.",
+  inconsistente:
+    "le pedimos un poco más de precisión para ayudarlo a consolidar el sonido que ya logra a veces.",
+  "sin-diagnostico": "usamos el ajuste estándar para su edad.",
+};
 
 export default function MamaPage() {
   const router = useRouter();
   const p = useProgreso();
   const plan = planDiarioPorEdad(p.edad);
+  const etiquetaSeveridad = ETIQUETA_SEVERIDAD[p.severidadR];
+  const descripcionSeveridad = DESCRIPCION_SEVERIDAD[p.severidadR];
   const monedasAnimadas = useConteo(p.monedas);
   const ejerciciosAnimados = useConteo(totalEjerciciosHechos(p));
 
@@ -49,6 +72,22 @@ export default function MamaPage() {
           </p>
         </div>
       </div>
+
+      {etiquetaSeveridad && (
+        <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-default p-4 animate-fade-up [animation-delay:210ms]">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-accent-soft text-brand-accent">
+            <IconMic className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="font-display font-bold text-sm text-txt-primary">
+              Personalización: {etiquetaSeveridad}
+            </p>
+            <p className="text-xs text-txt-secondary mt-0.5">
+              Según lo que nos contaste al empezar, {descripcionSeveridad}
+            </p>
+          </div>
+        </div>
+      )}
 
       {p.palabrasHechas.length > 0 && (
         <div className="mt-4 rounded-2xl border border-border-default p-4 animate-fade-up [animation-delay:240ms]">

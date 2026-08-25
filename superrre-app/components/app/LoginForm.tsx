@@ -5,9 +5,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { IconMail, IconLock } from "./icons";
-import { iniciarProgreso } from "@/lib/progress";
+import { iniciarProgreso, type SeveridadR } from "@/lib/progress";
 
 type EstadoEnvio = "idle" | "enviando" | "enviado" | "error";
+
+const SEVERIDADES_VALIDAS: SeveridadR[] = [
+  "sustitucion",
+  "omision",
+  "inconsistente",
+  "sin-diagnostico",
+];
 
 export function LoginForm() {
   const params = useSearchParams();
@@ -17,6 +24,12 @@ export function LoginForm() {
   const interes =
     params.get("interes") === "pirata" ? "pirata" : ("leon" as const);
   const edad = parseInt(params.get("edad") || "", 10) || 5;
+  const severidadParam = params.get("severidad") as SeveridadR | null;
+  const severidadR: SeveridadR = SEVERIDADES_VALIDAS.includes(
+    severidadParam as SeveridadR
+  )
+    ? (severidadParam as SeveridadR)
+    : "";
 
   const [email, setEmail] = useState("");
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
@@ -26,7 +39,7 @@ export function LoginForm() {
     if (!email.includes("@") || estado === "enviando") return;
     setEstado("enviando");
     setTimeout(() => {
-      iniciarProgreso({ nombre, plan, interes, edad });
+      iniciarProgreso({ nombre, plan, interes, edad, severidadR });
       setEstado("enviado");
       setCooldown(60);
       const id = setInterval(() => {
