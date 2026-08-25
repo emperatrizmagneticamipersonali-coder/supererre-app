@@ -1,6 +1,13 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-25 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. Ronda con video real del usuario — tsc limpio.
+- Monedas por ejercicio: 1→10 (`MONEDAS_POR_EJERCICIO` en `progress.ts`). Precios de la tienda re-escalados x10 (50-150 en vez de 5-15) para que la progresión siga sintiéndose igual, no instantánea.
+- Pestaña "Mi personaje" → "Tienda" (a pedido explícito). El sub-encabezado interno que también decía "Tienda" se renombró a "Comprar con monedas" para no repetir la palabra dos veces en la misma pantalla.
+- **Bug real encontrado con evidencia en video**: el usuario mandó una grabación de pantalla real mostrando el Sombrero de Explorador flotando a la DERECHA de la cabeza del León, no puesto encima — se veía como un sticker suelto, no como algo que se está vistiendo. Diagnóstico: extraje cuadros del video con ffmpeg (ya estaba instalado de una sesión anterior) y medí en píxeles — la matemática de "contain" del canvas (video 720×1280, vertical) decía que debería quedar centrado, pero la evidencia real mostraba el sombrero muy a la derecha (~78% en vez de 50%). No encontré la causa raíz exacta (no hay navegador real disponible en este entorno para debuggear en vivo), así que se corrigió A OJO desde la medición del video: `top` 8→14, `left` 50→24, `ancho` 120→110.
+⚠️ **Esta corrección es una calibración a ciegas, no una verificación** — puede necesitar un segundo ajuste. Los otros 3 accesorios de imagen real (gafas/capa/corona) y los 6 de la tienda (que usan la misma lógica de `top`/`left`/Mascota) probablemente tengan el MISMO problema pero no hay evidencia en video de ellos todavía — no se tocaron para no adivinar sin datos. Si el usuario los prueba y también están mal ubicados, pedirle otro video/fotos de cada uno para calibrar con el mismo método (extraer cuadro + medir en píxeles).
+Próximo paso: esperar que el usuario confirme si el sombrero quedó bien, y si hace falta corregir los demás accesorios con el mismo método.
+
 ⏸️ CHECKPOINT — Sesión 6/7. Feedback de moneda ganada — HECHO, tsc+build limpios (17/17).
 - `components/app/MonedaVolando.tsx` nuevo: 3 iconos de moneda que salen del centro-abajo y "vuelan" hacia arriba-derecha con fade (keyframe `moneda-volar` en `globals.css`, 900ms). Se dispara con un `trigger: number` (timestamp) en vez de booleano, para poder re-disparar aunque el ejercicio anterior también hubiera sido "true".
 - `lib/sonidoMonedas.ts` nuevo: sonido de moneda sintetizado con Web Audio (2 tonos ascendentes, sin archivo de audio — no hay forma de generar/conseguir un archivo en este entorno, y esto es 100% local igual que el resto de la app).

@@ -238,7 +238,7 @@ export default function PremiosPage() {
           [
             { id: "memorama", label: "Memorama" },
             { id: "album", label: "Álbum" },
-            { id: "vestir", label: "Mi personaje" },
+            { id: "vestir", label: "Tienda" },
           ] as const
         ).map((t) => (
           <button
@@ -466,7 +466,7 @@ export default function PremiosPage() {
           </div>
 
           <p className="mt-6 self-start text-xs font-bold uppercase tracking-wide text-txt-tertiary">
-            Tienda
+            Comprar con monedas
           </p>
           <div className="mt-2 grid grid-cols-3 gap-3 w-full">
             {ACCESORIOS_TIENDA.map((a, i) => {

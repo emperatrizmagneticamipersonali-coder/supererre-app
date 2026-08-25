@@ -32,9 +32,13 @@ export const ACCESORIOS: Accesorio[] = [
     nombre: "Sombrero de Explorador",
     emoji: "🤠",
     imagen: "/accesorios/sombrero.png",
-    top: 8,
-    left: 50,
-    ancho: 120,
+    // top/left recalibrados con un video real del usuario — el sombrero
+    // aparecía flotando a la derecha de la cabeza del León, no puesto
+    // encima. Ajustado a ojo desde esa evidencia (no se pudo verificar en
+    // vivo en este entorno) — puede necesitar un segundo ajuste.
+    top: 14,
+    left: 24,
+    ancho: 110,
     lograda: (p) =>
       TODAS_LAS_PRAXIAS.every((ex) => p.praxiasHechas.includes(ex.id)),
   },
@@ -84,7 +88,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 30,
     left: 68,
     tamaño: 26,
-    precio: 5,
+    precio: 50,
   },
   {
     id: "guantes",
@@ -93,7 +97,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 72,
     left: 50,
     tamaño: 26,
-    precio: 8,
+    precio: 80,
   },
   {
     id: "gorra",
@@ -102,7 +106,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 4,
     left: 50,
     tamaño: 32,
-    precio: 8,
+    precio: 80,
   },
   {
     id: "anteojos",
@@ -111,7 +115,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 36,
     left: 50,
     tamaño: 28,
-    precio: 10,
+    precio: 100,
   },
   {
     id: "collar",
@@ -120,7 +124,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 58,
     left: 50,
     tamaño: 28,
-    precio: 12,
+    precio: 120,
   },
   {
     id: "chaleco",
@@ -129,7 +133,7 @@ export const ACCESORIOS_TIENDA: Accesorio[] = [
     top: 55,
     left: 50,
     tamaño: 42,
-    precio: 15,
+    precio: 150,
   },
 ];
 

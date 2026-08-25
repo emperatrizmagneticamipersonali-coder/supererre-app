@@ -173,6 +173,10 @@ export function factorTiempoPorEdad(edad: number): number {
   return 0.8; // 8 años o más
 }
 
+/** Monedas que da cada ejercicio completado (se ganan siempre, no solo la
+ * primera vez — ver marcarPraxiaHecha/marcarSonidoHecho/marcarNivelEscaleraHecho). */
+export const MONEDAS_POR_EJERCICIO = 10;
+
 /** Suma segundos practicados HOY — si cambió el día desde la última vez,
  * arranca el contador de nuevo (es un cupo diario, no acumulado para siempre). */
 export function registrarTiempoPracticado(segundos: number) {
@@ -204,7 +208,7 @@ export function marcarPraxiaHecha(id: string) {
   }
   // la moneda se gana SIEMPRE, no solo la primera vez — es una moneda de
   // práctica que se gasta, tiene que poder seguir ganándose repitiendo
-  p.monedas += 1;
+  p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
   return p;
@@ -216,7 +220,7 @@ export function marcarSonidoHecho(id: string) {
     p.sonidosHechos.push(id);
     p.estrellas += 1;
   }
-  p.monedas += 1;
+  p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
   return p;
@@ -228,7 +232,7 @@ export function marcarNivelEscaleraHecho(idNivel: string) {
     p.palabrasHechas.push(idNivel);
     p.estrellas += 1;
   }
-  p.monedas += 1;
+  p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
   return p;
