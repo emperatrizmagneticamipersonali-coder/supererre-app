@@ -21,6 +21,8 @@ import { BotonEscuchar } from "@/components/app/BotonEscuchar";
 import { Mascota } from "@/components/app/Mascota";
 import { Celebracion } from "@/components/app/Celebracion";
 import { RevelacionPremio } from "@/components/app/RevelacionPremio";
+import { MonedaVolando } from "@/components/app/MonedaVolando";
+import { reproducirSonidoMonedas } from "@/lib/sonidoMonedas";
 import {
   IconChevronLeft,
   IconLock,
@@ -352,6 +354,7 @@ function NivelDetector({
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
   );
+  const [monedaTrigger, setMonedaTrigger] = useState(0);
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const completado = estado === "detectado" || estado === "sin-microfono";
   // cada peldaño tiene exactamente 3 niveles (sílaba/palabra/oración,
@@ -364,6 +367,8 @@ function NivelDetector({
       registrarTiempoPracticado(
         Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
       );
+      reproducirSonidoMonedas();
+      setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado]);
@@ -382,6 +387,7 @@ function NivelDetector({
   return (
     <div className="flex-1 flex flex-col px-5 pt-4 pb-8">
       <Celebracion activa={completado} />
+      <MonedaVolando trigger={monedaTrigger} />
       <button
         onClick={onVolver}
         aria-label="Atrás"

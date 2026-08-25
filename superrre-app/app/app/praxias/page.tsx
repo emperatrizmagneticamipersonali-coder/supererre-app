@@ -19,6 +19,8 @@ import { PasosEjercicio } from "@/components/app/PasosEjercicio";
 import { PASOS_EJERCICIOS } from "@/lib/praxias-pasos";
 import { VideoCompanero } from "@/components/app/VideoCompanero";
 import { RevelacionPremio } from "@/components/app/RevelacionPremio";
+import { MonedaVolando } from "@/components/app/MonedaVolando";
+import { reproducirSonidoMonedas } from "@/lib/sonidoMonedas";
 import {
   IconCheck,
   IconChevronLeft,
@@ -130,6 +132,7 @@ function PraxiasContenido() {
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
   const [nivelActivo, setNivelActivo] = useState<number | null>(null);
   const [activa, setActiva] = useState<Praxia | null>(null);
+  const [monedaTrigger, setMonedaTrigger] = useState(0);
 
   // Si llegamos desde otra sección de la sesión continua (?ex=id), abrimos
   // ese ejercicio directo en vez de mostrar la lista de niveles.
@@ -265,6 +268,7 @@ function PraxiasContenido() {
     return (
       <div className="flex-1 flex flex-col px-5 pt-4 pb-8">
         <Celebracion activa={hecho} />
+        <MonedaVolando trigger={monedaTrigger} />
         <button
           onClick={() => {
             setActiva(null);
@@ -326,6 +330,8 @@ function PraxiasContenido() {
               registrarTiempoPracticado(
                 Math.round(activa.duracionSeg * factorTiempoPorEdad(p.edad))
               );
+              reproducirSonidoMonedas();
+              setMonedaTrigger(Date.now());
               setHecho(true);
             }}
             className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"

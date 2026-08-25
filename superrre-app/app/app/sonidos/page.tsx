@@ -17,6 +17,8 @@ import { BotonEscuchar } from "@/components/app/BotonEscuchar";
 import { Celebracion } from "@/components/app/Celebracion";
 import { VideoCompanero } from "@/components/app/VideoCompanero";
 import { RevelacionPremio } from "@/components/app/RevelacionPremio";
+import { MonedaVolando } from "@/components/app/MonedaVolando";
+import { reproducirSonidoMonedas } from "@/lib/sonidoMonedas";
 import {
   IconCheck,
   IconChevronLeft,
@@ -204,6 +206,7 @@ function SonidoDetector({
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
   );
+  const [monedaTrigger, setMonedaTrigger] = useState(0);
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const marco = estado === "detectado";
   const completado = estado === "detectado" || estado === "sin-microfono";
@@ -215,6 +218,8 @@ function SonidoDetector({
       registrarTiempoPracticado(
         Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
       );
+      reproducirSonidoMonedas();
+      setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado]);
@@ -233,6 +238,7 @@ function SonidoDetector({
   return (
     <div className="flex-1 flex flex-col px-5 pt-4 pb-8">
       <Celebracion activa={completado} />
+      <MonedaVolando trigger={monedaTrigger} />
       <button
         onClick={onVolver}
         aria-label="Atrás"

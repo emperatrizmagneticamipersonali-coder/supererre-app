@@ -177,6 +177,15 @@ h1, h2, h3, .font-display {
   text-wrap: balance;
 }
 
+@keyframes moneda-volar {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 0; }
+  18% { opacity: 1; transform: translate(0, -20px) scale(1); }
+  100% { transform: translate(90px, -460px) scale(0.7); opacity: 0; }
+}
+.animate-moneda-volar {
+  animation: moneda-volar 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

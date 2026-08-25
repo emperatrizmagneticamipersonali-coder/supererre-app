@@ -1,6 +1,13 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-25 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. Feedback de moneda ganada — HECHO, tsc+build limpios (17/17).
+- `components/app/MonedaVolando.tsx` nuevo: 3 iconos de moneda que salen del centro-abajo y "vuelan" hacia arriba-derecha con fade (keyframe `moneda-volar` en `globals.css`, 900ms). Se dispara con un `trigger: number` (timestamp) en vez de booleano, para poder re-disparar aunque el ejercicio anterior también hubiera sido "true".
+- `lib/sonidoMonedas.ts` nuevo: sonido de moneda sintetizado con Web Audio (2 tonos ascendentes, sin archivo de audio — no hay forma de generar/conseguir un archivo en este entorno, y esto es 100% local igual que el resto de la app).
+- Conectado en los 3 lugares donde se completa un ejercicio: Praxias ("Ya lo intenté"), `SonidoDetector` y `NivelDetector` (Escalera R/L) — mismo patrón en los 3.
+- "TIENDA" (sección de comprar accesorios en Premios → Mi personaje) ya decía así desde el checkpoint anterior — el usuario lo pidió de nuevo pero ya estaba, no hizo falta cambiar nada ahí.
+Próximo paso: esperar que el usuario lo prueba en su celular — ni la animación ni el sonido se pudieron verificar visualmente/auditivamente en este entorno.
+
 ⏸️ CHECKPOINT — Sesión 6/7. **Sesión continua entre secciones — HECHO, tsc+build limpios (17/17).**
 - `lib/sesion.ts` nuevo: `pasosDeSesion(p, tema)` — lista plana de Praxias+Sonidos+Escalera R+Escalera L en el mismo orden/desbloqueo secuencial que ya usa el Mapa (sin Memorama, es un juego aparte). `siguientePasoSesion()` devuelve el próximo pendiente después de uno dado.
 - `Progreso` nuevo: `segundosHoy`+`fechaSegundosHoy` (se resetea solo al cambiar el día) + `registrarTiempoPracticado()`/`segundosRestantesHoy()` en `progress.ts`, usando `planDiarioPorEdad` como tope.
