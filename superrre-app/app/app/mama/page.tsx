@@ -10,7 +10,7 @@ export default function MamaPage() {
   const router = useRouter();
   const p = useProgreso();
   const plan = planDiarioPorEdad(p.edad);
-  const estrellasAnimadas = useConteo(p.estrellas);
+  const monedasAnimadas = useConteo(p.monedas);
   const ejerciciosAnimados = useConteo(totalEjerciciosHechos(p));
 
   return (
@@ -21,10 +21,10 @@ export default function MamaPage() {
 
       <div className="mt-5 rounded-2xl bg-brand-primary-soft p-5 animate-fade-up [animation-delay:60ms]">
         <p className="text-5xl font-display font-extrabold text-txt-on-primary-soft tabular-nums">
-          {estrellasAnimadas}
+          {monedasAnimadas}
         </p>
         <p className="text-sm font-semibold text-txt-on-primary-soft mt-1">
-          Estrellas ganadas
+          Monedas ganadas
         </p>
       </div>
 

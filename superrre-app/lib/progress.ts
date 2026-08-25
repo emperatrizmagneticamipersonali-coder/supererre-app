@@ -29,6 +29,11 @@ export type Progreso = {
   monedas: number;
   /** ids de accesorios de la tienda ya comprados con monedas */
   accesoriosComprados: string[];
+  /** segundos de práctica acumulados en fechaSegundosHoy — para la sesión
+   * continua, que avanza sola de ejercicio en ejercicio hasta cumplir el
+   * plan diario por edad */
+  segundosHoy: number;
+  fechaSegundosHoy: string;
 };
 
 const KEY = "supererre_progreso";
@@ -49,6 +54,8 @@ const DEFAULT_PROGRESO: Progreso = {
   accesorioEquipado: null,
   monedas: 0,
   accesoriosComprados: [],
+  segundosHoy: 0,
+  fechaSegundosHoy: "",
 };
 
 function isoLocal(d: Date): string {
@@ -166,13 +173,38 @@ export function factorTiempoPorEdad(edad: number): number {
   return 0.8; // 8 años o más
 }
 
+/** Suma segundos practicados HOY — si cambió el día desde la última vez,
+ * arranca el contador de nuevo (es un cupo diario, no acumulado para siempre). */
+export function registrarTiempoPracticado(segundos: number) {
+  const p = leerProgreso();
+  const hoy = hoyISO();
+  if (p.fechaSegundosHoy !== hoy) {
+    p.segundosHoy = 0;
+    p.fechaSegundosHoy = hoy;
+  }
+  p.segundosHoy += segundos;
+  guardar(p);
+  return p;
+}
+
+/** Cuántos segundos le quedan hoy según el plan diario por edad — para
+ * la sesión continua (saber si toca seguir al siguiente ejercicio o parar). */
+export function segundosRestantesHoy(p: Progreso): number {
+  const hoy = hoyISO();
+  const usados = p.fechaSegundosHoy === hoy ? p.segundosHoy : 0;
+  const metaSeg = planDiarioPorEdad(p.edad).minutos * 60;
+  return Math.max(0, metaSeg - usados);
+}
+
 export function marcarPraxiaHecha(id: string) {
   const p = leerProgreso();
   if (!p.praxiasHechas.includes(id)) {
     p.praxiasHechas.push(id);
     p.estrellas += 1;
-    p.monedas += 1;
   }
+  // la moneda se gana SIEMPRE, no solo la primera vez — es una moneda de
+  // práctica que se gasta, tiene que poder seguir ganándose repitiendo
+  p.monedas += 1;
   registrarActividadHoy(p);
   guardar(p);
   return p;
@@ -183,8 +215,8 @@ export function marcarSonidoHecho(id: string) {
   if (!p.sonidosHechos.includes(id)) {
     p.sonidosHechos.push(id);
     p.estrellas += 1;
-    p.monedas += 1;
   }
+  p.monedas += 1;
   registrarActividadHoy(p);
   guardar(p);
   return p;
@@ -195,8 +227,8 @@ export function marcarNivelEscaleraHecho(idNivel: string) {
   if (!p.palabrasHechas.includes(idNivel)) {
     p.palabrasHechas.push(idNivel);
     p.estrellas += 1;
-    p.monedas += 1;
   }
+  p.monedas += 1;
   registrarActividadHoy(p);
   guardar(p);
   return p;

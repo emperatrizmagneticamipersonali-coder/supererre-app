@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useProgreso, marcarPraxiaHecha, factorTiempoPorEdad } from "@/lib/progress";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useProgreso,
+  marcarPraxiaHecha,
+  factorTiempoPorEdad,
+  registrarTiempoPracticado,
+  segundosRestantesHoy,
+} from "@/lib/progress";
+import { siguientePasoSesion } from "@/lib/sesion";
 import { NIVELES_PRAXIAS, TODAS_LAS_PRAXIAS, type Praxia } from "@/lib/praxias-data";
 import { useHablar } from "@/hooks/useHablar";
 import { BotonEscuchar } from "@/components/app/BotonEscuchar";
@@ -109,11 +116,30 @@ function DemoEjercicio({
 }
 
 export default function PraxiasPage() {
+  return (
+    <Suspense fallback={null}>
+      <PraxiasContenido />
+    </Suspense>
+  );
+}
+
+function PraxiasContenido() {
   const router = useRouter();
+  const params = useSearchParams();
   const p = useProgreso();
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
   const [nivelActivo, setNivelActivo] = useState<number | null>(null);
   const [activa, setActiva] = useState<Praxia | null>(null);
+
+  // Si llegamos desde otra sección de la sesión continua (?ex=id), abrimos
+  // ese ejercicio directo en vez de mostrar la lista de niveles.
+  useEffect(() => {
+    const exId = params.get("ex");
+    if (!exId) return;
+    const ex = TODAS_LAS_PRAXIAS.find((e) => e.id === exId);
+    if (ex) setActiva(ex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [hecho, setHecho] = useState(false);
   const [iniciado, setIniciado] = useState(false);
   const [cuenta, setCuenta] = useState<number | null>(null);
@@ -122,7 +148,26 @@ export default function PraxiasPage() {
   const [accesorioAReclamar, setAccesorioAReclamar] = useState<string | null>(
     null
   );
+  const [idParaSeguirSesion, setIdParaSeguirSesion] = useState<string | null>(
+    null
+  );
   const { hablar } = useHablar();
+
+  // Cada vez que se cierra un nivel de Praxias se muestran los premios
+  // (figurita, y el accesorio si fue el último nivel de todos, en cola) —
+  // RECIÉN cuando el niño cerró todo lo pendiente saltamos solos al
+  // siguiente ejercicio (de Praxias o de otra sección) — así nunca se pisa
+  // el festejo del premio con la sesión continua, y se respeta el cupo de
+  // minutos del día.
+  useEffect(() => {
+    if (!idParaSeguirSesion || premioAReclamar || accesorioAReclamar) return;
+    const idActual = idParaSeguirSesion;
+    setIdParaSeguirSesion(null);
+    if (segundosRestantesHoy(p) <= 0) return;
+    const sig = siguientePasoSesion(p, tema, "praxia", idActual);
+    if (sig) router.push(sig.href);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idParaSeguirSesion, premioAReclamar, accesorioAReclamar]);
 
   useEffect(() => {
     setIniciado(false);
@@ -278,6 +323,9 @@ export default function PraxiasPage() {
           <button
             onClick={() => {
               marcarPraxiaHecha(activa.id);
+              registrarTiempoPracticado(
+                Math.round(activa.duracionSeg * factorTiempoPorEdad(p.edad))
+              );
               setHecho(true);
             }}
             className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
@@ -291,6 +339,7 @@ export default function PraxiasPage() {
               // Elevador cierra la sección Y toda la app de Praxias a la vez —
               // el accesorio queda en cola, se muestra recién al cerrar la figurita.
               if (!siguientePraxia(activa)) setAccesorioAReclamar("sombrero");
+              setIdParaSeguirSesion(activa.id);
               setActiva(null);
               setNivelActivo(null);
               setHecho(false);

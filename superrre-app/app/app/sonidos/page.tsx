@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useProgreso, marcarSonidoHecho, factorTiempoPorEdad } from "@/lib/progress";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useProgreso,
+  marcarSonidoHecho,
+  factorTiempoPorEdad,
+  registrarTiempoPracticado,
+  segundosRestantesHoy,
+} from "@/lib/progress";
+import { siguientePasoSesion } from "@/lib/sesion";
 import { MODOS } from "@/lib/sonidos-data";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
 import { useHablar } from "@/hooks/useHablar";
@@ -19,7 +26,16 @@ import {
 } from "@/components/app/icons";
 
 export default function SonidosPage() {
+  return (
+    <Suspense fallback={null}>
+      <SonidosContenido />
+    </Suspense>
+  );
+}
+
+function SonidosContenido() {
   const router = useRouter();
+  const params = useSearchParams();
   const p = useProgreso();
   const [modoOverride, setModoOverride] = useState<keyof typeof MODOS | null>(
     null
@@ -30,6 +46,28 @@ export default function SonidosPage() {
   const [accesorioAReclamar, setAccesorioAReclamar] = useState<string | null>(
     null
   );
+  const [idParaSeguirSesion, setIdParaSeguirSesion] = useState<string | null>(
+    null
+  );
+
+  // Si llegamos desde otra sección de la sesión continua (?ex=id).
+  useEffect(() => {
+    const exId = params.get("ex");
+    if (exId) setSonidoId(exId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Ver comentario equivalente en app/praxias/page.tsx: se espera a que se
+  // cierren los premios en cola antes de saltar solo al siguiente ejercicio.
+  useEffect(() => {
+    if (!idParaSeguirSesion || premioAReclamar || accesorioAReclamar) return;
+    const idActual = idParaSeguirSesion;
+    setIdParaSeguirSesion(null);
+    if (segundosRestantesHoy(p) <= 0) return;
+    const sig = siguientePasoSesion(p, modo, "sonido", idActual);
+    if (sig) router.push(sig.href);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idParaSeguirSesion, premioAReclamar, accesorioAReclamar]);
 
   const data = MODOS[modo];
   const sonido = data.sonidos.find((s) => s.id === sonidoId) || null;
@@ -57,6 +95,7 @@ export default function SonidosPage() {
             setPremioAReclamar("sonidos-leon");
             setAccesorioAReclamar("gafas");
           }
+          setIdParaSeguirSesion(sonido.id);
           setSonidoId(null);
         }}
       />
@@ -171,7 +210,12 @@ function SonidoDetector({
   const completadoSinSiguiente = completado && !onSiguiente;
 
   useEffect(() => {
-    if (estado === "detectado" || estado === "sin-microfono") onDetectado();
+    if (estado === "detectado" || estado === "sin-microfono") {
+      onDetectado();
+      registrarTiempoPracticado(
+        Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado]);
 

@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useProgreso, marcarNivelEscaleraHecho, factorTiempoPorEdad } from "@/lib/progress";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useProgreso,
+  marcarNivelEscaleraHecho,
+  factorTiempoPorEdad,
+  registrarTiempoPracticado,
+  segundosRestantesHoy,
+} from "@/lib/progress";
+import { siguientePasoSesion } from "@/lib/sesion";
 import {
   gruposDe,
   INSTRUCCION_POR_TIPO,
@@ -55,12 +62,7 @@ function construirCurva(puntos: { x: number; y: number }[]) {
   return d;
 }
 
-export function EscaleraLetra({
-  letra,
-  titulo,
-  subtitulo,
-  gruposSiempreAbiertos = false,
-}: {
+export function EscaleraLetra(props: {
   letra: string;
   titulo: string;
   subtitulo: string;
@@ -69,15 +71,60 @@ export function EscaleraLetra({
    * abren directo, sin repetir el gate de plan gratis/pago. */
   gruposSiempreAbiertos?: boolean;
 }) {
+  return (
+    <Suspense fallback={null}>
+      <EscaleraLetraContenido {...props} />
+    </Suspense>
+  );
+}
+
+function EscaleraLetraContenido({
+  letra,
+  titulo,
+  subtitulo,
+  gruposSiempreAbiertos = false,
+}: {
+  letra: string;
+  titulo: string;
+  subtitulo: string;
+  gruposSiempreAbiertos?: boolean;
+}) {
   const router = useRouter();
+  const params = useSearchParams();
   const p = useProgreso();
   const grupos = gruposDe(letra);
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
+  const tipoSesion = letra === "L" ? "escalera-l" : "escalera-r";
   const [nivelActivo, setNivelActivo] = useState<NivelEscalera | null>(null);
   const [premioAReclamar, setPremioAReclamar] = useState<string | null>(null);
   const [accesorioAReclamar, setAccesorioAReclamar] = useState<string | null>(
     null
   );
+  const [idParaSeguirSesion, setIdParaSeguirSesion] = useState<string | null>(
+    null
+  );
+
+  // Si llegamos desde otra sección de la sesión continua (?ex=id).
+  useEffect(() => {
+    const exId = params.get("ex");
+    if (!exId) return;
+    const nivel = grupos
+      .flatMap((g) => g.niveles)
+      .find((n) => n.id === exId);
+    if (nivel) setNivelActivo(nivel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Ver comentario equivalente en app/praxias/page.tsx.
+  useEffect(() => {
+    if (!idParaSeguirSesion || premioAReclamar || accesorioAReclamar) return;
+    const idActual = idParaSeguirSesion;
+    setIdParaSeguirSesion(null);
+    if (segundosRestantesHoy(p) <= 0) return;
+    const sig = siguientePasoSesion(p, tema, tipoSesion, idActual);
+    if (sig) router.push(sig.href);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idParaSeguirSesion, premioAReclamar, accesorioAReclamar]);
 
   if (nivelActivo) {
     const silaba = nivelActivo.id.split("-")[0];
@@ -96,6 +143,7 @@ export function EscaleraLetra({
           if (esUltimoPeldaño) {
             setAccesorioAReclamar(letra === "L" ? "corona" : "capa");
           }
+          setIdParaSeguirSesion(nivelActivo.id);
           setNivelActivo(null);
         }}
       />
@@ -311,7 +359,12 @@ function NivelDetector({
   const finDeSeccion = completado && nivel.id.endsWith("-2");
 
   useEffect(() => {
-    if (completado) onDetectado();
+    if (completado) {
+      onDetectado();
+      registrarTiempoPracticado(
+        Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estado]);
 
