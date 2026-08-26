@@ -1,5 +1,12 @@
 # ESTADO — SuperErre
-Última actualización: 2026-08-25 | Sesión actual: 6/7
+Última actualización: 2026-08-26 | Sesión actual: 6/7
+
+⏸️ CHECKPOINT — Sesión 6/7. **Capa 2 (onboarding, 11 pasos) — HECHA, tsc + build limpios (17/17).**
+- StepPaywall y StepGate no tenían `animate-fade-up` en su raíz (los únicos 2 pasos sin entrada animada) — agregado.
+- Stagger 60ms agregado en: botones de edad (StepEdad), chips de "¿Cómo dice la R hoy?" (StepDolor), chips de interés (StepInteres, pausado/sin usar pero corregido igual por consistencia), checklist del paywall, 3 botones de la puerta de adultos (StepGate). `Chip.tsx` ahora acepta `style` opcional para poder pasarle el delay desde afuera.
+- **Bug real encontrado (mismo patrón que ya se había corregido antes)**: el `<video>` de `StepVictoria` (el espejo circular de la Primera Victoria) usaba `className="hidden"` directo, en vez de pasar por `Mascota.tsx` — es el MISMO bug de `display:none` que frena la decodificación de cuadros en Android/Chrome, ya corregido en `Mascota.tsx`/`VideoCompanero.tsx` en una sesión anterior pero que se había quedado sin aplicar acá porque este video es standalone, no usa esos componentes. Corregido con el mismo patrón (opacity:0 + 1px en vez de display:none).
+Los demás 9 pasos (Nombre/Edad/Dolor/Reconocimiento/Revelación/Victoria/Celebración) ya tenían buena entrada animada de sesiones anteriores — no se tocaron.
+Próximo paso: preguntarle al usuario si sigue con el repaso general de la landing (Garantía/FAQ/Oferta, pendiente) o si prueba primero Racha+Onboarding en su celular.
 
 ⏸️ CHECKPOINT — Sesión 6/7. Skill `diseno` invocado de nuevo — usuario pidió Racha + onboarding completo + repaso general. Se acordó arrancar por capas, empezando por Racha. **Capa 1 (Racha) — HECHA, tsc limpio.**
 - Tarjeta de racha actual: fondo pasa de `border+surface-primary` a `bg-brand-accent-soft` (mismo patrón "hero card" que ya tiene Mamá), dato héroe `text-4xl→text-5xl` en color `brand-accent`, círculo del ícono ahora sólido (`bg-brand-accent` + ícono `text-txt-on-brand`) para más contraste sobre el fondo suave.

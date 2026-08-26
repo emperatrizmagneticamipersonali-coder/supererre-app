@@ -280,7 +280,7 @@ function StepEdad({
           <button
             key={e}
             onClick={() => onSelect(e)}
-            className={`rounded-2xl py-6 text-center font-display font-bold text-xl transition-colors active:scale-[0.98] ${
+            className={`rounded-2xl py-6 text-center font-display font-bold text-xl transition-colors active:scale-[0.98] animate-fade-up ${
               i === EDADES.length - 1 && EDADES.length % 2 === 1
                 ? "col-span-2"
                 : ""
@@ -289,6 +289,7 @@ function StepEdad({
                 ? "border-2 border-brand-primary bg-brand-primary-soft text-txt-on-primary-soft"
                 : "border border-border-default bg-surface-primary text-txt-primary"
             }`}
+            style={{ animationDelay: `${i * 60}ms` }}
           >
             {e}
           </button>
@@ -313,12 +314,13 @@ function StepDolor({
         Esto nos ayuda a armar sus primeros ejercicios.
       </p>
       <div className="mt-8 flex flex-col gap-3">
-        {DOLORES.map((d) => (
+        {DOLORES.map((d, i) => (
           <Chip
             key={d}
             label={d}
             selected={value === d}
             onClick={() => onSelect(d)}
+            style={{ animationDelay: `${i * 60}ms` }}
           />
         ))}
       </div>
@@ -344,12 +346,13 @@ function StepInteres({
         Elegimos con esto qué mundo abre primero en su Mapa de Islas.
       </p>
       <div className="mt-8 flex flex-col gap-3">
-        {INTERESES.map((i) => (
+        {INTERESES.map((i, idx) => (
           <Chip
             key={i.id}
             label={`${i.emoji}  ${i.label}`}
             selected={value === i.id}
             onClick={() => onSelect(i.id)}
+            style={{ animationDelay: `${idx * 60}ms` }}
           />
         ))}
       </div>
@@ -613,7 +616,16 @@ function StepVictoria({
           loop
           muted
           playsInline
-          className="hidden"
+          // display:none frena la decodificación de cuadros en varios
+          // Android/Chrome (mismo bug ya corregido en Mascota.tsx/VideoCompanero)
+          style={{
+            position: "absolute",
+            width: 1,
+            height: 1,
+            opacity: 0,
+            pointerEvents: "none",
+            overflow: "hidden",
+          }}
         />
         <canvas
           ref={canvasRef}
@@ -730,7 +742,7 @@ function StepPaywall({
       ? `El Modo Pirata de ${n} desbloqueado, con mapas y tesoros`
       : `Más aventuras con su León en el Mapa de Islas`;
   return (
-    <div className="flex-1 flex flex-col px-5 pt-4 pb-8 overflow-y-auto">
+    <div className="flex-1 flex flex-col px-5 pt-4 pb-8 overflow-y-auto animate-fade-up">
       <button
         onClick={onCerrar}
         aria-label="Cerrar"
@@ -754,8 +766,12 @@ function StepPaywall({
           }, ya guardados`,
           bulletTema,
           "Escalera Fonética completa: carro, perro, rana, ferrocarril",
-        ].map((b) => (
-          <div key={b} className="flex items-start gap-3">
+        ].map((b, i) => (
+          <div
+            key={b}
+            className="flex items-start gap-3 animate-fade-up"
+            style={{ animationDelay: `${i * 60}ms` }}
+          >
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-primary text-txt-on-brand">
               <IconCheck className="h-3.5 w-3.5" />
             </span>
@@ -837,7 +853,7 @@ function StepGate({
   onBack: () => void;
 }) {
   return (
-    <div className="flex-1 flex flex-col px-6 pt-8 pb-8">
+    <div className="flex-1 flex flex-col px-6 pt-8 pb-8 animate-fade-up">
       <FunnelHeader onBack={onBack} />
       <div className="flex-1 flex flex-col items-center justify-center text-center">
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft mb-5">
@@ -858,11 +874,12 @@ function StepGate({
           {a} + {b} = ?
         </p>
         <div className="mt-8 grid grid-cols-3 gap-3 w-full max-w-xs">
-          {options.map((n) => (
+          {options.map((n, i) => (
             <button
               key={n}
               onClick={n === correct ? onCorrect : onWrong}
-              className="rounded-2xl border border-border-default bg-surface-primary py-4 font-display font-bold text-xl text-txt-primary hover:border-brand-primary transition-colors"
+              className="rounded-2xl border border-border-default bg-surface-primary py-4 font-display font-bold text-xl text-txt-primary hover:border-brand-primary transition-colors animate-fade-up"
+              style={{ animationDelay: `${i * 60}ms` }}
             >
               {n}
             </button>
