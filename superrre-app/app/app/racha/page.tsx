@@ -51,26 +51,26 @@ export default function RachaPage() {
 
   return (
     <div className="flex-1 flex flex-col px-5 pt-6 pb-6">
-      <h1 className="font-display font-extrabold text-2xl text-txt-primary">
+      <h1 className="font-display font-extrabold text-2xl text-txt-primary animate-fade-up">
         Racha de {p.nombre || "tu hijo"}
       </h1>
 
-      <div className="mt-6 flex flex-col items-center rounded-2xl border border-border-default bg-surface-primary p-6">
+      <div className="mt-5 flex flex-col items-center rounded-2xl bg-brand-accent-soft p-6 animate-fade-up [animation-delay:60ms]">
         <div
           className={`flex h-24 w-24 items-center justify-center rounded-full ${
-            racha.actual > 0 ? "bg-brand-accent-soft" : "bg-surface-tertiary"
+            racha.actual > 0 ? "bg-brand-accent" : "bg-surface-tertiary"
           }`}
         >
           <IconFlame
             className={`h-12 w-12 ${
-              racha.actual > 0 ? "text-brand-accent" : "text-txt-tertiary"
+              racha.actual > 0 ? "text-txt-on-brand" : "text-txt-tertiary"
             }`}
           />
         </div>
-        <p className="mt-4 font-display font-extrabold text-4xl text-txt-primary tabular-nums">
+        <p className="mt-4 font-display font-extrabold text-5xl text-brand-accent tabular-nums">
           {rachaActualAnimada}
         </p>
-        <p className="text-sm text-txt-secondary">
+        <p className="text-sm font-semibold text-txt-primary">
           {racha.actual === 1 ? "día seguido" : "días seguidos"}
         </p>
         <p className="mt-3 text-sm font-semibold text-txt-primary text-center max-w-64">
@@ -78,7 +78,7 @@ export default function RachaPage() {
         </p>
       </div>
 
-      <div className="mt-4 grid grid-cols-7 gap-2">
+      <div className="mt-4 grid grid-cols-7 gap-2 animate-fade-up [animation-delay:120ms]">
         {ultimos7.map((d, i) => {
           const iso = isoDeFecha(d);
           const activo = activos.has(iso);
@@ -108,14 +108,14 @@ export default function RachaPage() {
         })}
       </div>
 
-      <div className="mt-4 flex gap-3">
+      <div className="mt-4 flex gap-3 animate-fade-up [animation-delay:180ms]">
         <div className="flex-1 rounded-2xl bg-surface-secondary p-4">
           <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
             {mejorRachaAnimada}
           </p>
           <p className="text-xs text-txt-secondary mt-1">Mejor racha</p>
         </div>
-        <div className="flex-1 rounded-2xl bg-surface-secondary p-4">
+        <div className="flex-1 rounded-2xl bg-surface-tertiary p-4">
           <p className="text-2xl font-display font-extrabold text-txt-primary tabular-nums">
             {ejerciciosAnimados}
           </p>
@@ -123,7 +123,7 @@ export default function RachaPage() {
         </div>
       </div>
 
-      <div className="mt-4 rounded-2xl border-2 border-brand-primary bg-surface-primary p-5">
+      <div className="mt-4 rounded-2xl border-2 border-brand-primary bg-surface-primary p-5 animate-fade-up [animation-delay:240ms]">
         <p className="text-xs font-bold uppercase tracking-wide text-txt-tertiary">
           Nivel actual
         </p>
