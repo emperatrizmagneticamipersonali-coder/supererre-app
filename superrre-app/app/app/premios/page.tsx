@@ -206,6 +206,7 @@ function PremiosContenido() {
   const [itemAConfirmar, setItemAConfirmar] = useState<Accesorio | null>(null);
   const [ajusteManual, setAjusteManual] = useState<AjusteManual | null>(null);
   const [verCuadricula, setVerCuadricula] = useState(true);
+  const [previsualizado, setPrevisualizado] = useState<string | null>(null);
 
   const disponible = p.plan === "completo" && minijuegoDesbloqueado(p);
   const accEquipadoId = p.accesorioEquipado;
@@ -326,16 +327,41 @@ function PremiosContenido() {
   const accEquipado = p.accesorioEquipado
     ? accesorioPorId(p.accesorioEquipado)
     : undefined;
+  const accMostrado = previsualizado
+    ? accesorioPorId(previsualizado)
+    : accEquipado;
   const accParaMostrar: Accesorio | undefined =
     calibrando && ajusteManual && accEquipado
       ? { ...accEquipado, ...ajusteManual }
-      : accEquipado;
+      : accMostrado;
+  const alcanzaParaComprar = itemAConfirmar
+    ? p.monedas >= itemAConfirmar.precio!
+    : false;
+
+  /** Tocar cualquier accesorio: si ya es tuyo, se lo pone/saca de una. Si
+   * no, primero lo muestra en vista previa sobre el León y abre el diálogo
+   * de compra — así el niño ve cómo le queda ANTES de decidir comprarlo. */
+  function elegirAccesorio(a: Accesorio, yaLoTiene: boolean) {
+    if (yaLoTiene) {
+      setPrevisualizado(null);
+      equiparAccesorio(p.accesorioEquipado === a.id ? null : a.id);
+    } else {
+      setPrevisualizado(a.id);
+      setItemAConfirmar(a);
+    }
+  }
 
   function confirmarCompra() {
     if (!itemAConfirmar) return;
     if (comprarAccesorio(itemAConfirmar.id, itemAConfirmar.precio!)) {
       equiparAccesorio(itemAConfirmar.id);
     }
+    setPrevisualizado(null);
+    setItemAConfirmar(null);
+  }
+
+  function cancelarCompra() {
+    setPrevisualizado(null);
     setItemAConfirmar(null);
   }
 
@@ -598,37 +624,44 @@ function PremiosContenido() {
           </p>
           <div className="mt-2 grid grid-cols-4 gap-3 w-full">
             {ACCESORIOS.map((a, i) => {
-              const lograda = accesorios.some((g) => g.id === a.id) || calibrando;
-              const equipado = p.accesorioEquipado === a.id;
+              const logradaReal = accesorios.some((g) => g.id === a.id);
+              const logradaVisible = logradaReal || calibrando;
+              const mostradoAhora = accParaMostrar?.id === a.id;
               return (
                 <button
                   key={a.id}
-                  disabled={!lograda}
-                  onClick={() => equiparAccesorio(equipado ? null : a.id)}
+                  onClick={() => {
+                    if (calibrando) {
+                      equiparAccesorio(mostradoAhora ? null : a.id);
+                      return;
+                    }
+                    elegirAccesorio(a, logradaReal);
+                  }}
                   onPointerDown={
-                    lograda && !calibrando
+                    logradaReal && !calibrando
                       ? (e) => iniciarArrastre(e, a)
                       : undefined
                   }
                   aria-label={a.nombre}
-                  className={`flex aspect-square flex-col items-center justify-center rounded-2xl transition-transform active:scale-95 animate-fade-up ${
-                    equipado
+                  className={`relative flex aspect-square flex-col items-center justify-center rounded-2xl transition-transform active:scale-95 animate-fade-up ${
+                    mostradoAhora
                       ? "bg-brand-primary-soft shadow-md ring-2 ring-brand-primary"
-                      : lograda
+                      : logradaVisible
                       ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
                       : "border-2 border-dashed border-border-default bg-surface-secondary"
                   }`}
                   style={{ animationDelay: `${i * 40}ms`, touchAction: "none" }}
                 >
-                  {lograda ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={a.imagen}
-                      alt={a.nombre}
-                      className="h-10 w-10 object-contain select-none"
-                    />
-                  ) : (
-                    <IconLock className="h-4 w-4 text-txt-tertiary" />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={a.imagen}
+                    alt={a.nombre}
+                    className={`h-10 w-10 object-contain select-none ${
+                      logradaVisible ? "" : "opacity-40"
+                    }`}
+                  />
+                  {!logradaVisible && (
+                    <IconLock className="absolute bottom-1 right-1 h-3.5 w-3.5 text-txt-tertiary" />
                   )}
                 </button>
               );
@@ -640,32 +673,31 @@ function PremiosContenido() {
           </p>
           <div className="mt-2 grid grid-cols-3 gap-3 w-full">
             {ACCESORIOS_COMPRABLES.map((a, i) => {
-              const tenido = accesorioDesbloqueado(a, p) || calibrando;
-              const equipado = p.accesorioEquipado === a.id;
-              const alcanza = p.monedas >= a.precio!;
+              const tenidoReal = accesorioDesbloqueado(a, p);
+              const tenidoVisible = tenidoReal || calibrando;
+              const mostradoAhora = accParaMostrar?.id === a.id;
               return (
                 <button
                   key={a.id}
-                  onClick={() =>
-                    tenido
-                      ? equiparAccesorio(equipado ? null : a.id)
-                      : setItemAConfirmar(a)
-                  }
+                  onClick={() => {
+                    if (calibrando) {
+                      equiparAccesorio(mostradoAhora ? null : a.id);
+                      return;
+                    }
+                    elegirAccesorio(a, tenidoReal);
+                  }}
                   onPointerDown={
-                    tenido && !calibrando
+                    tenidoReal && !calibrando
                       ? (e) => iniciarArrastre(e, a)
                       : undefined
                   }
-                  disabled={!tenido && !alcanza}
                   aria-label={a.nombre}
                   className={`flex flex-col items-center justify-center gap-1 rounded-2xl p-2 transition-transform active:scale-95 animate-fade-up ${
-                    equipado
+                    mostradoAhora
                       ? "bg-brand-primary-soft shadow-md ring-2 ring-brand-primary"
-                      : tenido
+                      : tenidoVisible
                       ? "bg-surface-primary shadow-sm ring-1 ring-border-default"
-                      : alcanza
-                      ? "bg-surface-secondary"
-                      : "bg-surface-secondary opacity-50"
+                      : "bg-surface-secondary"
                   }`}
                   style={{
                     animationDelay: `${i * 40}ms`,
@@ -688,8 +720,8 @@ function PremiosContenido() {
                   <span className="select-none text-xs font-bold text-txt-primary leading-tight text-center">
                     {a.nombre}
                   </span>
-                  {!tenido && (
-                    <span className="select-none inline-flex items-center gap-1 text-xs font-bold text-txt-on-primary-soft">
+                  {!tenidoVisible && (
+                    <span className="select-none inline-flex items-center gap-1 rounded-full bg-brand-primary-soft px-2 py-0.5 text-xs font-bold text-txt-on-primary-soft">
                       <IconCoin className="h-3 w-3" /> {a.precio}
                     </span>
                   )}
@@ -702,7 +734,7 @@ function PremiosContenido() {
             <div
               className="fixed inset-0 z-50 flex items-end justify-center px-5 pb-8 sm:items-center"
               style={{ backgroundColor: "var(--surface-overlay)" }}
-              onClick={() => setItemAConfirmar(null)}
+              onClick={cancelarCompra}
             >
               <div
                 className="w-full max-w-xs rounded-3xl bg-surface-primary p-6 text-center shadow-lg animate-pop-in"
@@ -724,20 +756,27 @@ function PremiosContenido() {
                   {itemAConfirmar.nombre}
                 </p>
                 <p className="mt-1 text-sm text-txt-secondary">
-                  Esto te costará{" "}
+                  Así se ve puesto. Esto te costará{" "}
                   <strong className="text-txt-primary">
                     {itemAConfirmar.precio} monedas
                   </strong>
                   .
                 </p>
+                {!alcanzaParaComprar && (
+                  <p className="mt-2 text-sm font-bold text-brand-accent">
+                    Te faltan {itemAConfirmar.precio! - p.monedas} monedas
+                    todavía.
+                  </p>
+                )}
                 <button
                   onClick={confirmarCompra}
-                  className="mt-5 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3 btn-3d-primary transition-colors"
+                  disabled={!alcanzaParaComprar}
+                  className="mt-5 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3 btn-3d-primary transition-colors disabled:opacity-40"
                 >
                   Sí, comprar
                 </button>
                 <button
-                  onClick={() => setItemAConfirmar(null)}
+                  onClick={cancelarCompra}
                   className="mt-2 w-full text-center text-sm text-txt-secondary underline underline-offset-2 py-2"
                 >
                   Cancelar
