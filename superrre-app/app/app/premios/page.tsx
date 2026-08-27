@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import type { RefObject } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useProgreso,
   minijuegoDesbloqueado,
@@ -148,7 +148,43 @@ function generarCartas(letra: string, nivel: number): Carta[] {
 }
 
 export default function PremiosPage() {
+  return (
+    <Suspense fallback={null}>
+      <PremiosContenido />
+    </Suspense>
+  );
+}
+
+/** Cuadrícula de referencia (cada 10% del retrato) — solo visible en modo
+ * calibración, para poder leer a ojo dónde cae cada punto. */
+function CuadriculaCalibracion() {
+  const marcas = [10, 20, 30, 40, 50, 60, 70, 80, 90];
+  return (
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {marcas.map((v) => (
+        <div
+          key={`v${v}`}
+          className="absolute top-0 bottom-0 border-l border-red-500/50"
+          style={{ left: `${v}%` }}
+        />
+      ))}
+      {marcas.map((v) => (
+        <div
+          key={`h${v}`}
+          className="absolute left-0 right-0 border-t border-red-500/50"
+          style={{ top: `${v}%` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+type AjusteManual = { top: number; left: number; ancho: number };
+
+function PremiosContenido() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const calibrando = searchParams.get("calibrar") === "1";
   const p = useProgreso();
   const tema: "leon" | "pirata" = p.interes === "pirata" ? "pirata" : "leon";
   const mascota = tema === "pirata" ? "🏴‍☠️" : "🦁";
@@ -168,8 +204,21 @@ export default function PremiosPage() {
   const [jugando, setJugando] = useState(false);
   const [gano, setGano] = useState(false);
   const [itemAConfirmar, setItemAConfirmar] = useState<Accesorio | null>(null);
+  const [ajusteManual, setAjusteManual] = useState<AjusteManual | null>(null);
 
   const disponible = p.plan === "completo" && minijuegoDesbloqueado(p);
+  const accEquipadoId = p.accesorioEquipado;
+
+  useEffect(() => {
+    if (!calibrando || !accEquipadoId) {
+      setAjusteManual(null);
+      return;
+    }
+    const acc = accesorioPorId(accEquipadoId);
+    if (acc) {
+      setAjusteManual({ top: acc.top, left: acc.left, ancho: acc.ancho ?? 90 });
+    }
+  }, [calibrando, accEquipadoId]);
 
   useEffect(() => {
     if (jugando && !gano && cartas.every((c) => c.emparejada)) {
@@ -276,6 +325,10 @@ export default function PremiosPage() {
   const accEquipado = p.accesorioEquipado
     ? accesorioPorId(p.accesorioEquipado)
     : undefined;
+  const accParaMostrar: Accesorio | undefined =
+    calibrando && ajusteManual && accEquipado
+      ? { ...accEquipado, ...ajusteManual }
+      : accEquipado;
 
   function confirmarCompra() {
     if (!itemAConfirmar) return;
@@ -480,7 +533,8 @@ export default function PremiosPage() {
           >
             <div className="relative" style={{ width: 200, height: 200 }}>
               <Mascota tema={tema} size={200} />
-              {accEquipado && <AccesorioOverlay acc={accEquipado} />}
+              {accParaMostrar && <AccesorioOverlay acc={accParaMostrar} />}
+              {calibrando && <CuadriculaCalibracion />}
             </div>
           </div>
 
@@ -489,6 +543,41 @@ export default function PremiosPage() {
               ? "Termina una sección completa o comprá algo en la tienda para tener tu primer accesorio."
               : "Arrastrá un accesorio hasta el León para ponérselo, o tocalo."}
           </p>
+
+          {calibrando && accEquipado && ajusteManual && (
+            <div className="mt-4 w-full rounded-2xl border border-border-default bg-surface-secondary p-4 text-left">
+              <p className="text-xs font-bold text-txt-tertiary mb-3">
+                MODO CALIBRACIÓN — {accEquipado.nombre}
+              </p>
+              {(["top", "left", "ancho"] as const).map((campo) => (
+                <label key={campo} className="block mb-3">
+                  <span className="text-xs text-txt-secondary">
+                    {campo}: {ajusteManual[campo]}
+                  </span>
+                  <input
+                    type="range"
+                    min={campo === "ancho" ? 30 : 0}
+                    max={campo === "ancho" ? 170 : 100}
+                    value={ajusteManual[campo]}
+                    onChange={(e) =>
+                      setAjusteManual(
+                        (a) => a && { ...a, [campo]: Number(e.target.value) }
+                      )
+                    }
+                    className="w-full"
+                  />
+                </label>
+              ))}
+              <p className="mt-1 rounded-lg bg-surface-tertiary p-3 font-mono text-sm text-txt-primary select-all">
+                top: {ajusteManual.top}, left: {ajusteManual.left}, ancho:{" "}
+                {ajusteManual.ancho}
+              </p>
+              <p className="mt-2 text-xs text-txt-tertiary">
+                Movés los deslizadores hasta que el accesorio quede bien
+                puesto, y me mandás una captura de estos 3 números.
+              </p>
+            </div>
+          )}
 
           <p className="mt-6 self-start text-xs font-bold uppercase tracking-wide text-txt-tertiary">
             Tus logros
@@ -560,7 +649,11 @@ export default function PremiosPage() {
                       ? "bg-surface-secondary"
                       : "bg-surface-secondary opacity-50"
                   }`}
-                  style={{ animationDelay: `${i * 40}ms`, touchAction: "none" }}
+                  style={{
+                    animationDelay: `${i * 40}ms`,
+                    touchAction: "none",
+                    WebkitTouchCallout: "none",
+                  }}
                 >
                   {a.imagen ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -574,11 +667,11 @@ export default function PremiosPage() {
                       {a.emoji}
                     </span>
                   )}
-                  <span className="text-xs font-bold text-txt-primary leading-tight text-center">
+                  <span className="select-none text-xs font-bold text-txt-primary leading-tight text-center">
                     {a.nombre}
                   </span>
                   {!tenido && (
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-txt-on-primary-soft">
+                    <span className="select-none inline-flex items-center gap-1 text-xs font-bold text-txt-on-primary-soft">
                       <IconCoin className="h-3 w-3" /> {a.precio}
                     </span>
                   )}
