@@ -584,7 +584,7 @@ function PremiosContenido() {
           </p>
           <div className="mt-2 grid grid-cols-4 gap-3 w-full">
             {ACCESORIOS.map((a, i) => {
-              const lograda = accesorios.some((g) => g.id === a.id);
+              const lograda = accesorios.some((g) => g.id === a.id) || calibrando;
               const equipado = p.accesorioEquipado === a.id;
               return (
                 <button
@@ -592,7 +592,9 @@ function PremiosContenido() {
                   disabled={!lograda}
                   onClick={() => equiparAccesorio(equipado ? null : a.id)}
                   onPointerDown={
-                    lograda ? (e) => iniciarArrastre(e, a) : undefined
+                    lograda && !calibrando
+                      ? (e) => iniciarArrastre(e, a)
+                      : undefined
                   }
                   aria-label={a.nombre}
                   className={`flex aspect-square flex-col items-center justify-center rounded-2xl transition-transform active:scale-95 animate-fade-up ${
@@ -624,7 +626,7 @@ function PremiosContenido() {
           </p>
           <div className="mt-2 grid grid-cols-3 gap-3 w-full">
             {ACCESORIOS_COMPRABLES.map((a, i) => {
-              const tenido = accesorioDesbloqueado(a, p);
+              const tenido = accesorioDesbloqueado(a, p) || calibrando;
               const equipado = p.accesorioEquipado === a.id;
               const alcanza = p.monedas >= a.precio!;
               return (
@@ -636,7 +638,9 @@ function PremiosContenido() {
                       : setItemAConfirmar(a)
                   }
                   onPointerDown={
-                    tenido ? (e) => iniciarArrastre(e, a) : undefined
+                    tenido && !calibrando
+                      ? (e) => iniciarArrastre(e, a)
+                      : undefined
                   }
                   disabled={!tenido && !alcanza}
                   aria-label={a.nombre}
