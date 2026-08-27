@@ -32,13 +32,21 @@ export const ACCESORIOS: Accesorio[] = [
     nombre: "Sombrero de Explorador",
     emoji: "🤠",
     imagen: "/accesorios/sombrero.png",
-    // top/left recalibrados con un video real del usuario — el sombrero
-    // aparecía flotando a la derecha de la cabeza del León, no puesto
-    // encima. Ajustado a ojo desde esa evidencia (no se pudo verificar en
-    // vivo en este entorno) — puede necesitar un segundo ajuste.
-    top: 14,
-    left: 24,
-    ancho: 110,
+    // top/left/ancho recalibrados midiendo en serio (no a ojo): se extrajo
+    // un frame real de leon.mp4 (720x1280) y se ubicaron los puntos clave
+    // de la cabeza (cejas, orejas, ancho de la melena) con una cuadrícula
+    // de referencia, luego se tradujeron a % del retrato de 200px usando
+    // la misma matemática de "contain" que usa useVideoChromaKey (escala
+    // por altura, letterbox horizontal de 43.75px a cada lado). El PNG del
+    // sombrero también se midió por su caja alfa real (contenido centrado,
+    // ocupa 89%×61% de su lienzo cuadrado) para saber cuánto sobresale el
+    // ala respecto al centro declarado en top/left. Con esto el sombrero
+    // queda apoyado sobre la melena, con el ala a la altura de las cejas,
+    // en vez de tapar toda la cara (bug reportado en video). No se pudo
+    // verificar en vivo en este entorno — sigue siendo cálculo, no captura.
+    top: 8,
+    left: 50,
+    ancho: 90,
     lograda: (p) =>
       TODAS_LAS_PRAXIAS.every((ex) => p.praxiasHechas.includes(ex.id)),
     // también se puede comprar directo con monedas, sin esperar a lograrlo
