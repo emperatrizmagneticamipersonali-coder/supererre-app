@@ -205,6 +205,7 @@ function PremiosContenido() {
   const [gano, setGano] = useState(false);
   const [itemAConfirmar, setItemAConfirmar] = useState<Accesorio | null>(null);
   const [ajusteManual, setAjusteManual] = useState<AjusteManual | null>(null);
+  const [verCuadricula, setVerCuadricula] = useState(true);
 
   const disponible = p.plan === "completo" && minijuegoDesbloqueado(p);
   const accEquipadoId = p.accesorioEquipado;
@@ -539,7 +540,7 @@ function PremiosContenido() {
               {accParaMostrar && !accParaMostrar.detras && (
                 <AccesorioOverlay acc={accParaMostrar} />
               )}
-              {calibrando && <CuadriculaCalibracion />}
+              {calibrando && verCuadricula && <CuadriculaCalibracion />}
             </div>
           </div>
 
@@ -551,9 +552,17 @@ function PremiosContenido() {
 
           {calibrando && accEquipado && ajusteManual && (
             <div className="mt-4 w-full rounded-2xl border border-border-default bg-surface-secondary p-4 text-left">
-              <p className="text-xs font-bold text-txt-tertiary mb-3">
-                MODO CALIBRACIÓN — {accEquipado.nombre}
-              </p>
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <p className="text-xs font-bold text-txt-tertiary">
+                  MODO CALIBRACIÓN — {accEquipado.nombre}
+                </p>
+                <button
+                  onClick={() => setVerCuadricula((v) => !v)}
+                  className="shrink-0 rounded-full bg-surface-tertiary px-3 py-1 text-xs font-bold text-txt-secondary"
+                >
+                  {verCuadricula ? "Ver limpio" : "Ver cuadrícula"}
+                </button>
+              </div>
               {(["top", "left", "ancho"] as const).map((campo) => (
                 <label key={campo} className="block mb-3">
                   <span className="text-xs text-txt-secondary">

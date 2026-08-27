@@ -1,6 +1,12 @@
 # ESTADO — SuperErre
 Última actualización: 2026-08-27 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7. **2 fixes tras feedback del usuario probando la capa/corona en modo calibración:**
+1. **El recorte de la patilla de las gafas (checkpoint anterior) se pasó de largo y le cortó un pedazo real al lente** — el usuario avisó "se ven incompletos". Diagnóstico correcto esta vez: medí fila por fila (no un único corte vertical) el punto exacto donde el aro circular termina y empieza el brazo — el aro sube hasta x≈143-144px de ancho en las filas de arriba/abajo del brazo, pero mi corte anterior había cortado en x=133, mordiendo el círculo. Recorté de nuevo desde el PNG original guardado en git (commit `d92d2ae`, antes del primer recorte) y esta vez solo borré el tramo x≥148 en las filas y=88-115 (donde de verdad está el brazo largo, que llega hasta x=188) — el círculo del lente quedó completo.
+2. **"la app no me deja checar para ver realmente cómo queda la capa y la corona"** — hipótesis más probable: la cuadrícula roja de referencia (`CuadriculaCalibracion`) tapa la vista limpia del personaje mientras se calibra. Se agregó un botón "Ver limpio"/"Ver cuadrícula" dentro del panel de modo calibración (`verCuadricula`, nuevo estado) para poder alternar y ver el resultado sin líneas encima, sin salir del modo calibración ni perder los sliders. ⚠️ Sigue pendiente confirmar con el usuario si esto era lo que quería decir, o si el problema era otra cosa (por ejemplo, que capa/corona siguen bloqueadas FUERA de `?calibrar=1` hasta ganarlas o comprarlas — eso es comportamiento esperado, no bug).
+tsc + build limpios (17/17).
+Próximo paso: esperar aclaración/confirmación del usuario sobre el punto 2, y que revise si el lente de las gafas ya se ve completo.
+
 ⏸️ CHECKPOINT — Sesión 6/7. **Los 4 accesorios de logro (sombrero/gafas/capa/corona) ya tienen posición VERIFICADA por el usuario en su celular real — cierra el bug que llevaba 3 rondas.** Con el modo calibración (`?calibrar=1`), el usuario probó los 4 en vivo y mandó captura de cada uno:
 - Gafas: `top:14, left:33, ancho:91` — confirmado, se ven de frente sobre los ojos (con la patilla ya recortada del checkpoint anterior).
 - Corona: `top:0, left:34, ancho:74` — confirmado, apoyada bien sobre la cabeza.
