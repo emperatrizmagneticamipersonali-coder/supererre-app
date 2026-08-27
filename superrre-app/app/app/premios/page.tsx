@@ -532,8 +532,13 @@ function PremiosContenido() {
             }}
           >
             <div className="relative" style={{ width: 200, height: 200 }}>
+              {accParaMostrar?.detras && (
+                <AccesorioOverlay acc={accParaMostrar} />
+              )}
               <Mascota tema={tema} size={200} />
-              {accParaMostrar && <AccesorioOverlay acc={accParaMostrar} />}
+              {accParaMostrar && !accParaMostrar.detras && (
+                <AccesorioOverlay acc={accParaMostrar} />
+              )}
               {calibrando && <CuadriculaCalibracion />}
             </div>
           </div>

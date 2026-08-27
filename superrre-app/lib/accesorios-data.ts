@@ -21,6 +21,9 @@ export type Accesorio = {
   lograda?: (p: Progreso) => boolean;
   /** accesorio de tienda: se compra con monedas ganadas ejercicio a ejercicio */
   precio?: number;
+  /** true = se dibuja DETRÁS del retrato del León (capa que cae por la
+   * espalda); si falta, se dibuja delante (sombrero/gafas/corona). */
+  detras?: boolean;
 };
 
 /** 4 accesorios "de vestir" premio de logro — uno por cada sección completa
@@ -50,9 +53,12 @@ export const ACCESORIOS: Accesorio[] = [
     nombre: "Gafas de Sol",
     emoji: "🕶️",
     imagen: "/accesorios/gafas.png",
-    top: 38,
-    left: 50,
-    ancho: 95,
+    // calibrado por el usuario en vivo con /app/premios?calibrar=1 (además,
+    // se le borró la patilla larga a la imagen — venía dibujada en 3/4 y
+    // sobresalía detrás de la oreja).
+    top: 14,
+    left: 33,
+    ancho: 91,
     lograda: (p) =>
       ["rugido", "ronroneo", "rugido-rey", "gruñido"].every((id) =>
         p.sonidosHechos.includes(`leon-${id}`)
@@ -64,9 +70,13 @@ export const ACCESORIOS: Accesorio[] = [
     nombre: "Capa Dorada",
     emoji: "🧣",
     imagen: "/accesorios/capa.png",
-    top: 68,
-    left: 50,
-    ancho: 130,
+    // calibrado por el usuario en vivo con /app/premios?calibrar=1. Se
+    // dibuja DETRÁS del León (ver `detras`) para que parezca puesta sobre
+    // la espalda en vez de tapada delante como un babero.
+    top: 44,
+    left: 34,
+    ancho: 89,
+    detras: true,
     lograda: (p) => letraCompleta("R", p.palabrasHechas),
     precio: 250,
   },
@@ -75,9 +85,10 @@ export const ACCESORIOS: Accesorio[] = [
     nombre: "Corona",
     emoji: "👑",
     imagen: "/accesorios/corona.png",
-    top: 2,
-    left: 50,
-    ancho: 95,
+    // calibrado por el usuario en vivo con /app/premios?calibrar=1.
+    top: 0,
+    left: 34,
+    ancho: 74,
     lograda: (p) => letraCompleta("L", p.palabrasHechas),
     precio: 300,
   },
