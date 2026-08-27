@@ -39,7 +39,7 @@ export function CtaFinal() {
 
         <Link
           href="/onboarding"
-          className="mt-7 inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base px-8 py-4 shadow-md transition-colors"
+          className="mt-7 inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base px-8 py-4 btn-3d-primary transition-colors"
         >
           Probar el Espejo gratis
         </Link>

@@ -51,6 +51,13 @@
   --shadow-sm: 0 2px 8px rgba(34, 51, 46, 0.06);
   --shadow-md: 0 8px 24px rgba(34, 51, 46, 0.10);
   --shadow-lg: 0 16px 40px rgba(34, 51, 46, 0.14);
+
+  /* Sombras "3D" de los botones — mismo tono que el fondo del botón, más
+     oscuro, nunca un gris genérico (derivadas de los tokens de marca,
+     nunca hex nuevo) */
+  --brand-primary-shadow: var(--brand-primary-hover);
+  --brand-secondary-shadow: color-mix(in oklab, var(--brand-secondary) 70%, black);
+  --brand-accent-shadow: color-mix(in oklab, var(--brand-accent) 70%, black);
 }
 
 /* SuperErre es una app infantil claro-cálida por decisión de diseño (FICHA-ARTE.md) —
@@ -109,6 +116,29 @@ body {
 
 h1, h2, h3, .font-display {
   font-family: var(--font-display), ui-rounded, sans-serif;
+}
+
+/* Botones "3D" — borde grueso abajo que se hunde al tocar, la misma
+   sensación de peso físico que Duolingo, pero con nuestros colores
+   cálidos (nunca oscuro/neón — ver FICHA-ARTE.md). Reemplaza shadow-md
+   en los botones principales. */
+.btn-3d-primary {
+  box-shadow: 0 4px 0 0 var(--brand-primary-shadow);
+  transition: transform 100ms ease, box-shadow 100ms ease, background-color 200ms ease;
+}
+.btn-3d-secondary {
+  box-shadow: 0 4px 0 0 var(--brand-secondary-shadow);
+  transition: transform 100ms ease, box-shadow 100ms ease, background-color 200ms ease;
+}
+.btn-3d-accent {
+  box-shadow: 0 4px 0 0 var(--brand-accent-shadow);
+  transition: transform 100ms ease, box-shadow 100ms ease, background-color 200ms ease;
+}
+.btn-3d-primary:active,
+.btn-3d-secondary:active,
+.btn-3d-accent:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 0 transparent;
 }
 
 @keyframes fade-up {

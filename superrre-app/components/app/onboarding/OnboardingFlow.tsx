@@ -254,7 +254,7 @@ function StepNombre({
       <button
         onClick={onNext}
         disabled={!value.trim()}
-        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-40 text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-40 text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
       >
         Continuar
       </button>
@@ -398,7 +398,7 @@ function StepReconocimiento({
       <div className="flex-1" />
       <button
         onClick={onNext}
-        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
       >
         Continuar
       </button>
@@ -673,7 +673,7 @@ function StepVictoria({
       {stage === "detectado" && (
         <button
           onClick={onDone}
-          className="mt-8 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+          className="mt-8 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
         >
           Continuar
         </button>
@@ -710,7 +710,7 @@ function StepCelebracion({
       </p>
       <button
         onClick={onNext}
-        className="mt-9 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+        className="mt-9 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
       >
         Ver el plan de {nombre || "mi hijo"}
       </button>
@@ -814,7 +814,7 @@ function StepPaywall({
 
       <button
         onClick={onCompleto}
-        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+        className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
       >
         Desbloquear el Plan de {n}
       </button>

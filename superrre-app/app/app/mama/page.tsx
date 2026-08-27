@@ -137,7 +137,7 @@ export default function MamaPage() {
             </p>
             <button
               onClick={() => router.push("/onboarding")}
-              className="mt-4 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3 flex items-center justify-center gap-2"
+              className="mt-4 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3 flex items-center justify-center gap-2 btn-3d-primary transition-colors"
             >
               <IconCoin className="h-4 w-4" />
               Ver el Espejo Completo

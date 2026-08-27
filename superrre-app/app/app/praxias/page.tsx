@@ -8,6 +8,7 @@ import {
   factorTiempoPorEdad,
   registrarTiempoPracticado,
   segundosRestantesHoy,
+  calcularRacha,
 } from "@/lib/progress";
 import { siguientePasoSesion } from "@/lib/sesion";
 import { NIVELES_PRAXIAS, TODAS_LAS_PRAXIAS, type Praxia } from "@/lib/praxias-data";
@@ -19,6 +20,7 @@ import { PasosEjercicio } from "@/components/app/PasosEjercicio";
 import { PASOS_EJERCICIOS } from "@/lib/praxias-pasos";
 import { VideoCompanero } from "@/components/app/VideoCompanero";
 import { RevelacionPremio } from "@/components/app/RevelacionPremio";
+import { SesionCompleta } from "@/components/app/SesionCompleta";
 import { MonedaVolando } from "@/components/app/MonedaVolando";
 import { reproducirSonidoMonedas } from "@/lib/sonidoMonedas";
 import {
@@ -154,6 +156,7 @@ function PraxiasContenido() {
   const [idParaSeguirSesion, setIdParaSeguirSesion] = useState<string | null>(
     null
   );
+  const [sesionCompleta, setSesionCompleta] = useState(false);
   const { hablar } = useHablar();
 
   // Cada vez que se cierra un nivel de Praxias se muestran los premios
@@ -166,7 +169,10 @@ function PraxiasContenido() {
     if (!idParaSeguirSesion || premioAReclamar || accesorioAReclamar) return;
     const idActual = idParaSeguirSesion;
     setIdParaSeguirSesion(null);
-    if (segundosRestantesHoy(p) <= 0) return;
+    if (segundosRestantesHoy(p) <= 0) {
+      setSesionCompleta(true);
+      return;
+    }
     const sig = siguientePasoSesion(p, tema, "praxia", idActual);
     if (sig) router.push(sig.href);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -253,7 +259,7 @@ function PraxiasContenido() {
         {cuenta === null && (
           <button
             onClick={() => setCuenta(3)}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
           >
             ¿Estás listo? Empezar
           </button>
@@ -334,7 +340,7 @@ function PraxiasContenido() {
               setMonedaTrigger(Date.now());
               setHecho(true);
             }}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
           >
             Ya lo intenté
           </button>
@@ -350,7 +356,7 @@ function PraxiasContenido() {
               setNivelActivo(null);
               setHecho(false);
             }}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
           >
             Reclamar mi premio
           </button>
@@ -360,7 +366,7 @@ function PraxiasContenido() {
               setActiva(siguiente);
               setHecho(false);
             }}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
           >
             Siguiente
           </button>
@@ -434,6 +440,15 @@ function PraxiasContenido() {
           else setAccesorioAReclamar(null);
         }}
       />
+      {sesionCompleta && (
+        <SesionCompleta
+          tema={tema}
+          minutosHoy={Math.round(p.segundosHoy / 60)}
+          racha={calcularRacha(p.diasActivos).actual}
+          monedas={p.monedas}
+          onCerrar={() => setSesionCompleta(false)}
+        />
+      )}
       <h1 className="font-display font-extrabold text-2xl text-txt-primary">
         Gimnasia de Lengua
       </h1>

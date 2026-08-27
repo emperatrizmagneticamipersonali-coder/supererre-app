@@ -168,7 +168,7 @@ export function Oferta() {
             </ul>
             <Link
               href="/onboarding"
-              className="mt-6 inline-flex justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-6 py-3 shadow-md transition-colors"
+              className="mt-6 inline-flex justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-6 py-3 btn-3d-primary transition-colors"
             >
               Desbloquear el Espejo completo
             </Link>

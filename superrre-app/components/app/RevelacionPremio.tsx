@@ -120,7 +120,7 @@ export function RevelacionPremio({
 
           <button
             onClick={cerrar}
-            className="mt-4 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-3 shadow-md"
+            className="mt-4 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-3 btn-3d-primary transition-colors"
           >
             ¡Genial!
           </button>

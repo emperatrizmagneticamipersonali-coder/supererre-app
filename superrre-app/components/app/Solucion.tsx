@@ -125,7 +125,7 @@ export function Solucion() {
         <div className="mt-9 text-center">
           <Link
             href="/onboarding"
-            className="inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-sm px-6 py-3 shadow-md transition-colors"
+            className="inline-flex items-center justify-center rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-sm px-6 py-3 btn-3d-primary transition-colors"
           >
             Probar el Espejo gratis →
           </Link>

@@ -343,7 +343,7 @@ export default function PremiosPage() {
               <Mascota tema={tema} size={180} className="mb-4" />
               <button
                 onClick={empezar}
-                className="rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-4 shadow-md"
+                className="rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-4 btn-3d-primary transition-colors"
               >
                 Jugar
               </button>
@@ -360,7 +360,7 @@ export default function PremiosPage() {
               </p>
               <button
                 onClick={siguienteNivel}
-                className="mt-6 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-4 shadow-md"
+                className="mt-6 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold px-8 py-4 btn-3d-primary transition-colors"
               >
                 {nivel < PAREJAS_POR_NIVEL.length - 1
                   ? "Siguiente nivel: más cartas"
@@ -621,7 +621,7 @@ export default function PremiosPage() {
                 </p>
                 <button
                   onClick={confirmarCompra}
-                  className="mt-5 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3"
+                  className="mt-5 w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold py-3 btn-3d-primary transition-colors"
                 >
                   Sí, comprar
                 </button>

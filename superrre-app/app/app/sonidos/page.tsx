@@ -8,6 +8,7 @@ import {
   factorTiempoPorEdad,
   registrarTiempoPracticado,
   segundosRestantesHoy,
+  calcularRacha,
   type SeveridadR,
 } from "@/lib/progress";
 import { siguientePasoSesion } from "@/lib/sesion";
@@ -18,6 +19,7 @@ import { BotonEscuchar } from "@/components/app/BotonEscuchar";
 import { Celebracion } from "@/components/app/Celebracion";
 import { VideoCompanero } from "@/components/app/VideoCompanero";
 import { RevelacionPremio } from "@/components/app/RevelacionPremio";
+import { SesionCompleta } from "@/components/app/SesionCompleta";
 import { MonedaVolando } from "@/components/app/MonedaVolando";
 import { reproducirSonidoMonedas } from "@/lib/sonidoMonedas";
 import {
@@ -52,6 +54,7 @@ function SonidosContenido() {
   const [idParaSeguirSesion, setIdParaSeguirSesion] = useState<string | null>(
     null
   );
+  const [sesionCompleta, setSesionCompleta] = useState(false);
 
   // Si llegamos desde otra sección de la sesión continua (?ex=id).
   useEffect(() => {
@@ -66,7 +69,10 @@ function SonidosContenido() {
     if (!idParaSeguirSesion || premioAReclamar || accesorioAReclamar) return;
     const idActual = idParaSeguirSesion;
     setIdParaSeguirSesion(null);
-    if (segundosRestantesHoy(p) <= 0) return;
+    if (segundosRestantesHoy(p) <= 0) {
+      setSesionCompleta(true);
+      return;
+    }
     const sig = siguientePasoSesion(p, modo, "sonido", idActual);
     if (sig) router.push(sig.href);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,6 +122,15 @@ function SonidosContenido() {
           else setAccesorioAReclamar(null);
         }}
       />
+      {sesionCompleta && (
+        <SesionCompleta
+          tema={modo}
+          minutosHoy={Math.round(p.segundosHoy / 60)}
+          racha={calcularRacha(p.diasActivos).actual}
+          monedas={p.monedas}
+          onCerrar={() => setSesionCompleta(false)}
+        />
+      )}
       <h1 className="font-display font-extrabold text-2xl text-txt-primary">
         El Espejo del León
       </h1>
@@ -330,7 +345,7 @@ function SonidoDetector({
       {(marco || estado === "sin-microfono") && (
         <button
           onClick={onSiguiente ?? onReclamar}
-          className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 shadow-md transition-colors"
+          className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
         >
           {onSiguiente ? "Siguiente" : "Reclamar mi premio"}
         </button>
