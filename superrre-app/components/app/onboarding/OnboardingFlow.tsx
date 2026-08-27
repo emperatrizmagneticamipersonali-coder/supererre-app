@@ -180,6 +180,8 @@ export function OnboardingFlow() {
         <StepVictoria
           nombre={nombre}
           interes={interes}
+          edad={parseInt(edad, 10) || 5}
+          severidad={SEVERIDAD_POR_DOLOR[dolor]}
           onDone={() => setStep("celebracion")}
         />
       )}
@@ -568,19 +570,36 @@ const COPIA_VICTORIA = {
 function StepVictoria({
   nombre,
   interes,
+  edad,
+  severidad,
   onDone,
 }: {
   nombre: string;
   interes: string;
+  edad: number;
+  severidad?: SeveridadR;
   onDone: () => void;
 }) {
   const tema: "leon" | "pirata" = interes === "pirata" ? "pirata" : "leon";
   const copia = COPIA_VICTORIA[tema];
-  const { estado: stage, nivelVoz, empezar } = useRugidoDetector();
+  const { estado: stage, nivelVoz, empezar } = useRugidoDetector(edad, severidad);
   const escala = 1 + Math.min(nivelVoz, 100) / 220; // el personaje "respira" con la voz
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useVideoChromaKey(videoRef, canvasRef, "cover");
+
+  // Si after de un buen rato escuchando no detecta nada (mic con ruido de
+  // fondo, cancelación agresiva del celular, etc.) nunca debe quedar
+  // trabado sin poder avanzar — se ofrece seguir de todos modos.
+  const [tardando, setTardando] = useState(false);
+  useEffect(() => {
+    if (stage !== "escuchando") {
+      setTardando(false);
+      return;
+    }
+    const t = setTimeout(() => setTardando(true), 10000);
+    return () => clearTimeout(t);
+  }, [stage]);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 text-center animate-fade-up">
@@ -590,9 +609,20 @@ function StepVictoria({
         </p>
       )}
       {stage === "escuchando" && (
-        <p className="text-sm font-bold text-brand-secondary uppercase tracking-wide mb-6 flex items-center gap-2">
-          <IconMic className="h-4 w-4" /> Escuchando…
-        </p>
+        <div className="mb-6 flex flex-col items-center gap-2">
+          <p className="text-sm font-bold text-brand-secondary uppercase tracking-wide flex items-center gap-2">
+            <IconMic className="h-4 w-4" /> Escuchando…
+          </p>
+          {/* Medidor real del volumen que capta el micrófono — para
+              distinguir "no llega sonido" (mic/permiso) de "llega pero
+              bajo" (necesita más fuerte), en vez de adivinar a ciegas. */}
+          <div className="h-2.5 w-48 rounded-full bg-surface-tertiary overflow-hidden">
+            <div
+              className="h-full rounded-full bg-brand-secondary transition-[width] duration-75"
+              style={{ width: `${Math.min(100, nivelVoz)}%` }}
+            />
+          </div>
+        </div>
       )}
 
       <button
@@ -651,9 +681,15 @@ function StepVictoria({
             {copia.permiso}
           </p>
         )}
-        {stage === "escuchando" && (
+        {stage === "escuchando" && !tardando && (
           <p className="text-lg font-bold text-txt-on-primary-soft">
             {copia.escuchando}
+          </p>
+        )}
+        {stage === "escuchando" && tardando && (
+          <p className="text-sm text-txt-secondary max-w-xs">
+            ¿Sigue sin escucharte? No hay problema — tocá el botón de abajo
+            para seguir de todos modos.
           </p>
         )}
         {stage === "detectado" && (
@@ -684,6 +720,14 @@ function StepVictoria({
           className="mt-4 w-full max-w-xs rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4 transition-colors"
         >
           Continuar sin micrófono
+        </button>
+      )}
+      {stage === "escuchando" && tardando && (
+        <button
+          onClick={onDone}
+          className="mt-4 w-full max-w-xs rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4 transition-colors"
+        >
+          Continuar de todos modos
         </button>
       )}
     </div>

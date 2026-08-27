@@ -374,8 +374,9 @@ function NivelDetector({
     Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
   );
   const [monedaTrigger, setMonedaTrigger] = useState(0);
+  const [forzado, setForzado] = useState(false);
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
-  const completado = estado === "detectado" || estado === "sin-microfono";
+  const completado = estado === "detectado" || estado === "sin-microfono" || forzado;
   // cada peldaño tiene exactamente 3 niveles (sílaba/palabra/oración,
   // índices 0/1/2) — el "-2" es siempre el último, ahí se completa la sección
   const finDeSeccion = completado && nivel.id.endsWith("-2");
@@ -390,7 +391,7 @@ function NivelDetector({
       setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado]);
+  }, [estado, forzado]);
 
   useEffect(() => {
     hablar(nivel.texto);
@@ -430,6 +431,12 @@ function NivelDetector({
             >
               ⏱ {segundos > 0 ? `${segundos}s` : "¡Listo!"}
             </span>
+            <div className="h-2 w-40 rounded-full bg-surface-tertiary overflow-hidden">
+              <div
+                className="h-full rounded-full bg-brand-secondary transition-[width] duration-75"
+                style={{ width: `${Math.min(100, nivelVoz)}%` }}
+              />
+            </div>
           </div>
         )}
         <button
@@ -479,6 +486,12 @@ function NivelDetector({
             No pudimos usar el micrófono, pero igual anotamos tu intento.
           </p>
         )}
+        {forzado && !finDeSeccion && (
+          <p className="mt-4 text-sm text-txt-secondary max-w-64">
+            Anotamos tu intento — seguí practicando, cada vez te va a salir
+            mejor.
+          </p>
+        )}
         {finDeSeccion && (
           <div className="mt-4 flex flex-col items-center gap-2 animate-pop-in">
             <span className="text-5xl" aria-hidden="true">
@@ -492,12 +505,20 @@ function NivelDetector({
         )}
       </div>
 
-      {(estado === "detectado" || estado === "sin-microfono") && (
+      {(estado === "detectado" || estado === "sin-microfono" || forzado) && (
         <button
           onClick={finDeSeccion ? onReclamar : onVolver}
           className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
         >
           {finDeSeccion ? "Reclamar mi premio" : "Continuar"}
+        </button>
+      )}
+      {estado === "escuchando" && segundos <= 0 && (
+        <button
+          onClick={() => setForzado(true)}
+          className="w-full text-center text-sm text-txt-secondary underline underline-offset-2"
+        >
+          ¿Sigue sin escucharte? Continuar de todos modos
         </button>
       )}
     </div>

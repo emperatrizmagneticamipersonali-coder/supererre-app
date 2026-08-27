@@ -226,13 +226,14 @@ function SonidoDetector({
     Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
   );
   const [monedaTrigger, setMonedaTrigger] = useState(0);
+  const [forzado, setForzado] = useState(false);
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
   const marco = estado === "detectado";
-  const completado = estado === "detectado" || estado === "sin-microfono";
+  const completado = estado === "detectado" || estado === "sin-microfono" || forzado;
   const completadoSinSiguiente = completado && !onSiguiente;
 
   useEffect(() => {
-    if (estado === "detectado" || estado === "sin-microfono") {
+    if (estado === "detectado" || estado === "sin-microfono" || forzado) {
       onDetectado();
       registrarTiempoPracticado(
         Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
@@ -241,7 +242,7 @@ function SonidoDetector({
       setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado]);
+  }, [estado, forzado]);
 
   useEffect(() => {
     hablar(pista);
@@ -281,6 +282,14 @@ function SonidoDetector({
             >
               ⏱ {segundos > 0 ? `${segundos}s` : "¡Listo!"}
             </span>
+            {/* Medidor real del volumen — para ver si el mic capta sonido
+                de verdad, en vez de adivinar por qué no detecta. */}
+            <div className="h-2 w-40 rounded-full bg-surface-tertiary overflow-hidden">
+              <div
+                className="h-full rounded-full bg-brand-secondary transition-[width] duration-75"
+                style={{ width: `${Math.min(100, nivelVoz)}%` }}
+              />
+            </div>
           </div>
         )}
         <button
@@ -329,6 +338,12 @@ function SonidoDetector({
             No pudimos usar el micrófono, pero igual anotamos tu intento.
           </p>
         )}
+        {forzado && !completadoSinSiguiente && (
+          <p className="mt-4 text-sm text-txt-secondary max-w-64">
+            Anotamos tu intento — seguí practicando, cada vez te va a salir
+            mejor.
+          </p>
+        )}
         {completadoSinSiguiente && (
           <div className="mt-4 flex flex-col items-center gap-2 animate-pop-in">
             <span className="text-5xl" aria-hidden="true">
@@ -342,12 +357,20 @@ function SonidoDetector({
         )}
       </div>
 
-      {(marco || estado === "sin-microfono") && (
+      {(marco || estado === "sin-microfono" || forzado) && (
         <button
           onClick={onSiguiente ?? onReclamar}
           className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
         >
           {onSiguiente ? "Siguiente" : "Reclamar mi premio"}
+        </button>
+      )}
+      {estado === "escuchando" && segundos <= 0 && (
+        <button
+          onClick={() => setForzado(true)}
+          className="w-full text-center text-sm text-txt-secondary underline underline-offset-2"
+        >
+          ¿Sigue sin escucharte? Continuar de todos modos
         </button>
       )}
     </div>
