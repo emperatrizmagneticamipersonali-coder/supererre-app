@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { track } from "./analytics";
 
 export type Plan = "free" | "completo";
 
@@ -160,6 +161,7 @@ export function iniciarProgreso(datos: {
   severidadR?: SeveridadR;
 }) {
   const actual = leerProgreso();
+  const esNuevo = !actual.nombre;
   guardar({
     ...actual,
     nombre: datos.nombre || actual.nombre,
@@ -168,6 +170,10 @@ export function iniciarProgreso(datos: {
     edad: datos.edad || actual.edad,
     severidadR: datos.severidadR ?? actual.severidadR,
   });
+  if (esNuevo) {
+    track("onboarding_completado", { plan: datos.plan });
+    track("app_abierta", { plan: datos.plan });
+  }
 }
 
 /** Plan diario recomendado según edad — sesiones cortas (criterio de
@@ -235,6 +241,7 @@ export function marcarPraxiaHecha(id: string) {
   p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
+  track("ejercicio_completado", { tipo: "praxia" });
   return p;
 }
 
@@ -247,6 +254,7 @@ export function marcarSonidoHecho(id: string) {
   p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
+  track("ejercicio_completado", { tipo: "sonido" });
   return p;
 }
 
@@ -259,6 +267,7 @@ export function marcarNivelEscaleraHecho(idNivel: string) {
   p.monedas += MONEDAS_POR_EJERCICIO;
   registrarActividadHoy(p);
   guardar(p);
+  track("ejercicio_completado", { tipo: "escalera" });
   return p;
 }
 
