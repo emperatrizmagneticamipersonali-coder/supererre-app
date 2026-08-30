@@ -91,6 +91,25 @@ export async function cambiarEstadoUsuario(
   revalidatePath("/admin/usuarios");
 }
 
+/** Eliminar una cuenta y TODOS sus datos — es el camino real detrás de la promesa de
+ * la Política de Privacidad ("puedes pedir la eliminación de tu cuenta"). Borra la cuenta
+ * de auth; por las relaciones ON DELETE CASCADE de la base de datos, arrastra también su
+ * fila en `parents`, sus hijos (`children`) y el progreso de esos hijos (`exercise_progress`)
+ * y sus compras (`purchases`). Los eventos de uso (`event_log`/`error_log`) NO se borran —
+ * quedan anonimizados (su `user_id` pasa a NULL), útiles para estadísticas agregadas sin
+ * poder atribuirse ya a esta persona. Acción irreversible: se confirma en el cliente antes
+ * de llamarla. Nunca se permite borrar al propio administrador (se protegería a sí mismo). */
+export async function eliminarUsuario(userId: string) {
+  const admin_ = await requireAdmin();
+  if (userId === admin_.id) {
+    throw new Error("No puedes eliminar tu propia cuenta de administrador.");
+  }
+  const admin = createAdminClient();
+  const { error } = await admin.auth.admin.deleteUser(userId);
+  if (error) throw error;
+  revalidatePath("/admin/usuarios");
+}
+
 /** Reenviar el enlace de acceso a alguien que YA tiene cuenta — por si el correo
  * original (el del webhook) no le llegó. Un magic link nuevo, no crea una cuenta duplicada. */
 export async function reenviarAcceso(email: string) {

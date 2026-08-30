@@ -5,6 +5,7 @@ import type { UsuarioAdmin } from "@/lib/admin/data";
 import {
   cambiarEstadoUsuario,
   crearUsuarioManual,
+  eliminarUsuario,
   reenviarAcceso,
 } from "@/app/admin/(panel)/usuarios/actions";
 import { IconUser, IconMail, IconCheck } from "@/components/app/icons";
@@ -162,6 +163,7 @@ export function UsuariosClient({ usuarios }: { usuarios: UsuarioAdmin[] }) {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [pendiente, startTransition] = useTransition();
   const [avisoId, setAvisoId] = useState<string | null>(null);
+  const [aEliminar, setAEliminar] = useState<UsuarioAdmin | null>(null);
 
   const filtrados = useMemo(() => {
     const q = busqueda.trim().toLowerCase();
@@ -187,6 +189,15 @@ export function UsuariosClient({ usuarios }: { usuarios: UsuarioAdmin[] }) {
       await reenviarAcceso(u.email);
       setAvisoId(u.id);
       setTimeout(() => setAvisoId(null), 3000);
+    });
+  }
+
+  function confirmarEliminar() {
+    if (!aEliminar) return;
+    const objetivo = aEliminar;
+    startTransition(async () => {
+      await eliminarUsuario(objetivo.id);
+      setAEliminar(null);
     });
   }
 
@@ -284,6 +295,15 @@ export function UsuariosClient({ usuarios }: { usuarios: UsuarioAdmin[] }) {
                           "Reenviar acceso"
                         )}
                       </button>
+                      {u.role !== "admin" && (
+                        <button
+                          disabled={pendiente}
+                          onClick={() => setAEliminar(u)}
+                          className="text-xs font-semibold text-error underline underline-offset-2 disabled:opacity-50"
+                        >
+                          Eliminar
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -305,6 +325,42 @@ export function UsuariosClient({ usuarios }: { usuarios: UsuarioAdmin[] }) {
 
       {modalAbierto && (
         <ModalAgregarUsuario onClose={() => setModalAbierto(false)} />
+      )}
+
+      {aEliminar && (
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center px-5 pb-8 sm:items-center"
+          style={{ backgroundColor: "var(--surface-overlay)" }}
+          onClick={() => setAEliminar(null)}
+        >
+          <div
+            className="w-full max-w-sm rounded-3xl bg-surface-primary p-6 text-center shadow-lg animate-pop-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-5xl mb-3 inline-block">⚠️</span>
+            <p className="font-display font-bold text-lg text-txt-primary">
+              ¿Eliminar a {aEliminar.name ?? aEliminar.email}?
+            </p>
+            <p className="mt-2 text-sm text-txt-secondary">
+              Se borra su cuenta, sus hijos registrados y todo su progreso
+              para siempre. No se puede deshacer.
+            </p>
+            <button
+              disabled={pendiente}
+              onClick={confirmarEliminar}
+              className="mt-5 w-full rounded-full bg-error disabled:opacity-50 text-txt-on-brand font-display font-bold py-3 transition-colors"
+            >
+              Sí, eliminar para siempre
+            </button>
+            <button
+              disabled={pendiente}
+              onClick={() => setAEliminar(null)}
+              className="mt-2 w-full text-center text-sm text-txt-secondary underline underline-offset-2 py-2"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

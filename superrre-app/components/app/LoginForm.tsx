@@ -32,11 +32,13 @@ export function LoginForm() {
     : "";
 
   const [email, setEmail] = useState("");
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [estado, setEstado] = useState<EstadoEnvio>("idle");
   const [cooldown, setCooldown] = useState(0);
 
   function enviarEnlace() {
-    if (!email.includes("@") || estado === "enviando") return;
+    if (!email.includes("@") || !aceptaTerminos || estado === "enviando")
+      return;
     setEstado("enviando");
     setTimeout(() => {
       iniciarProgreso({ nombre, plan, interes, edad, severidadR });
@@ -95,9 +97,39 @@ export function LoginForm() {
               className="mt-8 w-full rounded-2xl border border-border-default bg-surface-primary px-5 py-4 text-base text-txt-primary placeholder:text-txt-tertiary focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary-soft"
             />
 
+            <label className="mt-5 flex items-start gap-2.5 text-xs text-txt-secondary leading-relaxed">
+              <input
+                type="checkbox"
+                checked={aceptaTerminos}
+                onChange={(e) => setAceptaTerminos(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-brand-primary"
+              />
+              <span>
+                Acepto los{" "}
+                <Link
+                  href="/terminos"
+                  target="_blank"
+                  className="font-semibold text-brand-secondary"
+                >
+                  Términos
+                </Link>{" "}
+                y la{" "}
+                <Link
+                  href="/privacidad"
+                  target="_blank"
+                  className="font-semibold text-brand-secondary"
+                >
+                  Política de Privacidad
+                </Link>
+                .
+              </span>
+            </label>
+
             <button
               onClick={enviarEnlace}
-              disabled={!email.includes("@") || estado === "enviando"}
+              disabled={
+                !email.includes("@") || !aceptaTerminos || estado === "enviando"
+              }
               className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary hover:bg-brand-primary-hover disabled:opacity-50 text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
             >
               {estado === "enviando" ? (

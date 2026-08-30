@@ -28,10 +28,10 @@ export function Footer() {
             Reembolso
           </Link>
           <a
-            href="mailto:hola@supererre.app"
+            href="mailto:supererre.app@gmail.com"
             className="hover:text-txt-primary transition-colors"
           >
-            hola@supererre.app
+            supererre.app@gmail.com
           </a>
         </nav>
       </div>

@@ -10,10 +10,10 @@ export default function ReembolsoPage() {
         Política de Reembolso
       </h1>
       <p className="text-sm text-txt-tertiary mt-2">
-        Última actualización: agosto de 2026
+        Última actualización: 30 de agosto de 2026
       </p>
 
-      <div className="mt-8 space-y-6 text-[15px] text-txt-secondary leading-relaxed">
+      <div className="mt-8 space-y-6 text-sm text-txt-secondary leading-relaxed">
         <div>
           <h2 className="font-display font-bold text-lg text-txt-primary mb-2">
             La Garantía del Primer Rugido
@@ -23,8 +23,11 @@ export default function ReembolsoPage() {
             logra su primer intento real de sonido con el Espejo del
             León, te devolvemos el pago completo. Solo tienes que
             escribir a{" "}
-            <a href="mailto:hola@supererre.app" className="text-brand-secondary font-semibold">
-              hola@supererre.app
+            <a
+              href="mailto:supererre.app@gmail.com"
+              className="text-brand-secondary font-semibold"
+            >
+              supererre.app@gmail.com
             </a>
             . Sin preguntas, sin formularios.
           </p>
@@ -36,16 +39,30 @@ export default function ReembolsoPage() {
           </h2>
           <p>
             Los pagos de SuperErre se procesan a través de Hotmart, cuya
-            política de reembolso garantiza 7 días desde la compra. El
+            política garantiza al menos 7 días de reembolso desde la
+            compra. Puedes pedirlo escribiéndonos a nosotros, o
+            directamente desde tu portal de compras de Hotmart. El
             reembolso se acredita por el mismo medio de pago original.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="font-display font-bold text-lg text-txt-primary mb-2">
+            Sin cobros que cancelar
+          </h2>
+          <p>
+            SuperErre se vende como pago único, no como suscripción —
+            no hay ningún cobro recurrente que deba cancelarse. Un solo
+            pago te da acceso completo para siempre.
           </p>
         </div>
       </div>
 
       <p className="mt-10 text-xs text-txt-tertiary border-t border-border-default pt-5">
-        ⚠️ Esta garantía queda condicionada a que la cuenta de Hotmart del
-        producto esté configurada con una ventana de reembolso de al
-        menos 7 días — se confirma al conectar Hotmart en la Sesión 6.
+        ⚠️ Esta garantía queda condicionada a que la cuenta de Hotmart
+        del producto esté configurada con una ventana de reembolso de
+        al menos 7 días — se confirma al conectar Hotmart en una
+        próxima sesión.
       </p>
     </main>
   );
