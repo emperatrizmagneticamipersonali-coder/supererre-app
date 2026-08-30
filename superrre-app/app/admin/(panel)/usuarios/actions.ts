@@ -2,9 +2,19 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { requireAdmin } from "@/lib/admin/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+
+/** El origen real del sitio, leído del propio request — evita depender de una
+ * variable de entorno extra que alguien podría olvidar configurar en Vercel. */
+async function origenDelSitio() {
+  const h = await headers();
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  const host = h.get("host");
+  return `${proto}://${host}`;
+}
 
 const CrearUsuarioSchema = z.object({
   email: z.string().trim().email("Ese correo no parece válido"),
@@ -38,7 +48,9 @@ export async function crearUsuarioManual(
   const { email, name, plan } = parsed.data;
 
   const { data: invitado, error: inviteError } =
-    await admin.auth.admin.inviteUserByEmail(email);
+    await admin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: `${await origenDelSitio()}/auth/callback`,
+    });
   if (inviteError) {
     // Mensaje honesto pero sin filtrar detalles internos del proveedor.
     return {
@@ -92,7 +104,10 @@ export async function reenviarAcceso(email: string) {
   );
   const { error } = await supabase.auth.signInWithOtp({
     email,
-    options: { shouldCreateUser: false },
+    options: {
+      shouldCreateUser: false,
+      emailRedirectTo: `${await origenDelSitio()}/auth/callback`,
+    },
   });
   if (error) throw error;
 }
