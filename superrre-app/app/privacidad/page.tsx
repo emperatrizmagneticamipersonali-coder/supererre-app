@@ -140,6 +140,13 @@ export default function PrivacidadPage() {
             hijo y de su progreso — de forma permanente y sin poder
             deshacerse.
           </p>
+          <p className="mt-3 rounded-2xl bg-error/10 px-4 py-3 font-semibold text-error">
+            Importante: si ya compraste SuperErre y pides eliminar tu
+            cuenta, pierdes el acceso a la app para siempre — no queda
+            ningún registro de tu compra, así que tendrías que pagar de
+            nuevo para volver a entrar. Si solo quieres dejar de usar la
+            app por un tiempo, no hace falta borrar la cuenta.
+          </p>
         </div>
 
         <div>

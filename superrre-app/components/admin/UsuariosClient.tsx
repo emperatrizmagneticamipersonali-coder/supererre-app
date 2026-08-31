@@ -345,6 +345,11 @@ export function UsuariosClient({ usuarios }: { usuarios: UsuarioAdmin[] }) {
               Se borra su cuenta, sus hijos registrados y todo su progreso
               para siempre. No se puede deshacer.
             </p>
+            <p className="mt-3 rounded-2xl bg-error/10 px-4 py-3 text-sm font-semibold text-error">
+              Si esta persona ya pagó, va a perder el acceso por completo
+              y tendría que comprar SuperErre de nuevo para volver a
+              entrar — no queda ningún registro de que ya había pagado.
+            </p>
             <button
               disabled={pendiente}
               onClick={confirmarEliminar}
