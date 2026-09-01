@@ -153,6 +153,18 @@ export function useProgreso(): Progreso {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
+/** Ajusta el plan local para que coincida con lo que dice el SERVIDOR (tabla `parents`,
+ * llenada por el webhook de Hotmart o por el panel de administración) — es la ÚNICA
+ * función que debe escribir "completo" en el progreso. A diferencia de `iniciarProgreso`,
+ * esto se llama DESPUÉS de confirmar una sesión real de Supabase, nunca desde un dato que
+ * el propio usuario pueda editar (URL, localStorage a mano, devtools). Sin sesión real,
+ * nunca se llama — el plan gratis local queda como está. */
+export function sincronizarPlanDesdeServidor(plan: Plan) {
+  const actual = leerProgreso();
+  if (actual.plan === plan) return;
+  guardar({ ...actual, plan });
+}
+
 export function iniciarProgreso(datos: {
   nombre: string;
   plan: Plan;

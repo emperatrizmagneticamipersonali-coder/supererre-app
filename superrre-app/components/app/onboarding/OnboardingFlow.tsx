@@ -6,7 +6,7 @@ import { FunnelHeader } from "./FunnelHeader";
 import { Chip } from "./Chip";
 import { MascotBubble } from "./MascotBubble";
 import { Mascota, MASCOTA_SRC } from "../Mascota";
-import type { SeveridadR } from "@/lib/progress";
+import { iniciarProgreso, type SeveridadR } from "@/lib/progress";
 import { useRugidoDetector } from "@/hooks/useRugidoDetector";
 import { useVideoChromaKey } from "@/hooks/useVideoChromaKey";
 import {
@@ -105,6 +105,31 @@ export function OnboardingFlow() {
     router.push(
       `/login?plan=${plan}&nombre=${encodeURIComponent(nombre)}&interes=${interes}&edad=${edadNum}&severidad=${severidad}`
     );
+  }
+
+  /** Link real de pago en Hotmart (producto SuperErre, pago único). */
+  const HOTMART_CHECKOUT_URL =
+    "https://pay.hotmart.com/D107410546E?off=2vgwylvj";
+
+  /** Al pasar la verificación de adulto, se manda a pagar de verdad a Hotmart —
+   * antes solo entraba directo, sin pagar nada (hallazgo #2 de la auditoría).
+   * Se guarda la personalización (nombre/edad/interés) para que ya esté lista
+   * si vuelve en este mismo dispositivo tras pagar, pero SIN marcar "completo"
+   * acá: ese plan lo sigue decidiendo solo el servidor (PlanSync), cuando haya
+   * una sesión real — si se marcara acá, alguien que abandona el pago se
+   * quedaría con acceso completo gratis para siempre (el mismo hueco del
+   * hallazgo #1, reabierto por otra puerta). */
+  function irAPagar() {
+    const edadNum = parseInt(edad, 10) || 5;
+    const severidad = SEVERIDAD_POR_DOLOR[dolor] ?? "";
+    iniciarProgreso({
+      nombre,
+      plan: "free",
+      interes,
+      edad: edadNum,
+      severidadR: severidad,
+    });
+    window.location.href = HOTMART_CHECKOUT_URL;
   }
 
   return (
@@ -208,7 +233,7 @@ export function OnboardingFlow() {
           a={GATE_CHALLENGE.a}
           b={GATE_CHALLENGE.b}
           error={gateError}
-          onCorrect={() => irALogin("completo")}
+          onCorrect={irAPagar}
           onWrong={() => {
             setGateError(true);
             setTimeout(() => setGateError(false), 600);
