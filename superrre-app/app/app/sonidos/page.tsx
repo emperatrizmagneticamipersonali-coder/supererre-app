@@ -56,12 +56,14 @@ function SonidosContenido() {
   );
   const [sesionCompleta, setSesionCompleta] = useState(false);
 
-  // Si llegamos desde otra sección de la sesión continua (?ex=id).
+  // Si llegamos desde el mapa o la sesión continua (?ex=id). Depende del
+  // valor real de "ex" (ver comentario equivalente en app/praxias/page.tsx):
+  // sin esto, tocar dos sonidos distintos desde el mapa quedaba pegado en
+  // el primero abierto en toda la sesión.
+  const exIdSonido = params.get("ex");
   useEffect(() => {
-    const exId = params.get("ex");
-    if (exId) setSonidoId(exId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (exIdSonido) setSonidoId(exIdSonido);
+  }, [exIdSonido]);
 
   // Ver comentario equivalente en app/praxias/page.tsx: se espera a que se
   // cierren los premios en cola antes de saltar solo al siguiente ejercicio.

@@ -39,7 +39,7 @@ function construirSecciones(p: Progreso, tema: "leon" | "pirata"): Seccion[] {
   const praxias: PasoMapa[] = TODAS_LAS_PRAXIAS.map((ex) => ({
     id: `praxia-${ex.id}`,
     emoji: ex.emoji,
-    href: "/app/praxias",
+    href: `/app/praxias?ex=${ex.id}`,
     completo: p.praxiasHechas.includes(ex.id),
     requierePlanCompleto: false,
   }));
@@ -47,7 +47,7 @@ function construirSecciones(p: Progreso, tema: "leon" | "pirata"): Seccion[] {
   const sonidos: PasoMapa[] = modo.sonidos.map((s) => ({
     id: `sonido-${s.id}`,
     emoji: modo.emoji,
-    href: "/app/sonidos",
+    href: `/app/sonidos?ex=${s.id}`,
     completo: p.sonidosHechos.includes(`${tema}-${s.id}`),
     requierePlanCompleto: false,
   }));
@@ -66,7 +66,7 @@ function construirSecciones(p: Progreso, tema: "leon" | "pirata"): Seccion[] {
     grupo.niveles.map((nivel) => ({
       id: `escalera-${nivel.id}`,
       emoji: EMOJI_TIPO[nivel.tipo],
-      href: "/app/escalera",
+      href: `/app/escalera?ex=${nivel.id}`,
       completo: p.palabrasHechas.includes(nivel.id),
       requierePlanCompleto: grupo.silaba !== "RA",
     }))
@@ -76,7 +76,7 @@ function construirSecciones(p: Progreso, tema: "leon" | "pirata"): Seccion[] {
     grupo.niveles.map((nivel) => ({
       id: `escalera-${nivel.id}`,
       emoji: EMOJI_TIPO[nivel.tipo],
-      href: "/app/escalera-l",
+      href: `/app/escalera-l?ex=${nivel.id}`,
       completo: p.palabrasHechas.includes(nivel.id),
       requierePlanCompleto: true,
     }))

@@ -110,16 +110,19 @@ function EscaleraLetraContenido({
   );
   const [sesionCompleta, setSesionCompleta] = useState(false);
 
-  // Si llegamos desde otra sección de la sesión continua (?ex=id).
+  // Si llegamos desde el mapa o la sesión continua (?ex=id). Depende del
+  // valor real de "ex" (ver comentario equivalente en app/praxias/page.tsx):
+  // sin esto, tocar dos peldaños distintos desde el mapa quedaba pegado en
+  // el primero abierto en toda la sesión.
+  const exIdEscalera = params.get("ex");
   useEffect(() => {
-    const exId = params.get("ex");
-    if (!exId) return;
+    if (!exIdEscalera) return;
     const nivel = grupos
       .flatMap((g) => g.niveles)
-      .find((n) => n.id === exId);
+      .find((n) => n.id === exIdEscalera);
     if (nivel) setNivelActivo(nivel);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [exIdEscalera]);
 
   // Ver comentario equivalente en app/praxias/page.tsx.
   useEffect(() => {

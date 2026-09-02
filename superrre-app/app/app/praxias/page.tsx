@@ -136,15 +136,18 @@ function PraxiasContenido() {
   const [activa, setActiva] = useState<Praxia | null>(null);
   const [monedaTrigger, setMonedaTrigger] = useState(0);
 
-  // Si llegamos desde otra sección de la sesión continua (?ex=id), abrimos
-  // ese ejercicio directo en vez de mostrar la lista de niveles.
+  // Si llegamos desde el mapa o la sesión continua (?ex=id), abrimos ese
+  // ejercicio directo en vez de mostrar la lista de niveles. Depende del
+  // valor real de "ex" (no un array vacío): tocar dos ejercicios distintos
+  // desde el mapa no siempre remonta este componente (navegación suave de
+  // Next.js entre la misma ruta), así que sin esto quedaba pegado en el
+  // PRIMER ejercicio abierto en toda la sesión, sin importar cuál se tocara.
+  const exId = params.get("ex");
   useEffect(() => {
-    const exId = params.get("ex");
     if (!exId) return;
     const ex = TODAS_LAS_PRAXIAS.find((e) => e.id === exId);
     if (ex) setActiva(ex);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [exId]);
   const [hecho, setHecho] = useState(false);
   const [iniciado, setIniciado] = useState(false);
   const [cuenta, setCuenta] = useState<number | null>(null);
