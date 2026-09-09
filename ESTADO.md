@@ -1,6 +1,11 @@
 # ESTADO — SuperErre
 Última actualización: 2026-09-08 | Sesión actual: 6/7
 
+⏸️ CHECKPOINT — Sesión 6/7 CERRADA por el usuario (noche, "mañana regresamos"). **Conectando Resend (correo transaccional real) para reemplazar el servicio limitado por defecto de Supabase — en curso, sin terminar.**
+Avance: cuenta de Resend creada (login con GitHub, tuvo que ser en incógnito por el mismo bug de traductor de navegador que ya conocemos). Dominio `supererre.com` agregado en Resend, los 4 registros DNS (DKIM, 2 de SPF, DMARC opcional) ya están guardados en Namecheap. Estado actual: **"Pending"** en Resend — normal, es la misma espera de propagación que ya vivimos con el dominio en Vercel.
+Próximo paso exacto: mañana, entrar a Resend → Domains y darle de nuevo a verificar (o esperar a que se ponga en "Verified" solo). Una vez verificado: (1) sacar la API key de Resend, (2) ir a Supabase → Authentication → SMTP Settings (o "Custom SMTP") y conectar ahí los datos de Resend — con eso, TODOS los correos de Supabase (invitaciones, enlaces de acceso) van a salir por Resend automáticamente, sin tocar nada de código. Ningún archivo del repo cambia en esta tarea — es 100% configuración externa.
+Pendientes generales que siguen abiertos (sin urgencia): los 2-3 ítems 🟠/🟡 de la auditoría de seguridad (cabeceras de seguridad del sitio, protección de contraseñas filtradas en Supabase), y la prueba de pago real de punta a punta en Hotmart (la usuaria decidió dejarla para más adelante).
+
 ⏸️ CHECKPOINT — Sesión 6/7. **Dominio propio comprado y conectado — `supererre.com` (canónico `www.supererre.com`).** Configuración pura de infraestructura, sin cambios de código (el sitio ya calculaba su propio origen dinámicamente desde el request en vez de tenerlo fijo — pagó dividendos acá, cero deploys hicieron falta).
 - Comprado en **Namecheap**. Conectado en Vercel con "Redirigir dominios ápice a www" (recomendado) — `supererre.com` hace 308 a `www.supererre.com`.
 - DNS en Namecheap: registro **A** (`@` → `216.198.79.1`) para el ápice, registro **CNAME** (`www` → `4b6b65bbd4aaeae5.vercel-dns-017.com`) para el www — ambos verificados en verde en Vercel.
