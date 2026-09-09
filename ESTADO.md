@@ -1,5 +1,12 @@
 # ESTADO — SuperErre
-Última actualización: 2026-09-01 | Sesión actual: 6/7
+Última actualización: 2026-09-08 | Sesión actual: 6/7
+
+⏸️ CHECKPOINT — Sesión 6/7. **Dominio propio comprado y conectado — `supererre.com` (canónico `www.supererre.com`).** Configuración pura de infraestructura, sin cambios de código (el sitio ya calculaba su propio origen dinámicamente desde el request en vez de tenerlo fijo — pagó dividendos acá, cero deploys hicieron falta).
+- Comprado en **Namecheap**. Conectado en Vercel con "Redirigir dominios ápice a www" (recomendado) — `supererre.com` hace 308 a `www.supererre.com`.
+- DNS en Namecheap: registro **A** (`@` → `216.198.79.1`) para el ápice, registro **CNAME** (`www` → `4b6b65bbd4aaeae5.vercel-dns-017.com`) para el www — ambos verificados en verde en Vercel.
+- Supabase → Authentication → URL Configuration: `Site URL` y `Redirect URLs` actualizados a `https://www.supererre.com` (se dejó también la entrada vieja de `.vercel.app` en Redirect URLs, no se borró, por si acaso).
+⚠️ **Pendiente menor, no urgente**: el texto de la "clase de acceso" que la usuaria pegó en el área de miembros de Hotmart todavía menciona `supererre-app.vercel.app/login` en vez del dominio nuevo — sigue funcionando (el alias de Vercel nunca se quita), es solo cosmético. Avisado a la usuaria, ella decide cuándo actualizarlo (es texto en Hotmart, no código).
+Próximo paso: ninguno urgente de esta ronda. Pendientes generales que siguen abiertos de rondas anteriores: Resend (correo transaccional real, en vez del limitado de Supabase por defecto) y los ítems 🟠/🟡 de la auditoría de seguridad (cabeceras de seguridad del sitio, protección de contraseñas filtradas en Supabase).
 
 ⏸️ CHECKPOINT — Sesión 6/7. **Bug real reportado por la usuaria: "todos los niveles del mapa me llevan al primero (el Caballo)". Encontradas y corregidas 2 causas distintas, ambas preexistentes (no introducidas hoy).**
 **Causa 1 — el mapa nunca decía CUÁL ejercicio**: en `app/app/page.tsx`, cada ícono del mapa (uno por praxia/sonido/peldaño de escalera) apuntaba al link genérico de su sección (`/app/praxias`, `/app/sonidos`, `/app/escalera(-l)`) sin decir cuál ejercicio específico — aunque las 3 pantallas de destino SÍ sabían leer un `?ex=id` para abrir uno puntual (se construyó en una sesión anterior para la "sesión continua"), el mapa nunca lo usaba. Corregido: los 4 arreglos de secciones (praxias/sonidos/escaleraR/escaleraL) ahora arman el href con `?ex=${id}` real de cada ejercicio/sonido/nivel.
