@@ -8,7 +8,8 @@ export type EstadoDeteccion =
   | "pidiendo-permiso"
   | "escuchando"
   | "detectado"
-  | "sin-microfono";
+  | "sin-microfono"
+  | "permiso-bloqueado";
 
 /** Umbral de volumen y tiempo sostenido según edad — los más chicos tienen
  * menos control de aire/volumen (les cuesta más sostener un sonido fuerte),
@@ -119,8 +120,16 @@ export function useRugidoDetector(edad?: number, severidad?: SeveridadR) {
         rafRef.current = requestAnimationFrame(loop);
       };
       rafRef.current = requestAnimationFrame(loop);
-    } catch {
-      setEstado("sin-microfono");
+    } catch (e) {
+      // Permiso bloqueado/denegado ≠ "no hay micrófono": lo primero se puede
+      // arreglar desde el navegador (y merece avisarle a quien acompaña al
+      // niño en vez de premiar en silencio), lo segundo no tiene arreglo.
+      const nombre = e instanceof DOMException ? e.name : "";
+      if (nombre === "NotAllowedError" || nombre === "SecurityError") {
+        setEstado("permiso-bloqueado");
+      } else {
+        setEstado("sin-microfono");
+      }
     }
   }
 

@@ -489,6 +489,22 @@ function NivelDetector({
             No pudimos usar el micrófono, pero igual anotamos tu intento.
           </p>
         )}
+        {estado === "permiso-bloqueado" && (
+          <div className="mt-4 flex flex-col items-center gap-3 max-w-72">
+            <p className="text-sm text-txt-secondary">
+              El micrófono está bloqueado para esta app. Para activarlo:
+              tocá el ícono de candado o de configuración junto a la
+              dirección web, buscá &quot;Micrófono&quot; y ponlo en
+              &quot;Permitir&quot;. Luego volvé a intentar.
+            </p>
+            <button
+              onClick={empezar}
+              className="rounded-full border-2 border-border-strong px-5 py-2 text-sm font-bold text-txt-primary"
+            >
+              Ya lo permití, reintentar
+            </button>
+          </div>
+        )}
         {forzado && !finDeSeccion && (
           <p className="mt-4 text-sm text-txt-secondary max-w-64">
             Anotamos tu intento — seguí practicando, cada vez te va a salir
@@ -516,14 +532,17 @@ function NivelDetector({
           {finDeSeccion ? "Reclamar mi premio" : "Continuar"}
         </button>
       )}
-      {estado === "escuchando" && segundos <= 0 && (
+      {(estado === "escuchando" && segundos <= 0) ||
+      estado === "permiso-bloqueado" ? (
         <button
           onClick={() => setForzado(true)}
           className="w-full text-center text-sm text-txt-secondary underline underline-offset-2"
         >
-          ¿Sigue sin escucharte? Continuar de todos modos
+          {estado === "permiso-bloqueado"
+            ? "Continuar sin micrófono por ahora"
+            : "¿Sigue sin escucharte? Continuar de todos modos"}
         </button>
-      )}
+      ) : null}
     </div>
   );
 }

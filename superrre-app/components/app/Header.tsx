@@ -19,7 +19,7 @@ export function Header() {
           </span>
         </Link>
         <Link
-          href="/login"
+          href="/login?plan=completo"
           className="text-sm font-semibold text-txt-secondary hover:text-txt-primary transition-colors"
         >
           Entrar
