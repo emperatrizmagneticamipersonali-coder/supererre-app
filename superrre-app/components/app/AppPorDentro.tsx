@@ -1,33 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { IconMirror, IconMic, IconCompass, IconCoin } from "./icons";
 
 const pantallas = [
   {
     nombre: "El Espejo del León",
     resultado: "Su primer rugido, en menos de un minuto",
     tono: "primary",
-    icon: IconMirror,
+    imagen: "/capturas/espejo-leon.jpg",
   },
   {
     nombre: "Isla de Praxias",
     resultado: "5 minutos de gimnasia de lengua, jugando",
     tono: "secondary",
-    icon: IconMic,
+    imagen: "/capturas/isla-praxias.jpg",
   },
   {
     nombre: "Mapa de Islas",
     resultado: "Su progreso, visible en un camino que quiere recorrer",
     tono: "accent",
-    icon: IconCompass,
+    imagen: "/capturas/mapa-islas.jpg",
   },
   {
     nombre: "Cofre de Premios",
     resultado: "La recompensa que se gana tras cada logro real",
     tono: "primary",
-    icon: IconCoin,
+    imagen: "/capturas/cofre-premios.jpg",
   },
 ] as const;
 
@@ -84,25 +84,27 @@ export function AppPorDentro() {
         >
           {pantallas.map((p) => (
             <div key={p.nombre} className="snap-center shrink-0 w-56">
-              <div
-                className={`h-96 rounded-xl border-4 border-txt-primary/90 overflow-hidden flex flex-col items-center justify-center text-center px-4 ${tono[p.tono].soft}`}
-              >
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-full mb-4 text-txt-on-brand ${tono[p.tono].solid}`}
-                >
-                  <p.icon className="h-6 w-6" />
-                </span>
-                <span
-                  className={`text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-4 text-txt-on-brand ${tono[p.tono].solid}`}
-                >
-                  Ya disponible
-                </span>
-                <p className="font-display font-bold text-base text-txt-primary">
-                  {p.nombre}
-                </p>
-                <p className="mt-2 text-xs text-txt-secondary leading-relaxed">
-                  {p.resultado}
-                </p>
+              <div className="relative h-96 rounded-xl border-4 border-txt-primary/90 overflow-hidden">
+                <Image
+                  src={p.imagen}
+                  alt={p.nombre}
+                  fill
+                  sizes="224px"
+                  className="object-cover"
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-txt-primary/90 via-txt-primary/60 to-transparent px-4 pt-10 pb-4">
+                  <span
+                    className={`inline-block text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full mb-2 text-txt-on-brand ${tono[p.tono].solid}`}
+                  >
+                    Ya disponible
+                  </span>
+                  <p className="font-display font-bold text-base text-white">
+                    {p.nombre}
+                  </p>
+                  <p className="mt-1 text-xs text-white/85 leading-relaxed">
+                    {p.resultado}
+                  </p>
+                </div>
               </div>
             </div>
           ))}
