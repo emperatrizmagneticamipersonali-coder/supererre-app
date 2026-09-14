@@ -29,6 +29,12 @@ const pantallas = [
     tono: "primary",
     imagen: "/capturas/cofre-premios.jpg",
   },
+  {
+    nombre: "Memorama de la R",
+    resultado: "Encuentra las parejas de palabras con R, jugando",
+    tono: "secondary",
+    imagen: "/capturas/memorama.jpg",
+  },
 ] as const;
 
 const tono = {

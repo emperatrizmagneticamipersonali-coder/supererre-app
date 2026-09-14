@@ -7,8 +7,8 @@
 **Programa de afiliados**: se redactó la descripción del programa para el formulario de Hotmart (beneficios del producto + comisión 50% + reglas), basada en FICHA-AVATAR.md, ~830 caracteres.
 **Nombres de usuario para redes sociales**: se investigó la jerga real del nicho (rotacismo, "no pronuncia la r", fonoaudiólogo — NO "logopeda", término de España) y se dieron 15 opciones de username (sin el nombre de la app), con recomendación de usar namechk.com para verificar disponibilidad real (mis herramientas no pueden verificar usernames de IG/TikTok/FB de forma confiable, están bloqueadas para bots).
 **Landing — sección "La app por dentro" (`components/app/AppPorDentro.tsx`) ahora usa 4 CAPTURAS REALES de la app** (antes eran íconos genéricos de relleno) — la usuaria mandó las capturas desde su celular (vía zip de WhatsApp, recortadas con PowerShell/System.Drawing para quitar la barra del navegador y la barra de Android): `espejo-leon.jpg`, `isla-praxias.jpg`, `mapa-islas.jpg`, `cofre-premios.jpg` en `public/capturas/`. tsc + build limpios.
-⚠️ **Pendiente**: la usuaria mandó también una captura de un juego "Memorama" (parejas de palabras con R) que no encaja en ninguna de las 4 tarjetas actuales de esa sección — falta que confirme en qué parte de la app vive esa función para decidir si se agrega una 5ta tarjeta.
-Próximo paso: hacer commit+push de `AppPorDentro.tsx` + las 4 capturas (pendiente al momento de este checkpoint), y esperar respuesta de la usuaria sobre el Memorama.
+La usuaria confirmó que el "Memorama" vive dentro de la sección Premios (pestaña propia) — se agregó como una **5ta tarjeta** ("Memorama de la R", `public/capturas/memorama.jpg`) en vez de reemplazar alguna de las 4 anteriores. tsc + build limpios, publicado a producción.
+Próximo paso: ninguno urgente de esta ronda.
 
 ⏸️ CHECKPOINT — Sesión 7/7 (cierre). **Publicado a producción y PROBADO end-to-end en vivo: los 2 fixes de hoy (audio + micrófono bloqueado) y la suite de emails de activación.**
 Commit `d2583ac` pusheado a `master` (Vercel despliega automático). Variables `RESEND_API_KEY` y `CRON_SECRET` confirmadas en Vercel Y en `.env.local`.
