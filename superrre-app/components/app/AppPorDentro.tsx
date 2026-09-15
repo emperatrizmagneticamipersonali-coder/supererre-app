@@ -41,14 +41,17 @@ const tono = {
   primary: {
     soft: "bg-brand-primary-soft",
     solid: "bg-brand-primary",
+    border: "border-brand-primary",
   },
   secondary: {
     soft: "bg-brand-secondary-soft",
     solid: "bg-brand-secondary",
+    border: "border-brand-secondary",
   },
   accent: {
     soft: "bg-brand-accent-soft",
     solid: "bg-brand-accent",
+    border: "border-brand-accent",
   },
 };
 
@@ -90,7 +93,9 @@ export function AppPorDentro() {
         >
           {pantallas.map((p) => (
             <div key={p.nombre} className="snap-center shrink-0 w-56">
-              <div className="relative h-96 rounded-xl border-4 border-txt-primary/90 overflow-hidden">
+              <div
+                className={`relative h-96 rounded-xl border-4 overflow-hidden ${tono[p.tono].border}`}
+              >
                 <Image
                   src={p.imagen}
                   alt={p.nombre}

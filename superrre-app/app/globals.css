@@ -104,8 +104,10 @@
   --font-body: var(--font-quicksand);
 }
 
-* {
-  border-color: var(--border-default);
+@layer base {
+  * {
+    border-color: var(--border-default);
+  }
 }
 
 body {

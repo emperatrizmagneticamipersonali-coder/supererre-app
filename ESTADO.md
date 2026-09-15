@@ -1,5 +1,12 @@
 # ESTADO — SuperErre
-Última actualización: 2026-09-14 | Sesión actual: 7/7
+Última actualización: 2026-09-15 | Sesión actual: 7/7
+
+⏸️ CHECKPOINT — Sesión 7/7 (continuación). **Bug de diseño REAL encontrado y corregido en TODO el sitio (no solo lo pedido): los bordes de color de marca nunca se veían — siempre salían de un gris neutro, sin importar qué color pidiera el código.**
+La usuaria pidió agregar color al contorno de las 5 tarjetas nuevas de "La app por dentro" — al implementarlo, verifiqué con las herramientas del navegador (no me quedé con "parece que sí") y descubrí que el color NUNCA se aplicaba, ni en mis tarjetas nuevas ni en NINGÚN otro lugar del sitio que ya usaba bordes de color de marca (Oferta, Solución, Racha, Mamá — todos afectados desde antes, sin que nadie lo hubiera notado).
+**Causa raíz**: en `app/globals.css`, la regla `* { border-color: var(--border-default); }` (línea ~107) estaba escrita SUELTA, fuera de cualquier `@layer` de Tailwind — y en CSS moderno (cascade layers), CUALQUIER regla suelta le gana a CUALQUIER regla que sí esté dentro de un layer, sin importar la especificidad. Como Tailwind mete todas sus clases utilitarias (`border-brand-primary`, etc.) dentro de `@layer utilities`, esa regla suelta les ganaba a todas, siempre, en todo el sitio.
+**Fix**: se envolvió esa regla en `@layer base { ... }` — con eso, las clases de Tailwind (más específicas en la jerarquía de capas) vuelven a ganar como se esperaba. Verificado en vivo con JavaScript en el navegador (leyendo el color real ya aplicado, no solo el código): antes de el fix, TODOS los bordes de color de marca en toda la app mostraban gris; después del fix, cada uno muestra su color correcto (dorado/turquesa/coral).
+tsc + build limpios.
+Próximo paso: publicar (commit + push) y avisarle a la usuaria del hallazgo — es una mejora visual gratis en varias pantallas que ella no pidió arreglar pero que ahora se ven como se diseñaron originalmente.
 
 ⏸️ CHECKPOINT — Sesión 7/7 (continuación). **Prueba real de compra en Hotmart de punta a punta — HECHA con éxito (2 veces) — más trabajo de marketing (afiliados, redes) y las 4 capturas reales de la landing.**
 **Moneda base del producto en Hotmart bloqueada en MXN** (el campo tiene candado — Hotmart no deja cambiar la moneda base de un producto ya creado desde el panel). Diagnóstico: esto es solo el precio "de reporte" interno; el CHECKOUT real que ven los compradores sí muestra $19.99 USD correcto (confirmado por la usuaria al intentar pagar) — así que no es urgente, es cosmético. Camino recomendado si se quiere corregir: pedirle a soporte de Hotmart el cambio (no tocar el link/webhook), NUNCA crear un producto nuevo salvo que soporte no pueda resolverlo (perdería el link/reconexión de webhook).
