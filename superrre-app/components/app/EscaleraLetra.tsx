@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   useProgreso,
@@ -371,21 +371,35 @@ function NivelDetector({
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector(edad, severidad);
+  const { estado, nivelVoz, empezar, reiniciar } = useRugidoDetector(edad, severidad);
   const { hablar } = useHablar();
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
   );
   const [monedaTrigger, setMonedaTrigger] = useState(0);
   const [forzado, setForzado] = useState(false);
+  const [confirmado, setConfirmado] = useState(false);
+  const premiado = useRef(false);
+
+  function repetir() {
+    reiniciar();
+    setForzado(false);
+    setConfirmado(false);
+    setSegundos(Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad)));
+  }
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
-  const completado = estado === "detectado" || estado === "sin-microfono" || forzado;
+  // El detector solo sabe que hubo un intento (sonido fuerte y sostenido) —
+  // no si la palabra estuvo bien dicha. Quien decide si avanza es el adulto.
+  const hayIntento = estado === "detectado" || estado === "sin-microfono" || forzado;
+  const pendiente = hayIntento && !confirmado;
+  const completado = hayIntento && confirmado;
   // cada peldaño tiene exactamente 3 niveles (sílaba/palabra/oración,
   // índices 0/1/2) — el "-2" es siempre el último, ahí se completa la sección
   const finDeSeccion = completado && nivel.id.endsWith("-2");
 
   useEffect(() => {
-    if (completado) {
+    if (confirmado && !premiado.current) {
+      premiado.current = true;
       onDetectado();
       registrarTiempoPracticado(
         Math.round(DURACION_NIVEL_SEG * factorTiempoPorEdad(edad))
@@ -394,7 +408,7 @@ function NivelDetector({
       setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado, forzado]);
+  }, [confirmado]);
 
   useEffect(() => {
     hablar(nivel.texto);
@@ -478,16 +492,23 @@ function NivelDetector({
           <BotonEscuchar texto={nivel.texto} />
         </div>
 
-        {estado === "detectado" && !finDeSeccion && (
+        {pendiente && (
+          <div className="mt-4 flex flex-col items-center gap-1 animate-pop-in">
+            <p className="font-display font-extrabold text-lg text-txt-primary">
+              ¿Lo dijo bien?
+            </p>
+            <p className="text-sm text-txt-secondary max-w-64">
+              {estado === "sin-microfono"
+                ? "No pudimos usar el micrófono. Mamá o papá: ustedes deciden si avanza o repite."
+                : "Mamá o papá: escuchen y decidan si avanza o repite."}
+            </p>
+          </div>
+        )}
+        {completado && !finDeSeccion && (
           <div className="mt-4 flex items-center gap-2 text-brand-secondary animate-pop-in">
             <IconSparkles className="h-5 w-5" />
             <p className="font-bold">¡Muy bien dicho!</p>
           </div>
-        )}
-        {estado === "sin-microfono" && !finDeSeccion && (
-          <p className="mt-4 text-sm text-txt-secondary max-w-64">
-            No pudimos usar el micrófono, pero igual anotamos tu intento.
-          </p>
         )}
         {estado === "permiso-bloqueado" && (
           <div className="mt-4 flex flex-col items-center gap-3 max-w-72">
@@ -505,12 +526,6 @@ function NivelDetector({
             </button>
           </div>
         )}
-        {forzado && !finDeSeccion && (
-          <p className="mt-4 text-sm text-txt-secondary max-w-64">
-            Anotamos tu intento — seguí practicando, cada vez te va a salir
-            mejor.
-          </p>
-        )}
         {finDeSeccion && (
           <div className="mt-4 flex flex-col items-center gap-2 animate-pop-in">
             <span className="text-5xl" aria-hidden="true">
@@ -524,16 +539,41 @@ function NivelDetector({
         )}
       </div>
 
-      {(estado === "detectado" || estado === "sin-microfono" || forzado) && (
-        <button
-          onClick={finDeSeccion ? onReclamar : onVolver}
-          className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
-        >
-          {finDeSeccion ? "Reclamar mi premio" : "Continuar"}
-        </button>
+      {pendiente && (
+        <>
+          <button
+            onClick={() => setConfirmado(true)}
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+          >
+            Sí, lo dijo bien
+          </button>
+          <button
+            onClick={repetir}
+            className="mt-3 w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-3"
+          >
+            Repetir
+          </button>
+        </>
       )}
-      {(estado === "escuchando" && segundos <= 0) ||
-      estado === "permiso-bloqueado" ? (
+      {completado && (
+        <>
+          <button
+            onClick={finDeSeccion ? onReclamar : onVolver}
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+          >
+            {finDeSeccion ? "Reclamar mi premio" : "Continuar"}
+          </button>
+          <button
+            onClick={repetir}
+            className="mt-3 w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-3"
+          >
+            Repetir este ejercicio
+          </button>
+        </>
+      )}
+      {!hayIntento &&
+      ((estado === "escuchando" && segundos <= 0) ||
+        estado === "permiso-bloqueado") ? (
         <button
           onClick={() => setForzado(true)}
           className="w-full text-center text-sm text-txt-secondary underline underline-offset-2"

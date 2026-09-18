@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   useProgreso,
@@ -222,20 +222,33 @@ function SonidoDetector({
   onDetectado: () => void;
   onReclamar: () => void;
 }) {
-  const { estado, nivelVoz, empezar } = useRugidoDetector(edad, severidad);
+  const { estado, nivelVoz, empezar, reiniciar } = useRugidoDetector(edad, severidad);
   const { hablar } = useHablar();
   const [segundos, setSegundos] = useState(
     Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
   );
   const [monedaTrigger, setMonedaTrigger] = useState(0);
   const [forzado, setForzado] = useState(false);
+  const [confirmado, setConfirmado] = useState(false);
+  const premiado = useRef(false);
+
+  function repetir() {
+    reiniciar();
+    setForzado(false);
+    setConfirmado(false);
+    setSegundos(Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad)));
+  }
   const escala = 1 + Math.min(nivelVoz, 100) / 220;
-  const marco = estado === "detectado";
-  const completado = estado === "detectado" || estado === "sin-microfono" || forzado;
+  // El detector solo sabe que hubo un intento (sonido fuerte y sostenido) —
+  // no si la palabra estuvo bien dicha. Quien decide si avanza es el adulto.
+  const hayIntento = estado === "detectado" || estado === "sin-microfono" || forzado;
+  const pendiente = hayIntento && !confirmado;
+  const completado = hayIntento && confirmado;
   const completadoSinSiguiente = completado && !onSiguiente;
 
   useEffect(() => {
-    if (estado === "detectado" || estado === "sin-microfono" || forzado) {
+    if (confirmado && !premiado.current) {
+      premiado.current = true;
       onDetectado();
       registrarTiempoPracticado(
         Math.round(DURACION_SONIDO_SEG * factorTiempoPorEdad(edad))
@@ -244,7 +257,7 @@ function SonidoDetector({
       setMonedaTrigger(Date.now());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado, forzado]);
+  }, [confirmado]);
 
   useEffect(() => {
     hablar(pista);
@@ -329,16 +342,23 @@ function SonidoDetector({
           <BotonEscuchar texto={pista} />
         </div>
 
-        {marco && !completadoSinSiguiente && (
+        {pendiente && (
+          <div className="mt-4 flex flex-col items-center gap-1 animate-pop-in">
+            <p className="font-display font-extrabold text-lg text-txt-primary">
+              ¿Lo dijo bien?
+            </p>
+            <p className="text-sm text-txt-secondary max-w-64">
+              {estado === "sin-microfono"
+                ? "No pudimos usar el micrófono. Mamá o papá: ustedes deciden si avanza o repite."
+                : "Mamá o papá: escuchen y decidan si avanza o repite."}
+            </p>
+          </div>
+        )}
+        {completado && !completadoSinSiguiente && (
           <div className="mt-4 flex items-center gap-2 text-brand-secondary animate-pop-in">
             <IconSparkles className="h-5 w-5" />
             <p className="font-bold">¡Muy bien!</p>
           </div>
-        )}
-        {estado === "sin-microfono" && !completadoSinSiguiente && (
-          <p className="mt-4 text-sm text-txt-secondary max-w-64">
-            No pudimos usar el micrófono, pero igual anotamos tu intento.
-          </p>
         )}
         {estado === "permiso-bloqueado" && (
           <div className="mt-4 flex flex-col items-center gap-3 max-w-72">
@@ -356,12 +376,6 @@ function SonidoDetector({
             </button>
           </div>
         )}
-        {forzado && !completadoSinSiguiente && (
-          <p className="mt-4 text-sm text-txt-secondary max-w-64">
-            Anotamos tu intento — seguí practicando, cada vez te va a salir
-            mejor.
-          </p>
-        )}
         {completadoSinSiguiente && (
           <div className="mt-4 flex flex-col items-center gap-2 animate-pop-in">
             <span className="text-5xl" aria-hidden="true">
@@ -375,16 +389,41 @@ function SonidoDetector({
         )}
       </div>
 
-      {(marco || estado === "sin-microfono" || forzado) && (
-        <button
-          onClick={onSiguiente ?? onReclamar}
-          className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
-        >
-          {onSiguiente ? "Siguiente" : "Reclamar mi premio"}
-        </button>
+      {pendiente && (
+        <>
+          <button
+            onClick={() => setConfirmado(true)}
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+          >
+            Sí, lo dijo bien
+          </button>
+          <button
+            onClick={repetir}
+            className="mt-3 w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-3"
+          >
+            Repetir
+          </button>
+        </>
       )}
-      {(estado === "escuchando" && segundos <= 0) ||
-      estado === "permiso-bloqueado" ? (
+      {completado && (
+        <>
+          <button
+            onClick={onSiguiente ?? onReclamar}
+            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+          >
+            {onSiguiente ? "Siguiente" : "Reclamar mi premio"}
+          </button>
+          <button
+            onClick={repetir}
+            className="mt-3 w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-3"
+          >
+            Repetir este sonido
+          </button>
+        </>
+      )}
+      {!hayIntento &&
+      ((estado === "escuchando" && segundos <= 0) ||
+        estado === "permiso-bloqueado") ? (
         <button
           onClick={() => setForzado(true)}
           className="w-full text-center text-sm text-txt-secondary underline underline-offset-2"

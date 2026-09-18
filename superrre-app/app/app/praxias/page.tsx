@@ -347,43 +347,57 @@ function PraxiasContenido() {
           >
             Ya lo intenté
           </button>
-        ) : finDeSeccion ? (
-          <button
-            onClick={() => {
-              setPremioAReclamar(figuritaDeSeccion(activa));
-              // Elevador cierra la sección Y toda la app de Praxias a la vez —
-              // el accesorio queda en cola, se muestra recién al cerrar la figurita.
-              if (!siguientePraxia(activa)) setAccesorioAReclamar("sombrero");
-              setIdParaSeguirSesion(activa.id);
-              setActiva(null);
-              setNivelActivo(null);
-              setHecho(false);
-            }}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
-          >
-            Reclamar mi premio
-          </button>
-        ) : siguiente ? (
-          <button
-            onClick={() => {
-              setActiva(siguiente);
-              setHecho(false);
-            }}
-            className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
-          >
-            Siguiente
-          </button>
         ) : (
-          <button
-            onClick={() => {
-              setActiva(null);
-              setNivelActivo(null);
-              setHecho(false);
-            }}
-            className="w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4"
-          >
-            Volver
-          </button>
+          <>
+            {finDeSeccion ? (
+              <button
+                onClick={() => {
+                  setPremioAReclamar(figuritaDeSeccion(activa));
+                  // Elevador cierra la sección Y toda la app de Praxias a la vez —
+                  // el accesorio queda en cola, se muestra recién al cerrar la figurita.
+                  if (!siguientePraxia(activa)) setAccesorioAReclamar("sombrero");
+                  setIdParaSeguirSesion(activa.id);
+                  setActiva(null);
+                  setNivelActivo(null);
+                  setHecho(false);
+                }}
+                className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+              >
+                Reclamar mi premio
+              </button>
+            ) : siguiente ? (
+              <button
+                onClick={() => {
+                  setActiva(siguiente);
+                  setHecho(false);
+                }}
+                className="w-full rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+              >
+                Siguiente
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setActiva(null);
+                  setNivelActivo(null);
+                  setHecho(false);
+                }}
+                className="w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4"
+              >
+                Volver
+              </button>
+            )}
+            <button
+              onClick={() => {
+                setHecho(false);
+                setIniciado(false);
+                setCuenta(null);
+              }}
+              className="mt-3 w-full rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-3"
+            >
+              Repetir este ejercicio
+            </button>
+          </>
         )}
       </div>
     );
