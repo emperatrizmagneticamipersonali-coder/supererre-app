@@ -11,6 +11,10 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  const path = request.nextUrl.pathname;
+  const esRutaAdmin = path.startsWith("/admin");
+  const esLoginAdmin = path === "/admin/login" || path.startsWith("/admin/auth");
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -32,32 +36,44 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // getUser() valida el JWT contra Supabase (y dispara el refresh si expiró) — nunca
-  // getSession() acá, que no revalida nada.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Este middleware corre en TODAS las rutas (no solo /admin) — si Supabase no
+  // responde (pausado, caído, o cualquier error de red), antes esto tumbaba el
+  // sitio ENTERO con un 500 para cualquier visitante. Ahora, si falla, dejamos
+  // pasar la request sin sesión en vez de romper la página — /admin sigue
+  // protegido (sin user confirmado, se manda a login), y el resto del sitio
+  // (paywall, ejercicios, landing) sigue funcionando con normalidad.
+  try {
+    // getUser() valida el JWT contra Supabase (y dispara el refresh si expiró) —
+    // nunca getSession() acá, que no revalida nada.
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const path = request.nextUrl.pathname;
-  const esRutaAdmin = path.startsWith("/admin");
-  const esLoginAdmin = path === "/admin/login" || path.startsWith("/admin/auth");
-
-  if (esRutaAdmin && !esLoginAdmin) {
-    if (!user) {
+    if (esRutaAdmin && !esLoginAdmin) {
+      if (!user) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/admin/login";
+        return NextResponse.redirect(url);
+      }
+      // Defensa en profundidad: el rol se vuelve a verificar en cada Server
+      // Component/acción del panel (nunca confiar solo en el middleware) —
+      // esto es la primera barrera, no la única.
+      const { data: perfil } = await supabase
+        .from("parents")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (perfil?.role !== "admin") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/";
+        return NextResponse.redirect(url);
+      }
+    }
+  } catch (error) {
+    console.error("proxy: Supabase no respondió, dejando pasar sin sesión", error);
+    if (esRutaAdmin && !esLoginAdmin) {
       const url = request.nextUrl.clone();
       url.pathname = "/admin/login";
-      return NextResponse.redirect(url);
-    }
-    // Defensa en profundidad: el rol se vuelve a verificar en cada Server Component/acción
-    // del panel (nunca confiar solo en el middleware) — esto es la primera barrera, no la única.
-    const { data: perfil } = await supabase
-      .from("parents")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-    if (perfil?.role !== "admin") {
-      const url = request.nextUrl.clone();
-      url.pathname = "/";
       return NextResponse.redirect(url);
     }
   }
