@@ -9,6 +9,7 @@ import {
   type EjercicioMama,
 } from "@/lib/ejercicios-mama";
 import { useProgreso } from "@/lib/progress";
+import { IlustracionMama } from "@/components/app/IlustracionMama";
 import {
   IconAlarmClock,
   IconCheck,
@@ -64,6 +65,10 @@ export default function EjerciciosJuntosPage() {
               {n}
             </span>
           ))}
+        </div>
+
+        <div className="mt-6 animate-fade-up [animation-delay:105ms]">
+          <IlustracionMama tipo={abierto.ilustracion} />
         </div>
 
         <div className="mt-6 rounded-2xl border-2 border-brand-accent bg-brand-accent-soft p-5 animate-fade-up [animation-delay:120ms]">

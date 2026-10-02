@@ -1,5 +1,8 @@
+import type { TipoIlustracion } from "@/components/app/IlustracionMama";
+
 export type EjercicioMama = {
   id: string;
+  ilustracion: TipoIlustracion;
   nombre: string;
   resumen: string;
   paraQue: string;
@@ -25,6 +28,7 @@ export const CUIDADOS_HISOPO = [
 export const EJERCICIOS_MAMA: EjercicioMama[] = [
   {
     id: "hisopo-rr",
+    ilustracion: "hisopo",
     nombre: "El hisopo para la R fuerte",
     resumen: "Una pista para que la puntita de la lengua encuentre su lugar.",
     paraQue:
@@ -49,6 +53,7 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
   },
   {
     id: "lengua-ancha",
+    ilustracion: "ancha",
     nombre: "Lengua ancha y sonrisa",
     resumen: "Prepara el aire y la lengua para la R fuerte, sin ningún objeto.",
     paraQue:
