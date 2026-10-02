@@ -73,6 +73,23 @@ export default function MamaPage() {
         </div>
       </div>
 
+      <button
+        onClick={() => router.push("/app/mama/juntos")}
+        className="mt-4 flex w-full items-center gap-3 rounded-2xl border-2 border-brand-secondary bg-brand-secondary-soft p-4 text-left transition-transform active:scale-[0.98] animate-fade-up [animation-delay:200ms]"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-secondary text-txt-on-brand">
+          <IconCheck className="h-5 w-5" />
+        </span>
+        <div>
+          <p className="font-display font-bold text-sm text-txt-on-secondary-soft">
+            Ejercicios para hacer juntos
+          </p>
+          <p className="text-xs text-txt-on-secondary-soft mt-0.5">
+            Pasos guiados para que los hagas tú con {p.nombre || "tu hijo"}.
+          </p>
+        </div>
+      </button>
+
       {etiquetaSeveridad && (
         <div className="mt-4 flex items-center gap-3 rounded-2xl border border-border-default p-4 animate-fade-up [animation-delay:210ms]">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-accent-soft text-brand-accent">

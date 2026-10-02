@@ -10,7 +10,7 @@ export default function TerminosPage() {
         Términos y Condiciones
       </h1>
       <p className="text-sm text-txt-tertiary mt-2">
-        Última actualización: 30 de agosto de 2026
+        Última actualización: 2 de octubre de 2026
       </p>
 
       <div className="mt-8 space-y-6 text-sm text-txt-secondary leading-relaxed">
@@ -56,6 +56,23 @@ export default function TerminosPage() {
             padre, madre o tutor — nunca del niño. El adulto es
             responsable de supervisar el uso y de cualquier decisión
             relacionada con la salud o el desarrollo del niño.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="font-display font-bold text-lg text-txt-primary mb-2">
+            Ejercicios que haces junto a tu hijo
+          </h2>
+          <p>
+            Algunas secciones (como &ldquo;Ejercicios para hacer
+            juntos&rdquo;) describen actividades que realiza un adulto
+            con el niño, a veces con un objeto sencillo como un hisopo.
+            Son una guía general de práctica en casa, no una indicación
+            médica ni terapéutica personalizada. El adulto decide si
+            realizarlas, las hace bajo su propia responsabilidad,
+            siguiendo los cuidados indicados en cada una, y debe
+            suspenderlas ante cualquier molestia o duda, consultando a un
+            profesional de la salud.
           </p>
         </div>
 
