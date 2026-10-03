@@ -1,13 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import {
-  EJERCICIOS_MAMA,
-  CUIDADOS_GENERALES,
-  CUIDADOS_HISOPO,
-  type EjercicioMama,
-} from "@/lib/ejercicios-mama";
+import { EJERCICIOS_MAMA, type EjercicioMama } from "@/lib/ejercicios-mama";
 import { useProgreso } from "@/lib/progress";
 import { IlustracionMama } from "@/components/app/IlustracionMama";
 import {
@@ -30,11 +26,21 @@ export default function EjerciciosJuntosPage() {
     setIntentado(false);
   }
 
+  const guiados = EJERCICIOS_MAMA.filter((e) => e.grupo === "guiado");
+  const espejo = EJERCICIOS_MAMA.filter((e) => e.grupo === "espejo");
+  const PILDORA = [
+    "bg-brand-primary-soft text-txt-on-primary-soft",
+    "bg-brand-secondary-soft text-txt-on-secondary-soft",
+    "bg-brand-accent-soft text-txt-primary",
+  ];
+  const BORDE = [
+    "border-brand-primary",
+    "border-brand-secondary",
+    "border-brand-accent",
+  ];
+
   if (abierto) {
-    const cuidados = [
-      ...(abierto.conHisopo ? CUIDADOS_HISOPO : []),
-      ...CUIDADOS_GENERALES,
-    ];
+    const cuidados = abierto.cuidados;
     return (
       <div className="flex-1 flex flex-col px-5 pt-4 pb-6">
         <button
@@ -68,7 +74,19 @@ export default function EjerciciosJuntosPage() {
         </div>
 
         <div className="mt-6 animate-fade-up [animation-delay:105ms]">
-          <IlustracionMama tipo={abierto.ilustracion} />
+          {abierto.imagen ? (
+            <div className="relative mx-auto aspect-square w-full max-w-72 overflow-hidden rounded-2xl border-2 border-brand-secondary bg-surface-primary">
+              <Image
+                src={abierto.imagen}
+                alt={abierto.nombre}
+                fill
+                sizes="288px"
+                className="object-cover"
+              />
+            </div>
+          ) : abierto.ilustracion ? (
+            <IlustracionMama tipo={abierto.ilustracion} />
+          ) : null}
         </div>
 
         <div className="mt-6 rounded-2xl border-2 border-brand-accent bg-brand-accent-soft p-5 animate-fade-up [animation-delay:120ms]">
@@ -161,7 +179,7 @@ export default function EjerciciosJuntosPage() {
       </p>
 
       <div className="mt-6 flex flex-col gap-3">
-        {EJERCICIOS_MAMA.map((ex, i) => (
+        {guiados.map((ex, i) => (
           <button
             key={ex.id}
             onClick={() => setAbierto(ex)}
@@ -181,6 +199,41 @@ export default function EjerciciosJuntosPage() {
                 {ex.conHisopo ? " · con hisopo" : " · sin objetos"}
               </p>
             </div>
+          </button>
+        ))}
+      </div>
+
+      <h2 className="mt-8 font-display font-extrabold text-xl text-txt-primary animate-fade-up [animation-delay:240ms]">
+        Gimnasia frente al espejo
+      </h2>
+      <p className="mt-1 text-sm text-txt-secondary animate-fade-up [animation-delay:270ms]">
+        Toca una imagen para ver cómo se hace. Háganlo juntos, como un juego.
+      </p>
+
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        {espejo.map((ex, i) => (
+          <button
+            key={ex.id}
+            onClick={() => setAbierto(ex)}
+            style={{ animationDelay: `${300 + i * 40}ms` }}
+            className="flex flex-col items-stretch gap-2 text-left transition-transform active:scale-[0.96] animate-fade-up"
+          >
+            <span
+              className={`relative block aspect-square overflow-hidden rounded-2xl border-4 bg-surface-primary ${BORDE[i % 3]}`}
+            >
+              <Image
+                src={ex.imagen ?? ""}
+                alt={ex.nombre}
+                fill
+                sizes="110px"
+                className="object-cover"
+              />
+            </span>
+            <span
+              className={`flex min-h-9 items-center justify-center rounded-full px-2 py-1 text-center text-xs font-bold leading-tight ${PILDORA[i % 3]}`}
+            >
+              {ex.etiqueta}
+            </span>
           </button>
         ))}
       </div>
