@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { EJERCICIOS_MAMA, type EjercicioMama } from "@/lib/ejercicios-mama";
 import { useProgreso } from "@/lib/progress";
-import { IlustracionMama } from "@/components/app/IlustracionMama";
 import {
   IconAlarmClock,
   IconCheck,
@@ -83,7 +82,7 @@ export default function EjerciciosJuntosPage() {
         </div>
 
         <div className="mt-6 animate-fade-up [animation-delay:105ms]">
-          {abierto.imagen ? (
+          {abierto.imagen && (
             <figure>
               <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl border-2 border-brand-secondary bg-surface-primary">
                 <Image
@@ -100,9 +99,7 @@ export default function EjerciciosJuntosPage() {
                 </figcaption>
               )}
             </figure>
-          ) : abierto.ilustracion ? (
-            <IlustracionMama tipo={abierto.ilustracion} />
-          ) : null}
+          )}
         </div>
 
         <div className="mt-6 rounded-2xl border-2 border-brand-accent bg-brand-accent-soft p-5 animate-fade-up [animation-delay:120ms]">

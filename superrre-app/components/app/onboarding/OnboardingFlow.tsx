@@ -729,6 +729,14 @@ function StepVictoria({
             de abajo para seguir de todos modos.
           </p>
         )}
+        {stage === "permiso-bloqueado" && (
+          <p className="text-sm text-txt-secondary max-w-xs">
+            El micrófono está bloqueado para esta página. Para activarlo:
+            toca el candado o el ícono de configuración junto a la dirección
+            web, busca “Micrófono” y ponlo en “Permitir”. Luego toca “Ya lo
+            permití”.
+          </p>
+        )}
       </div>
 
       {stage === "detectado" && (
@@ -739,7 +747,15 @@ function StepVictoria({
           Continuar
         </button>
       )}
-      {stage === "sin-microfono" && (
+      {stage === "permiso-bloqueado" && (
+        <button
+          onClick={empezar}
+          className="mt-2 w-full max-w-xs rounded-full bg-brand-primary hover:bg-brand-primary-hover text-txt-on-brand font-display font-bold text-base py-4 btn-3d-primary transition-colors"
+        >
+          Ya lo permití
+        </button>
+      )}
+      {(stage === "sin-microfono" || stage === "permiso-bloqueado") && (
         <button
           onClick={onDone}
           className="mt-4 w-full max-w-xs rounded-full border-2 border-border-strong text-txt-primary font-display font-bold text-base py-4 transition-colors"

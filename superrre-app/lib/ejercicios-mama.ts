@@ -1,11 +1,7 @@
-import type { TipoIlustracion } from "@/components/app/IlustracionMama";
-
 export type EjercicioMama = {
   id: string;
   grupo: "guiado" | "espejo";
-  /** dibujo SVG propio (ejercicios guiados) */
-  ilustracion?: TipoIlustracion;
-  /** imagen de la cuadrícula (ejercicios frente al espejo) */
+  /** imagen del ejercicio (también la de la cuadrícula frente al espejo) */
   imagen?: string;
   /** etiqueta corta que se ve sobre la imagen en la cuadrícula */
   etiqueta?: string;
@@ -84,7 +80,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
   {
     id: "lengua-ancha",
     grupo: "guiado",
-    ilustracion: "ancha",
+    imagen: "/ejercicios/lengua-ancha.jpg",
+    pie: "Fíjate en tres cosas: la sonrisa grande con las esquinas de los labios hacia arriba, la lengua ancha y relajada que cubre los dientes de abajo, y el aire que sale suave por la boca.",
     nombre: "Lengua ancha y sonrisa",
     resumen: "Prepara el aire y la lengua para la R fuerte, sin ningún objeto.",
     paraQue:
