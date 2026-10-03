@@ -9,6 +9,8 @@ export type EjercicioMama = {
   imagen?: string;
   /** etiqueta corta que se ve sobre la imagen en la cuadrícula */
   etiqueta?: string;
+  /** nota que explica la imagen, debajo de ella */
+  pie?: string;
   nombre: string;
   resumen: string;
   paraQue: string;
@@ -54,7 +56,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
   {
     id: "hisopo-rr",
     grupo: "guiado",
-    ilustracion: "hisopo",
+    imagen: "/ejercicios/hisopo-rr.jpg",
+    pie: "El círculo muestra lo mismo visto de lado: el punto dorado marca el lugar, en la encía justo detrás de los dientes de arriba, donde van la punta de la lengua y la punta del palito. El algodón siempre queda afuera, en tus dedos.",
     nombre: "El hisopo para la R fuerte",
     resumen: "Una pista para que la puntita de la lengua encuentre su lugar.",
     paraQue:

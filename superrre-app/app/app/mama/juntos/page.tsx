@@ -84,15 +84,22 @@ export default function EjerciciosJuntosPage() {
 
         <div className="mt-6 animate-fade-up [animation-delay:105ms]">
           {abierto.imagen ? (
-            <div className="relative mx-auto aspect-square w-full max-w-72 overflow-hidden rounded-2xl border-2 border-brand-secondary bg-surface-primary">
-              <Image
-                src={abierto.imagen}
-                alt={abierto.nombre}
-                fill
-                sizes="288px"
-                className="object-cover"
-              />
-            </div>
+            <figure>
+              <div className="relative mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-2xl border-2 border-brand-secondary bg-surface-primary">
+                <Image
+                  src={abierto.imagen}
+                  alt={abierto.nombre}
+                  fill
+                  sizes="(max-width: 384px) 100vw, 384px"
+                  className="object-cover"
+                />
+              </div>
+              {abierto.pie && (
+                <figcaption className="mt-2 text-xs text-txt-secondary leading-relaxed">
+                  {abierto.pie}
+                </figcaption>
+              )}
+            </figure>
           ) : abierto.ilustracion ? (
             <IlustracionMama tipo={abierto.ilustracion} />
           ) : null}
