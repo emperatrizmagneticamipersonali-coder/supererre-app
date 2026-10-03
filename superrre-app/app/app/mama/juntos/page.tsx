@@ -54,11 +54,7 @@ export default function EjerciciosJuntosPage() {
         <h1 className="mt-2 font-display font-extrabold text-2xl text-txt-primary text-balance animate-fade-up">
           {abierto.nombre}
         </h1>
-        <p className="mt-2 text-sm text-txt-secondary animate-fade-up [animation-delay:60ms]">
-          {abierto.paraQue}
-        </p>
-
-        <div className="mt-4 flex flex-wrap items-center gap-2 animate-fade-up [animation-delay:90ms]">
+        <div className="mt-4 flex flex-wrap items-center gap-2 animate-fade-up [animation-delay:60ms]">
           <span className="inline-flex items-center gap-2 rounded-full bg-brand-secondary-soft text-txt-on-secondary-soft text-xs font-bold px-3 py-1">
             <IconAlarmClock className="h-4 w-4" />
             {abierto.minutos} min
@@ -71,6 +67,19 @@ export default function EjerciciosJuntosPage() {
               {n}
             </span>
           ))}
+        </div>
+
+        <div className="mt-6 rounded-2xl bg-brand-secondary-soft p-5 animate-fade-up [animation-delay:90ms]">
+          <p className="text-xs font-bold uppercase tracking-wide text-txt-on-secondary-soft">
+            ¿Para qué sirve?
+          </p>
+          <p className="mt-2 text-sm text-txt-primary leading-relaxed">
+            {abierto.paraQue}
+          </p>
+          <p className="mt-2 text-xs text-txt-secondary leading-relaxed">
+            Es un calentamiento que se combina con practicar los sonidos en la
+            app. No hace falta que salga perfecto: cada intento suma.
+          </p>
         </div>
 
         <div className="mt-6 animate-fade-up [animation-delay:105ms]">

@@ -58,7 +58,7 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     nombre: "El hisopo para la R fuerte",
     resumen: "Una pista para que la puntita de la lengua encuentre su lugar.",
     paraQue:
-      "Ayuda a que tu hijo sienta dónde va la punta de la lengua y a lograr que vibre, que es lo que hace la R fuerte (rr).",
+      "Para decir la R fuerte (como en “carro”), la punta de la lengua tiene que subir a un lugar exacto, la encía de arriba justo detrás de los dientes, y vibrar con el aire. Muchos niños no sienten dónde está ese lugar. El hisopo les da una pista que pueden sentir para encontrarlo. Es normal que tarden varios intentos: lo importante es que se sienta seguro y se divierta.",
     minutos: 5,
     necesitas: [
       "Un hisopo (cotonete) nuevo",
@@ -85,7 +85,7 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     nombre: "Lengua ancha y sonrisa",
     resumen: "Prepara el aire y la lengua para la R fuerte, sin ningún objeto.",
     paraQue:
-      "Enseña a soltar el aire con la lengua ancha y relajada, que es la base para producir la R fuerte (rr).",
+      "La R fuerte necesita que el aire salga con la lengua ancha y relajada, no tensa ni en punta. Este ejercicio le enseña esa sensación, sin objetos y sin presión. Es un buen calentamiento antes de otros ejercicios de la R fuerte.",
     minutos: 3,
     necesitas: ["Un espejo", "Manos limpias"],
     pasos: [
@@ -107,7 +107,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Sonrisa grande",
     nombre: "Sonrisa grande",
     resumen: "Estira los labios y las mejillas con una sonrisa enorme.",
-    paraQue: "Ejercita los músculos de los labios y las mejillas.",
+    paraQue:
+      "Calienta los músculos de los labios y las mejillas y le enseña a moverlos con control. Hablar bien necesita una cara que se mueva con soltura. Es de los ejercicios que más fácil salen, ideal para empezar con buen ánimo.",
     pasos: [
       "Siéntense frente al espejo.",
       "Pídele una sonrisa muy grande, mostrando los dientes.",
@@ -123,7 +124,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Beso",
     nombre: "El beso",
     resumen: "Labios hacia adelante, como para dar un beso.",
-    paraQue: "Ejercita los labios para llevarlos hacia adelante y redondearlos.",
+    paraQue:
+      "Ayuda a que los labios se muevan hacia adelante y se redondeen, y a pasar de un gesto a otro con facilidad (sonrisa, beso, sonrisa). Esa agilidad de los labios se usa al hablar todo el tiempo.",
     pasos: [
       "Siéntense frente al espejo.",
       "Pídele que lleve los labios hacia adelante, como si fuera a dar un beso.",
@@ -139,7 +141,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Inflar mejillas",
     nombre: "Inflar las mejillas",
     resumen: "Llenar de aire las mejillas y soltarlo despacio.",
-    paraQue: "Ejercita las mejillas y el control del aire.",
+    paraQue:
+      "Enseña a guardar el aire y soltarlo poco a poco, y fortalece las mejillas. Controlar el aire es importante porque la R necesita una salida de aire constante.",
     pasos: [
       "Siéntense frente al espejo.",
       "Pídele que llene de aire las mejillas, con los labios cerrados.",
@@ -155,7 +158,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Sacar la lengua",
     nombre: "Sacar la lengua",
     resumen: "Sacarla bien recta hacia adelante y volver a meterla.",
-    paraQue: "Ejercita el movimiento de la lengua hacia afuera y hacia adentro.",
+    paraQue:
+      "Entrena que la lengua se mueva hacia afuera y hacia adentro con control, y que se mantenga derechita. Cuando tu hijo controla su lengua, le es más fácil colocarla donde pide cada sonido, incluida la R.",
     pasos: [
       "Siéntense frente al espejo, con la boca abierta.",
       "Pídele que saque la lengua lo más recta posible, hacia adelante.",
@@ -171,7 +175,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Lengua a un lado",
     nombre: "Lengua hacia un lado",
     resumen: "Llevar la punta de la lengua a una esquina de la boca.",
-    paraQue: "Ejercita que la lengua se mueva hacia los lados, sin mover la cabeza.",
+    paraQue:
+      "Enseña a mover la lengua hacia los lados sin mover la cabeza ni la mandíbula. Esa independencia de la lengua es lo que después le permite colocar la punta justo donde la necesita para decir la R.",
     pasos: [
       "Siéntense frente al espejo, con la boca abierta.",
       "Pídele que lleve la punta de la lengua hacia una esquina de la boca, sin mover la cabeza.",
@@ -187,7 +192,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Lengua al otro lado",
     nombre: "Lengua hacia el otro lado",
     resumen: "Ahora la punta de la lengua va a la esquina contraria.",
-    paraQue: "Ejercita que la lengua se mueva hacia los lados, sin mover la cabeza.",
+    paraQue:
+      "Es la misma idea del ejercicio anterior, pero hacia el otro lado. Así la lengua aprende a moverse con soltura hacia los dos lados, sin que se mueva la cabeza.",
     pasos: [
       "Siéntense frente al espejo, con la boca abierta.",
       "Pídele que lleve la punta de la lengua a la esquina contraria de la boca, sin mover la cabeza.",
@@ -204,7 +210,7 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     nombre: "Lengua arriba, detrás de los dientes",
     resumen: "Tocar con la punta la parte de arriba, justo detrás de los dientes.",
     paraQue:
-      "Enseña dónde va la punta de la lengua para la R fuerte: el paladar, justo detrás de los dientes de arriba.",
+      "Este es el lugar clave de la R fuerte: la punta de la lengua toca el techo de la boca, justo detrás de los dientes de arriba. Aquí tu hijo aprende a subir la lengua hasta ahí y a mantenerla, antes de intentar soltar el aire para que vibre.",
     pasos: [
       "Siéntense frente al espejo, con la boca bien abierta.",
       "Pídele que suba la punta de la lengua y toque el techo de la boca, justo detrás de los dientes de arriba.",
@@ -220,7 +226,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Abrir la boca",
     nombre: "Abrir la boca",
     resumen: "Abrir bien la boca, como en un bostezo, y cerrar despacio.",
-    paraQue: "Ejercita abrir y cerrar la boca con control.",
+    paraQue:
+      "Enseña a abrir y cerrar la boca con calma y control, sin golpear los dientes. Una boca que se abre bien deja espacio para que la lengua se mueva libre, y ayuda a que tu hijo note qué hace cada parte de su boca.",
     pasos: [
       "Siéntense frente al espejo.",
       "Pídele que abra la boca bien grande, como en un bostezo.",
@@ -236,7 +243,8 @@ export const EJERCICIOS_MAMA: EjercicioMama[] = [
     etiqueta: "Soplar burbujas",
     nombre: "Soplar burbujas con pajita",
     resumen: "Soplar por una pajita para hacer burbujas en el agua.",
-    paraQue: "Entrena el soplo continuo, útil para el aire que necesita la R.",
+    paraQue:
+      "Entrena el soplo continuo: soltar el aire de forma pareja y por más tiempo. La R fuerte necesita un aire constante para que la lengua vibre. Las burbujas lo hacen divertido y le muestran, con los ojos, que lo está logrando.",
     minutos: 3,
     necesitas: ["Una pajita", "Un vaso con un dedo de agua", "Manos limpias"],
     pasos: [
